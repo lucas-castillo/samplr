@@ -26,13 +26,13 @@ algorithms
 
 ``` r
 library(samplr)
-set.seed(0118999)
+set.seed(1)
 chain <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1) * .5, iterations = 2048)
 print(chain[[1]][1:20])
-#>  [1]  1.00000000  1.00000000  0.55184878  0.78960729  0.81028884  0.13077598
-#>  [7]  0.91602932  0.09927559 -0.04626322 -0.17780208 -0.12099197 -1.03343621
-#> [13] -0.98615098 -0.63079177 -1.11736808  0.04886893  0.47235421  0.24165146
-#> [19]  0.24165146  0.23985357
+#>  [1]  1.00000000  0.55703026  0.68688570  0.09600704  1.22404092  0.13513180
+#>  [7] -0.52146425 -0.72986307 -0.73394108  0.96640564  1.50634775  1.78200855
+#> [13]  1.57732831  1.57732831  1.75567722  1.75567722  0.88060541  0.72202406
+#> [19]  0.98888308  1.08316613
 ```
 
 As well as tools to diagnose the patterns both from samplers and
@@ -42,10 +42,10 @@ participants:
 plot_qqplot(chain[[1]], change = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
 plot_series(chain[[1]])
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
