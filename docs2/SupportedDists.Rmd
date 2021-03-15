@@ -1,0 +1,144 @@
+---
+title: "Supported Distributions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+The current distributions in the Samplr package are those supported by [Rcpp](http://rcpp.org/) and [RcppDist](https://github.com/duckmayr/RcppDist).
+
+## Univariate Distributions
+The parameters these distributions take can be provided in a vector, e.g. a vector `c(0,1)` for the standard normal distribution.
+
+### Continuous Distributions
+
+```{r echo=FALSE}
+abbrev_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
+                "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
+
+for (i in 1:length(abbrev_cont)){abbrev_cont[i] <- paste("*", abbrev_cont[i],"*", sep="")}
+name_cont <- c("Uniform", "Normal","Lognormal", "Gamma", "Beta", "Non-central Beta", "Chi-squared", "Non-central Chi-squared", "t", "Non-central t", "F", "Non-central F", "Cauchy", "Exponential", "Logistic", "Weibull",
+                           "4-parameter Beta", "Location-scale t", "Truncated Normal", "Truncated t", "Truncated Location-scale t", "Triangular")
+
+for (i in 1:length(name_cont)){name_cont[i] <- paste(name_cont[i],"Distribution")}
+
+parameters <- c(
+  "`min`, `max`", # "unif",
+  "`mean`, `sd`",# "norm",
+  "`log_mean`, `log_sd`", # "lnorm",
+  "`shape`, `scale`", # "gamma",
+  "`shape1`,`shape2`", # "beta",
+  "`shape1`,`shape2`, `ncp`", # "nbeta",
+  "`df`", # "chisq",
+  "`df`, `ncp`", # "nchisq",
+  "`df`", # "t",
+  "`df`, `ncp`", # "nt",
+  "`df1`, `df2`", # "f",
+  "`df1`, `df2`, `ncp`", # "nf",
+  "`location`, `scale`, ", # "cauchy",
+  "`rate`", # "exp",
+  "`location`, `scale`", # "logis",
+  "`shape`, `scale`",# "weibull",
+  "`shape1`,`shape2`, `minumum`, `maximum`", # "4beta",
+  "`df`, `location`, `scale`, ", # "lst",
+  "`mean`, `sd`, `low_bound`, `high_bound`", # "truncnorm",
+  "`df`, `low_bound`, `high_bound`", # "trunct",
+  "`df`, `location`, `scale`, `low_bound`, `high_bound`", # "trunclst",
+  "`lower_limit`, `upper_limit`, `mode`"# "triangular"
+)
+
+X <- data.frame(abbrev_cont, name_cont, parameters)
+names(X) <- c("Abbreviation", "Distribution Name", "Parameters")
+knitr::kable(X)
+```
+
+### Discrete Distributions
+
+```{r echo=FALSE}
+abbr_discr <- c("binom", "nbinom", "nbinom_mu", "pois", "geom", "hyper", "wilcox", "signrank")
+for (i in 1:length(abbr_discr)){abbr_discr[i] <- paste("*", abbr_discr[i],"*", sep="")}
+
+
+name_discr <- c("Binomial", "Negative Binomial", "Negative Binomial", "Poisson", "Geometric", "Hypergeometric", "Wilcoxon rank-sum test statistic", "Wilcoxon signed-rank test statistic")
+
+for (i in 1:length(name_discr)){
+  if ((name_discr[i] != "Wilcoxon rank-sum test statistic") && (name_discr[i] != "Wilcoxon signed-rank test statistic")){
+    name_discr[i] <- paste(name_discr[i],"Distribution")
+  } else{
+    name_discr[i] <- paste("Distribution of", name_discr[i])
+  }
+  if (i == 2){
+    name_discr[i] <- paste(name_discr[i],"(with success probability as parameter)")
+  }
+  else if (i == 3){
+    name_discr[i] <- paste(name_discr[i],"(with mean as parameter)")
+  }
+}
+
+parameters_discr <-c(
+  "`size`, `success_prob`", # Binomial", 
+  "`size`, `success_prob`", # Non-central Binomial", 
+  "`size`, `mean`", # Negative binomial", 
+  "`lambda`", # Poisson", 
+  "`success_prob`", # Geometric", 
+  "`number_successes`, `number_failures`, `number_samples`", # Hypergeometric", 
+  "`number_samples1`, `number_samples2`", # Wilcoxon rank-sum test statistic", 
+  "`number_samples`" # Wilcoxon signed-rank test statistic"
+  )
+
+X <- data.frame(abbr_discr, name_discr, parameters_discr)
+names(X) <- c("Abbreviation", "Distribution Name", "Parameters")
+knitr::kable(X)
+```
+## Multivariate Distributions
+For multivariate distributions, provide the distribution parameters in a list. See tables for the type of each parameter. 
+
+### Continuous Distributions
+```{r echo=FALSE}
+abbrev_cont_mv <- c("mvnorm", "mvt")
+
+for (i in 1:length(abbrev_cont)){abbrev_cont[i] <- paste("*", abbrev_cont[i],"*", sep="")}
+
+name_cont_mv <- c("Multivariate Normal", "Multivariate t")
+
+for (i in 1:length(name_cont)){name_cont[i] <- paste(name_cont[i],"Distribution")}
+
+parameters_cont_mv <- c(
+  "`mean` (vector); `covariance_matrix` (matrix)", # Multivariate Normal", 
+  "`location` (vector); `scale_matrix` (matrix), `df` (number)" # Multivariate t"
+  )
+
+X <- data.frame(abbrev_cont_mv, name_cont_mv, parameters_cont_mv)
+names(X) <- c("Abbreviation", "Distribution Name", "Parameters")
+knitr::kable(X)
+```
+
+## Examples
+```{r}
+library(Samplr)
+```
+### Univariate distribution
+```{r}
+X <- sampler_mcmc(
+  distr_name = "truncnorm", # Use abbreviation in distr_name
+  distr_params = c(0,1,-5,0), # provide distribution parameters as a vector for univariate distributions
+  start = 0, # starting point for the sampler
+  sigma_prop = 1, # variance of the proposal distribution
+)
+hist(X[[1]])
+```
+
+### Multivariate distribution
+```{r}
+X <- sampler_mcmc(
+  "mvnorm", 
+  list(c(0,0), diag(2)), # provide distribution parameters as a list for multivariate distributions
+  start = c(5,-5), # a far-off start
+  sigma_prop = diag(2) * 1/8
+)
+
+x <- X[[1]][,1]
+y <- X[[1]][,2]
+plot(x,y)
+```

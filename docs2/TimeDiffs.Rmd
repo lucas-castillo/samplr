@@ -1,0 +1,56 @@
+---
+title: "Time Differences"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+All samplers run for 1024 iterations.
+
+## R
+```{r}
+pdf <- SampleR::make_distr_pdf(distr::Norm())
+X <- bench::mark(
+    SampleR::sampler_mcmc(pdf, 1, sigma_prop = 1),
+    SampleR::sampler_mc3(pdf, 1, sigma_prop = 1),
+    SampleR::sampler_hmc(pdf, 1),
+    SampleR::sampler_nuts(pdf, 1, .5),
+    check = FALSE,
+)
+print(X[,c("expression", "min", "median")])
+```
+
+## C++
+```{r}
+X <- bench::mark(
+    Samplr::sampler_mcmc("norm", c(0,1), 1, sigma_prop=1),
+    Samplr::sampler_mc3("norm", c(0,1), 1, sigma_prop=1),
+    Samplr::sampler_hmc("norm", c(0,1), 1),
+    Samplr::sampler_nuts("norm", c(0,1), 1),
+    check = FALSE,
+)
+print(X[,c("expression", "min", "median")])
+```
+
+## MATLAB
+```{r echo=FALSE}
+columns <- c("expression",  "timeit")
+tests <- c("MCMConGaussian(0, 1)", "MCMConGaussian(0, 6)")
+timeit <- c("6.22ms", "55.13ms")
+X <- data.frame(tests, timeit)
+knitr::kable(X)
+```
+
+## C++
+```{r bench.all_columns = TRUE}
+options(width = 300)
+X <- bench::mark(
+    Samplr::sampler_mcmc("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)),
+    Samplr::sampler_mc3("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)),
+    Samplr::sampler_hmc("mvnorm", list(c(0,1), diag(2)), c(0,0)),
+    # Samplr::sampler_nuts("mvnorm", list(c(0,1), diag(2)), c(0,0)),
+    check = FALSE,
+)
+print(X[,c("expression", "min", "median")])
+```
