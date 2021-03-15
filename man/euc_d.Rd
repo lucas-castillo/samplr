@@ -13,10 +13,10 @@ euc_d(x, y)
 Numeric or Vector. Distance between points. If vector, distances between the ith points in the matrices.
 }
 \description{
-Calculates the distance between two points. If instead given two matrices A and B of size n x d, for n number of items of d dimensions each, it will return an n - 1 length vector with the distances between each of the items (i.e. the distance between the item A\[1,\] and B\[1,\]; between A\[2,\] and B\[2,\], and so on).
+Calculates the distance between two points. If instead given two matrices A and B of size n x d, for n number of items of d dimensions each, it will return an n - 1 length vector with the distances between each of the items (i.e. the distance between the item A[1,] and B[1,]; between A[2,] and B[2,], and so on).
 }
 \details{
-It assumes that all dimensions have the same units or that all dimensions are normalized (mean = 0 and std = 1). Adapted from [here](https://hlab.stanford.edu/brian/euclidean_distance_in.html)
+It assumes that all dimensions have the same units or that all dimensions are normalized (mean = 0 and std = 1). Adapted from \href{https://hlab.stanford.edu/brian/euclidean_distance_in.html}{here}
 }
 \examples{
 # distance between two points

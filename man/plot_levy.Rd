@@ -16,9 +16,9 @@ If plot is true, it returns a simple plot with the log absolute difference in es
 This plotter analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
 }
 \details{
-Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging [(Viswanathan et al., 1999)](https://www.nature.com/articles/44831). See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
+Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging \href{https://www.nature.com/articles/44831}{(Viswanathan et al., 1999)}. See \href{https://dl.acm.org/doi/abs/10.5555/3327345.3327477}{Zhu et al. 2018} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 
- @param chain Matrix of n x d dimensions, n = iterations, d = dimensions
+@param chain Matrix of n x d dimensions, n = iterations, d = dimensions
 }
 \examples{
 target <- distr::Norm()
