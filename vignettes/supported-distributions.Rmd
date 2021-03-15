@@ -141,11 +141,10 @@ hist(X[[1]])
 
 ### Multivariate distribution
 ```{r}
-X <- sampler_mcmc(
+X <- sampler_hmc(
   distr_name = "mvnorm", # as before
   list(c(0,0), diag(2)), # provide distribution parameters as a list for multivariate distributions
-  start = c(5,-5), 
-  sigma_prop = diag(2) * 1/8
+  start = c(0,0), 
 )
 
 x <- X[[1]][,1]
