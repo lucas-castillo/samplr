@@ -25,8 +25,7 @@ Plots the autocorrelation of a given sequence, or of the size of the steps (retu
 Markets display no significant autocorrelations in the returns of a given asset.
 }
 \examples{
-target <- distr::Norm()
-pd_func <- make_distr_pdf(target)
-chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+set.seed(1)
+chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 plot_autocorr(chain1[[1]])
 }

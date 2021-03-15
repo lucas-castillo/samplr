@@ -1,29 +1,29 @@
-#' Euclidean Distance Calculator
-#'
-#' Calculates the distance between two points. If instead given two matrices A and B of size n x d, for n number of items of d dimensions each, it will return an n - 1 length vector with the distances between each of the items (i.e. the distance between the item A\[1,\] and B\[1,\]; between A\[2,\] and B\[2,\], and so on).
-#'
-#'
-#'
-#' It assumes that all dimensions have the same units or that all dimensions are normalized (mean = 0 and std = 1). Adapted from [here](https://hlab.stanford.edu/brian/euclidean_distance_in.html)
-#'
-#' @param x,y Vector or Matrix. If vector of length d, a d-dimensional point. If matrix of size n x d, n points of d dimensions.
-#'
-#' @return Numeric or Vector. Distance between points. If vector, distances between the ith points in the matrices.
-#'
-#' @export
-#'
-#' @examples
-#' # distance between two points
-#' euc_d(c(0,0), c(3,4))
-#'
-#' # ask for multiple distances
-#' M <- matrix(0, nrow = 3, ncol = 2)
-#' M2 <- matrix(0, nrow = 3, ncol = 2)
-#' for (i in 1:3){
-#'   M[i,] <- stats::runif(2) * 5
-#'   M2[i,] <- stats::runif(2) * 5
-#' }
-#'euc_d(M, M2)
+# Euclidean Distance Calculator
+#
+# Calculates the distance between two points. If instead given two matrices A and B of size n x d, for n number of items of d dimensions each, it will return an n - 1 length vector with the distances between each of the items (i.e. the distance between the item A\[1,\] and B\[1,\]; between A\[2,\] and B\[2,\], and so on).
+#
+#
+#
+# It assumes that all dimensions have the same units or that all dimensions are normalized (mean = 0 and std = 1). Adapted from [here](https://hlab.stanford.edu/brian/euclidean_distance_in.html)
+#
+# @param x,y Vector or Matrix. If vector of length d, a d-dimensional point. If matrix of size n x d, n points of d dimensions.
+#
+# @return Numeric or Vector. Distance between points. If vector, distances between the ith points in the matrices.
+#
+
+
+# @examples
+# # distance between two points
+# euc_d(c(0,0), c(3,4))
+#
+# # ask for multiple distances
+# M <- matrix(0, nrow = 3, ncol = 2)
+# M2 <- matrix(0, nrow = 3, ncol = 2)
+# for (i in 1:3){
+#   M[i,] <- stats::runif(2) * 5
+#   M2[i,] <- stats::runif(2) * 5
+# }
+#euc_d(M, M2)
 euc_d <- function(x,y){
   euclidean_distance <- function(a,b){
     counter = 0
@@ -62,20 +62,19 @@ euc_d <- function(x,y){
 
 }
 
-#' Change Calculator
-#'
-#' Given a one-dimensional chain, it returns a 1d chain of step sizes and direction (e.g. given a chain \[1,4,1\], it returns \[3, -3\])
-#'
-#' @param X one-dimensional chain.
-#'
-#' @return one-dimensional chain of step sizes
-#' @export
-#'
-#' @examples
-#' chain <- stats::runif(10, 1, 10)
-#' change_1d(chain)
-#'
-#'
+# Change Calculator
+#
+# Given a one-dimensional chain, it returns a 1d chain of step sizes and direction (e.g. given a chain \[1,4,1\], it returns \[3, -3\])
+#
+# @param X one-dimensional chain.
+#
+# @return one-dimensional chain of step sizes
+#
+# @examples
+# chain <- stats::runif(10, 1, 10)
+# change_1d(chain)
+#
+#
 change_1d <- function(X){
   if (length(X) > 1){
     return(X[2:length(X)] - X[1:(length(X)-1)])
@@ -99,9 +98,8 @@ change_1d <- function(X){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_levy(chain1[[1]])
 plot_levy <- function(chain, plot=TRUE){
   distances <- vector()
@@ -187,9 +185,8 @@ plot_levy <- function(chain, plot=TRUE){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_PSD(chain1[[1]])
 plot_PSD <- function(chain, plot = TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -249,9 +246,8 @@ plot_PSD <- function(chain, plot = TRUE){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_qqplot(chain1[[1]])
 plot_qqplot <- function(chain, change = TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -285,15 +281,12 @@ plot_qqplot <- function(chain, change = TRUE){
 #'
 #' @examples
 #'
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_sigma_scaling(chain1[[1]])
 #'
 #' set.seed(1)
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_sigma_scaling(chain1[[1]], plot = FALSE)
 plot_sigma_scaling <- function(chain, plot=TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -351,9 +344,8 @@ plot_sigma_scaling <- function(chain, plot=TRUE){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_autocorr(chain1[[1]])
 plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -397,9 +389,8 @@ plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_series(chain1[[1]])
 plot_series <- function(chain){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -420,9 +411,8 @@ plot_series <- function(chain){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_change(chain1[[1]])
 plot_change <- function(chain){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -444,9 +434,8 @@ plot_change <- function(chain){
 #' @export
 #'
 #' @examples
-#' target <- distr::Norm()
-#' pd_func <- make_distr_pdf(target)
-#' chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+#' set.seed(1)
+#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 #' plot_all(chain1[[1]])
 plot_all <- function(chain, title = NULL){
   if (is.matrix(chain) && ncol(chain)>1){

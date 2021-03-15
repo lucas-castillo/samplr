@@ -21,8 +21,7 @@ Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, an
 @param chain Matrix of n x d dimensions, n = iterations, d = dimensions
 }
 \examples{
-target <- distr::Norm()
-pd_func <- make_distr_pdf(target)
-chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+set.seed(1)
+chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 plot_levy(chain1[[1]])
 }
