@@ -1,6 +1,8 @@
 pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2021-03-15T14:22Z
+articles:
+  supported-distributions: supported-distributions.html
+  time-comparisons: time-comparisons.html
+last_built: 2021-03-15T17:00Z
 
