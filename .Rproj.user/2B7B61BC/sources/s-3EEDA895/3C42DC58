@@ -1,0 +1,24 @@
+{
+    "id": "3C42DC58",
+    "path": "~/MEGA/Code/r/SampleR/Samplr/samplr/R/samplers.R",
+    "project_path": "R/samplers.R",
+    "type": "r_source",
+    "hash": "13916255",
+    "contents": "",
+    "dirty": false,
+    "created": 1615815875823.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "0|60|62|0|\n64|48|80|0|\n139|138|167|0|\n187|93|201|0|\n220|104|231|0|\n",
+    "lastKnownWriteTime": 1615817521,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615817521112,
+    "read_only": false,
+    "read_only_alternatives": []
+}

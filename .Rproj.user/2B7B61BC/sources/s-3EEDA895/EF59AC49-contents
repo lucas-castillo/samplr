@@ -1,0 +1,23 @@
+Package: samplr
+Type: Package
+Title: Tools To Compare Human Performance To Sampling Algorithms
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Lucas",
+           family = "Castillo",
+           role = c("aut", "cre"),
+           email = "lucas.castillo@warwick.ac.uk",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Date: 2021-02-22
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: MIT + file LICENSE
+Imports: 
+  Rcpp (>= 1.0.6)
+LinkingTo: 
+  Rcpp, 
+  RcppArmadillo, 
+  RcppDist,
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Encoding: UTF-8
