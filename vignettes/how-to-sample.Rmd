@@ -1,0 +1,100 @@
+---
+title: "How to Sample From a Distribution"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{how-to-sample}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(samplr)
+```
+### Choosing a distibution
+To sample from a distribution, check the abbreviation, as well as the distribution parameters, in [the Supported Distributions Vignette](supported-distributions.html). Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:
+\begin{itemize}{
+  \item Distribution Name = "norm"
+  \item Distribution Parameters = A vector with `mean` and `std`. In our case: `c(0,1)`. 
+}
+
+### Different Sampling Algorithms
+
+<!-- To use a sampler from the SampleR package to explore a distribution, it is easiest to start by creating a distribution using a package such as distr or distr6.  -->
+<!-- ```{r} -->
+<!-- distribution <- distr::Norm(mean = 1, sd = 2) -->
+<!-- ``` -->
+<!-- Samplers only use the probability density function of a distribution, so the next step is to create such a function. This function will take a vector with the current position and an optional boolean with whether to return the log density instead. -->
+
+<!-- If using distr or distr6, SampleR makes it easy to create such a function: -->
+<!-- ```{r} -->
+<!-- pd_function <- make_distr_pdf(distribution) -->
+<!-- ``` -->
+<!-- We can now ask different samplers to approximate the distribution -->
+<!-- ```{r} -->
+<!-- # for direct sampling, use the random function directly. -->
+<!-- # these are r() for distr; $rand() for distr6; rnorm, etc, for stats, and so on  -->
+<!-- direct_sampling <- distr::r(distribution)(1024) -->
+<!-- # MCMC and MC3 require a starting point. We also give them the width of the proposal distribution -->
+<!-- MCMC <- sampler_mcmc(pd_function, start = 0, sigma_prop = .5) -->
+<!-- MC3 <- sampler_mc3(pd_function, start = 0, sigma_prop = .5) -->
+
+<!-- # sampler_MCMC and sampler_MC3 return other information, but for now we are only -->
+<!-- # interested in the regions they visited, which is the first item they return.  -->
+<!-- MCMC_chain <- MCMC[[1]] -->
+<!-- MC3_cold_chain <- MC3[[1]][,,1] # we are only interested in the first (cold) chain -->
+<!-- ``` -->
+<!-- Once we have sampled the distribution we can compare how different samplers behaved, with a series plot -->
+<!-- ```{r, dpi=150, fig.align="center"} -->
+<!-- a <- plot_series(direct_sampling) + ggtitle("Direct Sampling") -->
+<!-- b <- plot_series(MCMC_chain) + ggtitle("MCMC") -->
+<!-- c <- plot_series(MC3_cold_chain) + ggtitle("MC3") -->
+
+<!-- gridExtra::grid.arrange(a,b,c) -->
+<!-- ``` -->
+<!-- A Change Series plot -->
+<!-- ```{r, dpi=150, fig.align="center"} -->
+<!-- a <- plot_change(direct_sampling) + ggtitle("Direct Sampling") -->
+<!-- b <- plot_change(MCMC_chain) + ggtitle("MCMC") -->
+<!-- c <- plot_change(MC3_cold_chain) + ggtitle("MC3") -->
+
+<!-- gridExtra::grid.arrange(a,b,c) -->
+<!-- ``` -->
+<!-- And so on. A way to get a quick diagnostic look is to use the `plot_all` function -->
+<!-- ```{r, fig.align="center", fig.width=10, fig.height=5} -->
+<!-- plot_all(MCMC_chain, title = "MCMC") -->
+<!-- ``` -->
+<!-- With the other functions as a start for custom editing -->
+<!-- ```{r, dpi=150, fig.align="center"} -->
+<!-- plot_sigma_scaling(MCMC_chain) + ggtitle("MCMC") + theme_void() -->
+<!-- ``` -->
+
+<!-- ## A note about timing -->
+<!-- When it comes to density functions, `distr6` is generally slower than `distr`. -->
+
+<!-- ```{r} -->
+<!-- chain <- stats::rnorm(2^10) -->
+<!-- target <- distr::Norm() -->
+<!-- target6 <- distr6::Normal$new() -->
+<!-- # stats::dnorm time -->
+<!-- system.time(for (i in 1:length(chain)){stats::dnorm(chain[i])}) -->
+<!-- # distr time -->
+<!-- system.time(for (i in 1:length(chain)){distr::d(target)(chain[i])}) -->
+<!-- # distr6 time -->
+<!-- system.time(for (i in 1:length(chain)){target6$pdf(chain[i])}) -->
+<!-- ``` -->
+<!-- However, it doesn't make much of a difference. For multivariate normals, `distr` doesn't yet have multivariate normals. We recommend using `mvtnorm` instead of `distr6` as the speed difference here is more considerable (especially in mixture distributions) -->
+<!-- ```{r} -->
+<!--   chain <- mvtnorm::rmvnorm(2^10, mean = c(0,0)) -->
+<!--   target6 <- distr6::MultivariateNormal$new() -->
+<!--   print("mvtnorm -> dmvnorm") -->
+<!--   system.time(for (i in 1:length(chain[,1])){mvtnorm::dmvnorm(chain[i,])}) -->
+<!--   print("distr6 -> pdf") -->
+<!--   system.time(target6$pdf(data=chain)) -->
+<!-- ``` -->
