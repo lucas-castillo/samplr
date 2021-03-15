@@ -14,6 +14,9 @@ Description: More about what it does (maybe more than one line)
 License: MIT + file LICENSE
 Imports: 
   Rcpp (>= 1.0.6)
+Suggests: 
+  knitr, 
+  rmarkdown
 LinkingTo: 
   Rcpp, 
   RcppArmadillo, 
@@ -21,3 +24,4 @@ LinkingTo:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Encoding: UTF-8
+VignetteBuilder: knitr

@@ -1,12 +1,25 @@
 ---
-title: "Supported Distributions"
-output: html_document
+title: "supported-distributions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{supported-distributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE
+)
 ```
-The current distributions in the Samplr package are those supported by [Rcpp](http://rcpp.org/) and [RcppDist](https://github.com/duckmayr/RcppDist).
+
+```{r setup}
+library(samplr)
+```
+
+The current distributions in the samplr package are those supported by [Rcpp](http://rcpp.org/) and [RcppDist](https://github.com/duckmayr/RcppDist).
 
 ## Univariate Distributions
 The parameters these distributions take can be provided in a vector, e.g. a vector `c(0,1)` for the standard normal distribution.
@@ -92,7 +105,7 @@ names(X) <- c("Abbreviation", "Distribution Name", "Parameters")
 knitr::kable(X)
 ```
 ## Multivariate Distributions
-For multivariate distributions, provide the distribution parameters in a list. See tables for the type of each parameter. 
+For multivariate distributions, distribution parameters are provided in a list, not a vector. 
 
 ### Continuous Distributions
 ```{r echo=FALSE}
@@ -115,9 +128,6 @@ knitr::kable(X)
 ```
 
 ## Examples
-```{r}
-library(Samplr)
-```
 ### Univariate distribution
 ```{r}
 X <- sampler_mcmc(
@@ -132,9 +142,9 @@ hist(X[[1]])
 ### Multivariate distribution
 ```{r}
 X <- sampler_mcmc(
-  "mvnorm", 
+  distr_name = "mvnorm", # as before
   list(c(0,0), diag(2)), # provide distribution parameters as a list for multivariate distributions
-  start = c(5,-5), # a far-off start
+  start = c(5,-5), 
   sigma_prop = diag(2) * 1/8
 )
 
