@@ -13,7 +13,7 @@ change_1d(X)
 one-dimensional chain of step sizes
 }
 \description{
-Given a one-dimensional chain, it returns a 1d chain of step sizes and direction (e.g. given a chain \[1,4,1\], it returns \[3, -3\])
+Given a one-dimensional chain, it returns a 1d chain of step sizes and direction (e.g. given a chain [1,4,1], it returns [3, -3])
 }
 \examples{
 chain <- stats::runif(10, 1, 10)

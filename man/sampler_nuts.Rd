@@ -27,7 +27,7 @@ sampler_nuts(
 \item{iterations}{Number of iterations of the sampler.}
 }
 \description{
-Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found [here](https://arxiv.org/abs/1111.4246)
+Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found \href{https://arxiv.org/abs/1111.4246}{here}
 }
 \examples{
 NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)

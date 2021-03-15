@@ -18,7 +18,7 @@ If plot is, it returns a simple plot with the log PSD against the log frequency,
 This function plots the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
 }
 \details{
-A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
+A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See \href{https://dl.acm.org/doi/abs/10.5555/3327345.3327477}{Zhu et al. 2018} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 }
 \examples{
 target <- distr::Norm()

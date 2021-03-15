@@ -26,15 +26,15 @@ sampler_mcmc(
 \value{
 A list containing
 \enumerate{
- \item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
- \item{acceptance ratio - the proportions of proposals that were accepted (numeric)}
+\item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
+\item{acceptance ratio - the proportions of proposals that were accepted (numeric)}
 }
 }
 \description{
-This sampler navigates the proposal distribution following a random walk. At each step, it generates a new proposal from a proposal distribution (in this case a Gaussian centered at the current position) and chooses to accept it or reject it following the Metropolis-Hastings rule: it accepts it if the density of the posterior distribution at the proposed point is higher than at the current point. If the current position is denser, it still may accept the proposal with probability `proposal_density / current_density`.
+This sampler navigates the proposal distribution following a random walk. At each step, it generates a new proposal from a proposal distribution (in this case a Gaussian centered at the current position) and chooses to accept it or reject it following the Metropolis-Hastings rule: it accepts it if the density of the posterior distribution at the proposed point is higher than at the current point. If the current position is denser, it still may accept the proposal with probability \code{proposal_density / current_density}.
 }
 \details{
-As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the `sigma_prop` parameter, which defaults to the identity matrix if not specified.
+As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the \code{sigma_prop} parameter, which defaults to the identity matrix if not specified.
 }
 \examples{
 

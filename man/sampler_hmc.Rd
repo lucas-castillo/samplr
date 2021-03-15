@@ -27,7 +27,7 @@ sampler_hmc(
 \item{iterations}{Number of iterations of the sampler.}
 }
 \description{
-Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read [here](http://arxiv.org/abs/1701.02434)
+Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read \href{http://arxiv.org/abs/1701.02434}{here}
 }
 \details{
 This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I) )
