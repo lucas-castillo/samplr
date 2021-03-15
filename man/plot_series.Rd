@@ -16,8 +16,7 @@ A series plot
 Plots the value of a one-dimensional series against the iteration where it occurred. Useful to see the general pattern of the chain (white noise, random walk, volatility clustering)
 }
 \examples{
-target <- distr::Norm()
-pd_func <- make_distr_pdf(target)
-chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+set.seed(1)
+chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 plot_series(chain1[[1]])
 }

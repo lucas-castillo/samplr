@@ -18,8 +18,7 @@ A grid plotting all the plot_* functions
 Plots all the plot_* plots into a grid for ease.
 }
 \examples{
-target <- distr::Norm()
-pd_func <- make_distr_pdf(target)
-chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+set.seed(1)
+chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 plot_all(chain1[[1]])
 }

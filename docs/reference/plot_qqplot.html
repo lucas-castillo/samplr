@@ -95,10 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/supported-distributions.html">supported-distributions</a>
+      <a href="../articles/supported-distributions.html">Supported Distributions</a>
     </li>
     <li>
-      <a href="../articles/time-comparisons.html">time-comparisons</a>
+      <a href="../articles/time-comparisons.html">Time Comparisons</a>
     </li>
   </ul>
 </li>
@@ -147,11 +147,10 @@
     <p>QQ plot of Theoretical vs Empirical values</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>target</span> <span class='op'>&lt;-</span> <span class='fu'>distr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/distr/man/Norm-class.html'>Norm</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd_func</span> <span class='op'>&lt;-</span> <span class='fu'>make_distr_pdf</span><span class='op'>(</span><span class='va'>target</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in make_distr_pdf(target): could not find function "make_distr_pdf"</span></div><div class='input'><span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='va'>pd_func</span>, <span class='fl'>0</span>, sigma_prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in checkDistrInfo(distr_name, distr_params, start): object 'pd_func' not found</span></div><div class='input'><span class='fu'>plot_qqplot</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in plot_qqplot(chain1[[1]]): object 'chain1' not found</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>plot_qqplot</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_qqplot-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -95,10 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/supported-distributions.html">supported-distributions</a>
+      <a href="../articles/supported-distributions.html">Supported Distributions</a>
     </li>
     <li>
-      <a href="../articles/time-comparisons.html">time-comparisons</a>
+      <a href="../articles/time-comparisons.html">Time Comparisons</a>
     </li>
   </ul>
 </li>
@@ -151,17 +151,28 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='va'>target</span> <span class='op'>&lt;-</span> <span class='fu'>distr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/distr/man/Norm-class.html'>Norm</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd_func</span> <span class='op'>&lt;-</span> <span class='fu'>make_distr_pdf</span><span class='op'>(</span><span class='va'>target</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in make_distr_pdf(target): could not find function "make_distr_pdf"</span></div><div class='input'><span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='va'>pd_func</span>, <span class='fl'>0</span>, sigma_prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in checkDistrInfo(distr_name, distr_params, start): object 'pd_func' not found</span></div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in plot_sigma_scaling(chain1[[1]]): object 'chain1' not found</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>target</span> <span class='op'>&lt;-</span> <span class='fu'>distr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/distr/man/Norm-class.html'>Norm</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>pd_func</span> <span class='op'>&lt;-</span> <span class='fu'>make_distr_pdf</span><span class='op'>(</span><span class='va'>target</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in make_distr_pdf(target): could not find function "make_distr_pdf"</span></div><div class='input'><span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='va'>pd_func</span>, <span class='fl'>0</span>, sigma_prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in checkDistrInfo(distr_name, distr_params, start): object 'pd_func' not found</span></div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in plot_sigma_scaling(chain1[[1]], plot = FALSE): object 'chain1' not found</span></div></pre>
+<span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_sigma_scaling-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   [1] 0.7462984 0.9967371 1.1686469 1.3002975 1.3886138 1.4657430 1.5207912
+#&gt;   [8] 1.5362467 1.5556786 1.5624490 1.5729226 1.5888925 1.6138107 1.6421450
+#&gt;  [15] 1.6648751 1.6756023 1.6701865 1.6608909 1.6423838 1.6199695 1.6035684
+#&gt;  [22] 1.5988625 1.5864555 1.5884850 1.5921402 1.5752027 1.5453772 1.5224437
+#&gt;  [29] 1.5129250 1.5241096 1.5399425 1.5586670 1.5880518 1.6089522 1.6352175
+#&gt;  [36] 1.6495986 1.6471017 1.6547899 1.6485007 1.6355298 1.6229134 1.6077815
+#&gt;  [43] 1.6041117 1.6233252 1.6477648 1.6684871 1.6697560 1.6677194 1.6705073
+#&gt;  [50] 1.6568019 1.6338977 1.6254614 1.6280203 1.6303466 1.6419994 1.6359258
+#&gt;  [57] 1.6290840 1.6255261 1.6245577 1.6351575 1.6384434 1.6343391 1.6224909
+#&gt;  [64] 1.6092573 1.6121913 1.6232225 1.6324477 1.6343102 1.6449688 1.6543489
+#&gt;  [71] 1.6550382 1.6736156 1.6886427 1.6913357 1.7031233 1.6974455 1.6951426
+#&gt;  [78] 1.6913987 1.6809351 1.6744163 1.6709509 1.6618981 1.6453573 1.6424729
+#&gt;  [85] 1.6311415 1.6089316 1.5884544 1.5844043 1.5889529 1.5890100 1.5963473
+#&gt;  [92] 1.6106310 1.6167173 1.6353517 1.6343343 1.6305610 1.6387745 1.6459140
+#&gt;  [99] 1.6424140 1.6471589 1.6506242 1.6453793</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

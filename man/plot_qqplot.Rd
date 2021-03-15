@@ -18,8 +18,7 @@ QQ plot of Theoretical vs Empirical values
 Plots a QQ plot of Empirical values against Theoretical values from a normal distribution. Can plot the chain points or the distances between successive points
 }
 \examples{
-target <- distr::Norm()
-pd_func <- make_distr_pdf(target)
-chain1 <- sampler_mcmc(pd_func, 0, sigma_prop = 1)
+set.seed(1)
+chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
 plot_qqplot(chain1[[1]])
 }
