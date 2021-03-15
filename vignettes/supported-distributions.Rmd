@@ -1,5 +1,5 @@
 ---
-title: "supported-distributions"
+title: "Supported Distributions"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{supported-distributions}
@@ -111,7 +111,7 @@ For multivariate distributions, distribution parameters are provided in a list, 
 ```{r echo=FALSE}
 abbrev_cont_mv <- c("mvnorm", "mvt")
 
-for (i in 1:length(abbrev_cont)){abbrev_cont[i] <- paste("*", abbrev_cont[i],"*", sep="")}
+for (i in 1:length(abbrev_cont_mv)){abbrev_cont_mv[i] <- paste("*", abbrev_cont_mv[i],"*", sep="")}
 
 name_cont_mv <- c("Multivariate Normal", "Multivariate t")
 
