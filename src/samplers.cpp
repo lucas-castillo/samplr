@@ -56,11 +56,10 @@ double joint_d(NumericVector theta, NumericVector &momentum, dfunc &log_func){
 
 
 NumericVector metropolis_step_cpp(NumericMatrix &chain, int currentIndex, double lastP, NumericMatrix &sigma_prop, dfunc &pdf, bool &discreteValues, double beta){
-
   NumericVector current_x = chain.row(currentIndex - 1);
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
   NumericVector proposal = NumericVector(proposal_.begin(), proposal_.end());
-  print(proposal);
+
   // if dist is discrete round the proposal to nearest int
   if (discreteValues){
     for (int i = 0; i < proposal.length(); i++){
@@ -71,31 +70,25 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, int currentIndex, double
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
-  Rcout << "Last P = " << lastP << ", current P = " << prob_prop << "\n";
 
   // proposal is accepted with probability prob_prop / prob_curr
   if (lastP != 0){
     double ratio = prob_prop / lastP;
-    Rcout << ratio << "\n";
     if (ratio >= 1){
       chain.row(currentIndex) = proposal;
-      Rcout << "A"<< "\n";
       return NumericVector::create(prob_prop, 1);
       // The beta parameter (temperature), beta <= 1, increases the value of the ratio making hotter chains more likely to accept proposals
     } else if (R::runif(0,1) < pow(ratio, beta)){
       chain.row(currentIndex) = proposal;
-      Rcout << "B"<< "\n";
       return NumericVector::create(prob_prop, 1);
     }
   } else {
     if (prob_prop > 0) {
       chain.row(currentIndex) = proposal;
-      Rcout << "C"<< "\n";
       return NumericVector::create(prob_prop, 1);
     }
   }
   chain.row(currentIndex) = current_x;
-  Rcout << "D"<< "\n";
   return NumericVector::create(lastP, 0);
 }
 
@@ -272,23 +265,15 @@ dfunc managePDF(const StringVector &distr_name, const List &distr_params, const 
   std::vector<dfunc> pdfs;
   if (!isMix){
     pdf = getPDF(distr_name(0), distr_params, log);
-    print(distr_name(0));
-    Rcout << "Params = \n";
-    print(distr_params);
-    Rcout << "Log = \n";
-    Rcout << log;
-    Rcout << "\n";
+
   } else
   {
     for (int i = 0; i < distr_name.size(); i++){
-      Rcout << "PDF Number = " << i << "\n";
       pdfs.push_back(getPDF(distr_name(i), distr_params(i), log));
     }
     pdf = getMixturePDF(pdfs, weights);
-    Rcout << pdf(1) << "\n";
     // stop("Mixture distributions not yet supported");
   }
-  Rcout << pdf(1) << "\n";
   return pdf;
 }
 
@@ -305,7 +290,6 @@ List sampler_mcmc_cpp(
     NumericVector weights
 )
 {
-
   // Initialize variables ---------------------------------
   int acceptances = 0;
   int n_dim = start.size();
@@ -316,7 +300,6 @@ List sampler_mcmc_cpp(
   // first row is start
   chain.row(0) = start;
   ps(0,0) = pdf(start);
-
 
 
   // Run the sampler ------------------------------------------------
