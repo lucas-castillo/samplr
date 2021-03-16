@@ -60,37 +60,42 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, int currentIndex, double
   NumericVector current_x = chain.row(currentIndex - 1);
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
   NumericVector proposal = NumericVector(proposal_.begin(), proposal_.end());
+  print(proposal);
   // if dist is discrete round the proposal to nearest int
   if (discreteValues){
     for (int i = 0; i < proposal.length(); i++){
       proposal(i) = round(proposal(i));
     }
   }
-
   // calculate current and proposal probabilities
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
+  Rcout << "Last P = " << lastP << ", current P = " << prob_prop << "\n";
 
   // proposal is accepted with probability prob_prop / prob_curr
   if (lastP != 0){
     double ratio = prob_prop / lastP;
-
+    Rcout << ratio << "\n";
     if (ratio >= 1){
       chain.row(currentIndex) = proposal;
+      Rcout << "A"<< "\n";
       return NumericVector::create(prob_prop, 1);
       // The beta parameter (temperature), beta <= 1, increases the value of the ratio making hotter chains more likely to accept proposals
     } else if (R::runif(0,1) < pow(ratio, beta)){
       chain.row(currentIndex) = proposal;
+      Rcout << "B"<< "\n";
       return NumericVector::create(prob_prop, 1);
     }
   } else {
     if (prob_prop > 0) {
       chain.row(currentIndex) = proposal;
+      Rcout << "C"<< "\n";
       return NumericVector::create(prob_prop, 1);
     }
   }
   chain.row(currentIndex) = current_x;
+  Rcout << "D"<< "\n";
   return NumericVector::create(lastP, 0);
 }
 
@@ -245,20 +250,46 @@ dfunc getPDF(String distr_name, List distr_params, bool log=false)
   return pdf;
 }
 
-dfunc getMixturePDF(std::vector<dfunc> &pdfs, NumericVector &weights){
+
+dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights){
   dfunc pdf;
   pdf = [pdfs, weights](NumericVector x){
     double total_density = 0;
-    for (unsigned i = 0; i < pdfs.size(); i++){
+    for (unsigned i = 0; i < weights.size(); i++){
       dfunc p = pdfs[i];
 
       total_density +=  p(x) * weights[i];
     }
     return total_density;
   };
-
   return pdf;
 
+}
+
+
+dfunc managePDF(const StringVector &distr_name, const List &distr_params, const bool &isMix, const NumericVector &weights, const bool &log){
+  dfunc pdf;
+  std::vector<dfunc> pdfs;
+  if (!isMix){
+    pdf = getPDF(distr_name(0), distr_params, log);
+    print(distr_name(0));
+    Rcout << "Params = \n";
+    print(distr_params);
+    Rcout << "Log = \n";
+    Rcout << log;
+    Rcout << "\n";
+  } else
+  {
+    for (int i = 0; i < distr_name.size(); i++){
+      Rcout << "PDF Number = " << i << "\n";
+      pdfs.push_back(getPDF(distr_name(i), distr_params(i), log));
+    }
+    pdf = getMixturePDF(pdfs, weights);
+    Rcout << pdf(1) << "\n";
+    // stop("Mixture distributions not yet supported");
+  }
+  Rcout << pdf(1) << "\n";
+  return pdf;
 }
 
 
@@ -267,17 +298,18 @@ List sampler_mcmc_cpp(
     NumericVector start,
     NumericMatrix sigma_prop,
     int iterations,
-    String distr_name,
+    StringVector distr_name,
     List distr_params,
-    bool discreteValues
+    bool discreteValues,
+    bool isMix,
+    NumericVector weights
 )
 {
 
   // Initialize variables ---------------------------------
   int acceptances = 0;
   int n_dim = start.size();
-
-  dfunc pdf= getPDF(distr_name, distr_params);
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
 
   NumericMatrix chain(iterations, n_dim);
   NumericMatrix ps(1, iterations);
@@ -290,7 +322,7 @@ List sampler_mcmc_cpp(
   // Run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
     // NumericVector current_x = chain.row(i-1);
-    NumericVector accept = metropolis_step_cpp(chain, i, ps(0,0), sigma_prop, pdf, discreteValues, 1);
+    NumericVector accept = metropolis_step_cpp(chain, i, ps(0,i-1), sigma_prop, pdf, discreteValues, 1);
     ps(0,i) = accept(0);
     acceptances += accept(1);
   }
@@ -306,9 +338,11 @@ List sampler_mc3_cpp(
     double delta_T,
     bool swap_all,
     double iterations,
-    String distr_name,
+    StringVector distr_name,
     List distr_params,
-    bool discreteValues
+    bool discreteValues,
+    bool isMix = false,
+    NumericVector weights = NumericVector::create(1)
 )
 {
   NumericVector acceptances(nChains);
@@ -321,7 +355,7 @@ List sampler_mc3_cpp(
   NumericVector beta(nChains);
   NumericMatrix ps(nChains, iterations);
 
-  dfunc pdf = getPDF(distr_name, distr_params);
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
   double initial_probability = pdf(start);
 
 
@@ -388,15 +422,17 @@ List sampler_mc3_cpp(
 // [[Rcpp::export]]
 List sampler_hmc_cpp(
   NumericVector start,
-  String distr_name,
+  StringVector distr_name,
   List distr_params,
   double epsilon,
   int L,
-  int iterations
+  int iterations,
+  bool isMix = false,
+  NumericVector weights = NumericVector::create(1)
   )
 {
   // init vars
-  dfunc log_pdf = getPDF(distr_name, distr_params, true);
+  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true);
   int dim = start.size();
   NumericMatrix chain(iterations, dim);
   NumericMatrix momentums(iterations, dim);
@@ -576,23 +612,26 @@ NumericMatrix build_tree(const NumericVector &theta, const NumericVector &moment
 //[[Rcpp::export]]
 List sampler_nuts_cpp(
     NumericVector start,
-    String distr_name,
+    StringVector distr_name,
     List distr_params,
     double epsilon,
     int iterations,
-    double delta_max
+    double delta_max,
+    bool isMix = false,
+    NumericVector weights = NumericVector::create(1)
   )
 {
   //// init vars
-  dfunc log_pdf = getPDF(distr_name, distr_params, true);
+  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true);
   int dim = start.size();
   NumericMatrix chain(iterations, dim);
   chain.row(0) = start;
   NumericMatrix momentums(iterations, dim);
+
   arma::mat identityMatrix(dim, dim, arma::fill::eye);
   arma::vec zeroes(dim, arma::fill::zeros);
-  arma::vec momentum_0;
-  NumericVector momentum0;
+  arma::mat momentum_0 = rmvnorm(1,  zeroes, identityMatrix);
+  NumericVector momentum0 = NumericVector(momentum_0.begin(), momentum_0.end());
 
   // NumericVector epsilons(iterations);
   // NumericVector bar_epsilons(iterations);
@@ -615,10 +654,8 @@ List sampler_nuts_cpp(
        momentum_0 = rmvnorm(1,  zeroes, identityMatrix);
        momentum0 = NumericVector(momentum_0.begin(), momentum_0.end());
 
-
        // get a slice u
        double u = R::runif(0, exp(joint_d(chain.row(i-1), momentum0, log_pdf)));
-
 
        // init variables
        NumericVector theta_minus = chain.row(i-1);
@@ -640,12 +677,10 @@ List sampler_nuts_cpp(
 
        while (s==1)
        {
-
          // random direction
 
          if (sampleDirection() == -1)
          {
-
            NumericMatrix bt = build_tree(theta_minus, momentum_minus, u, -1, j, epsilon, delta_max, log_pdf);
 
            theta_minus = bt.row(0);
@@ -701,7 +736,6 @@ List sampler_nuts_cpp(
        //   epsilons(i) = bar_epsilons(iterations_adapt);
        // }
      }
-
     return List::create(chain);
 }
 
@@ -710,3 +744,5 @@ List sampler_nuts_cpp(
   ///       TESTS///////
 
   //////////////////////////
+
+
