@@ -95,7 +95,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+      <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
       <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
@@ -140,8 +140,8 @@
   <span class='va'>distr_name</span>,
   <span class='va'>distr_params</span>,
   <span class='va'>start</span>,
-  nChains <span class='op'>=</span> <span class='fl'>6</span>,
   sigma_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nChains <span class='op'>=</span> <span class='fl'>6</span>,
   delta_T <span class='op'>=</span> <span class='fl'>4</span>,
   swap_all <span class='op'>=</span> <span class='cn'>TRUE</span>,
   iterations <span class='op'>=</span> <span class='fl'>1024L</span>,
@@ -164,12 +164,12 @@
       <td><p>Vector. Starting position of the sampler.</p></td>
     </tr>
     <tr>
-      <th>nChains</th>
-      <td><p>Number of chains to run.</p></td>
-    </tr>
-    <tr>
       <th>sigma_prop</th>
       <td><p>Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.</p></td>
+    </tr>
+    <tr>
+      <th>nChains</th>
+      <td><p>Number of chains to run.</p></td>
     </tr>
     <tr>
       <th>delta_T</th>

@@ -1,5 +1,5 @@
 ---
-title: "How to Sample From a Distribution"
+title: "Getting Started: How to Sample From a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{how-to-sample}
@@ -10,91 +10,75 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = "center"
 )
 ```
 
 ```{r setup}
 library(samplr)
+set.seed(123)
 ```
 ### Choosing a distibution
 To sample from a distribution, check the abbreviation, as well as the distribution parameters, in [the Supported Distributions Vignette](supported-distributions.html). Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:
-\begin{itemize}{
-  \item Distribution Name = "norm"
-  \item Distribution Parameters = A vector with `mean` and `std`. In our case: `c(0,1)`. 
-}
 
+1. **Distribution Name**: `"norm"`,
+2. **Distribution Parameters**: A vector with the distribution parameters. In our case, `mean` and `std`, that is: `c(0,1)`,
+3. A **starting point**: Any point in the sampling space. We'll choose the mean of our distribution, `0`.,
+
+```{r}
+name = "norm"
+params = c(0,1)
+start = 0
+```
 ### Different Sampling Algorithms
+Different algorithms are available in the `samplr` package. For our example, we will use Metropolis Hastings. To use a sampler, we will always need the three previously mentioned items. For Metropolis Hastings and MC3, it is convenient to provide the variance of the proposal distribution, so we do that before sampling.
+```{r}
+proposal_variance <- 1 / 2
+MH_samples <- sampler_mcmc(name, params, start, proposal_variance)
+```
 
-<!-- To use a sampler from the SampleR package to explore a distribution, it is easiest to start by creating a distribution using a package such as distr or distr6.  -->
-<!-- ```{r} -->
-<!-- distribution <- distr::Norm(mean = 1, sd = 2) -->
-<!-- ``` -->
-<!-- Samplers only use the probability density function of a distribution, so the next step is to create such a function. This function will take a vector with the current position and an optional boolean with whether to return the log density instead. -->
+If we plot our results:
+```{r}
+hist(MH_samples[[1]], freq=FALSE, breaks = 20)
+curve(dnorm(x, 0,1), add=TRUE)
+```
 
-<!-- If using distr or distr6, SampleR makes it easy to create such a function: -->
-<!-- ```{r} -->
-<!-- pd_function <- make_distr_pdf(distribution) -->
-<!-- ``` -->
-<!-- We can now ask different samplers to approximate the distribution -->
-<!-- ```{r} -->
-<!-- # for direct sampling, use the random function directly. -->
-<!-- # these are r() for distr; $rand() for distr6; rnorm, etc, for stats, and so on  -->
-<!-- direct_sampling <- distr::r(distribution)(1024) -->
-<!-- # MCMC and MC3 require a starting point. We also give them the width of the proposal distribution -->
-<!-- MCMC <- sampler_mcmc(pd_function, start = 0, sigma_prop = .5) -->
-<!-- MC3 <- sampler_mc3(pd_function, start = 0, sigma_prop = .5) -->
+Notice that the same approach is used for all other samplers:
+```{r}
+MC3_samples <- sampler_mc3(name, params, start, proposal_variance)
 
-<!-- # sampler_MCMC and sampler_MC3 return other information, but for now we are only -->
-<!-- # interested in the regions they visited, which is the first item they return.  -->
-<!-- MCMC_chain <- MCMC[[1]] -->
-<!-- MC3_cold_chain <- MC3[[1]][,,1] # we are only interested in the first (cold) chain -->
-<!-- ``` -->
-<!-- Once we have sampled the distribution we can compare how different samplers behaved, with a series plot -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- a <- plot_series(direct_sampling) + ggtitle("Direct Sampling") -->
-<!-- b <- plot_series(MCMC_chain) + ggtitle("MCMC") -->
-<!-- c <- plot_series(MC3_cold_chain) + ggtitle("MC3") -->
+HMC_samples <- sampler_hmc(name, params, start)
 
-<!-- gridExtra::grid.arrange(a,b,c) -->
-<!-- ``` -->
-<!-- A Change Series plot -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- a <- plot_change(direct_sampling) + ggtitle("Direct Sampling") -->
-<!-- b <- plot_change(MCMC_chain) + ggtitle("MCMC") -->
-<!-- c <- plot_change(MC3_cold_chain) + ggtitle("MC3") -->
+NUTS_samples <- sampler_nuts(name, params, start)
+```
 
-<!-- gridExtra::grid.arrange(a,b,c) -->
-<!-- ``` -->
-<!-- And so on. A way to get a quick diagnostic look is to use the `plot_all` function -->
-<!-- ```{r, fig.align="center", fig.width=10, fig.height=5} -->
-<!-- plot_all(MCMC_chain, title = "MCMC") -->
-<!-- ``` -->
-<!-- With the other functions as a start for custom editing -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- plot_sigma_scaling(MCMC_chain) + ggtitle("MCMC") + theme_void() -->
-<!-- ``` -->
+### Mixture Distributions
+If we want to sample from a mixture distribution, the following change:
 
-<!-- ## A note about timing -->
-<!-- When it comes to density functions, `distr6` is generally slower than `distr`. -->
+1. **Distribution Name**: A vector of distribution names, e.g. `c("norm", "norm")`
+2. **Distribution Parameters**: A list of vectors, each containing the distribution parameters.
+3. **Distribution Weights (optional)**: A vector with the weights given to each distribution. The sum of weights equals 1. 
 
-<!-- ```{r} -->
-<!-- chain <- stats::rnorm(2^10) -->
-<!-- target <- distr::Norm() -->
-<!-- target6 <- distr6::Normal$new() -->
-<!-- # stats::dnorm time -->
-<!-- system.time(for (i in 1:length(chain)){stats::dnorm(chain[i])}) -->
-<!-- # distr time -->
-<!-- system.time(for (i in 1:length(chain)){distr::d(target)(chain[i])}) -->
-<!-- # distr6 time -->
-<!-- system.time(for (i in 1:length(chain)){target6$pdf(chain[i])}) -->
-<!-- ``` -->
-<!-- However, it doesn't make much of a difference. For multivariate normals, `distr` doesn't yet have multivariate normals. We recommend using `mvtnorm` instead of `distr6` as the speed difference here is more considerable (especially in mixture distributions) -->
-<!-- ```{r} -->
-<!--   chain <- mvtnorm::rmvnorm(2^10, mean = c(0,0)) -->
-<!--   target6 <- distr6::MultivariateNormal$new() -->
-<!--   print("mvtnorm -> dmvnorm") -->
-<!--   system.time(for (i in 1:length(chain[,1])){mvtnorm::dmvnorm(chain[i,])}) -->
-<!--   print("distr6 -> pdf") -->
-<!--   system.time(target6$pdf(data=chain)) -->
-<!-- ``` -->
+```{r}
+name <- c("norm", "norm")
+params <- list(c(-2, 1), c(2, 1))
+weights <- c(.4, .6)
+```
+We'll make a custom density function to plot the curve with our results (this is not necessary for the samplers to work)
+```{r}
+customDensity <- function(x){
+  dnorm(x, -2, 1) * 0.4 + dnorm(x, 2, 1) * 0.6
+}
+```
+We proceed as we did before:
+```{r}
+# Sample (more iterations as MH struggles to change hills)
+proposal_variance <- 1
+MH_samples <- sampler_mcmc(name, params, start, proposal_variance, iterations = 2**12, weights = weights)
+# plot
+hist(MH_samples[[1]], freq=FALSE, breaks = 20)
+curve(customDensity(x), add=TRUE)
+```
+
+See [the Multivariate Mixtures Vignette](multivariate-mixtures.html) for examples on how to mix multivariate distributions, as well as a comparison between the performance of different samplers in a 'patchy' environment. 

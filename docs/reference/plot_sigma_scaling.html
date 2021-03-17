@@ -95,7 +95,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+      <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
       <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
@@ -162,11 +162,11 @@
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='img'><img src='plot_sigma_scaling-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   [1] 0.6554206 0.8710101 1.0034985 1.0960127 1.1611904 1.2049326 1.2345926
 #&gt;   [8] 1.2595104 1.2708884 1.2669402 1.2742124 1.2834349 1.2885459 1.2800990
 #&gt;  [15] 1.2812005 1.2898789 1.3049639 1.3189057 1.3222918 1.3357071 1.3343457

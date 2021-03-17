@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Sample From a Distribution • samplr</title>
+<title>Getting Started: How to Sample From a Distribution • samplr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="How to Sample From a Distribution">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started: How to Sample From a Distribution">
 <meta property="og:description" content="samplr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+      <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
       <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
@@ -84,7 +84,7 @@
       </header><script src="how-to-sample_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>How to Sample From a Distribution</h1>
+      <h1 data-toc-skip>Getting Started: How to Sample From a Distribution</h1>
             
       
       
@@ -95,83 +95,76 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">samplr</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">samplr</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></code></pre></div>
 <div id="choosing-a-distibution" class="section level3">
 <h3 class="hasAnchor">
 <a href="#choosing-a-distibution" class="anchor"></a>Choosing a distibution</h3>
-To sample from a distribution, check the abbreviation, as well as the distribution parameters, in <a href="supported-distributions.html">the Supported Distributions Vignette</a>. Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need: \begin{itemize}{
-Distribution Name = “norm”
-<p>Distribution Parameters = A vector with <code>mean</code> and <code>std</code>. In our case: <code><a href="https://rdrr.io/r/base/c.html">c(0,1)</a></code>. }</p>
+<p>To sample from a distribution, check the abbreviation, as well as the distribution parameters, in <a href="supported-distributions.html">the Supported Distributions Vignette</a>. Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Distribution Name</strong>: <code>"norm"</code>,</li>
+<li>
+<strong>Distribution Parameters</strong>: A vector with the distribution parameters. In our case, <code>mean</code> and <code>std</code>, that is: <code><a href="https://rdrr.io/r/base/c.html">c(0,1)</a></code>,</li>
+<li>A <strong>starting point</strong>: Any point in the sampling space. We’ll choose the mean of our distribution, <code>0</code>.,</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">name</span> <span class="op">=</span> <span class="st">"norm"</span>
+<span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>
+<span class="va">start</span> <span class="op">=</span> <span class="fl">0</span></code></pre></div>
 </div>
 <div id="different-sampling-algorithms" class="section level3">
 <h3 class="hasAnchor">
 <a href="#different-sampling-algorithms" class="anchor"></a>Different Sampling Algorithms</h3>
-<!-- To use a sampler from the SampleR package to explore a distribution, it is easiest to start by creating a distribution using a package such as distr or distr6.  -->
-<!-- ```{r} -->
-<!-- distribution <- distr::Norm(mean = 1, sd = 2) -->
-<!-- ``` -->
-<!-- Samplers only use the probability density function of a distribution, so the next step is to create such a function. This function will take a vector with the current position and an optional boolean with whether to return the log density instead. -->
-<!-- If using distr or distr6, SampleR makes it easy to create such a function: -->
-<!-- ```{r} -->
-<!-- pd_function <- make_distr_pdf(distribution) -->
-<!-- ``` -->
-<!-- We can now ask different samplers to approximate the distribution -->
-<!-- ```{r} -->
-<!-- # for direct sampling, use the random function directly. -->
-<!-- # these are r() for distr; $rand() for distr6; rnorm, etc, for stats, and so on  -->
-<!-- direct_sampling <- distr::r(distribution)(1024) -->
-<!-- # MCMC and MC3 require a starting point. We also give them the width of the proposal distribution -->
-<!-- MCMC <- sampler_mcmc(pd_function, start = 0, sigma_prop = .5) -->
-<!-- MC3 <- sampler_mc3(pd_function, start = 0, sigma_prop = .5) -->
-<!-- # sampler_MCMC and sampler_MC3 return other information, but for now we are only -->
-<!-- # interested in the regions they visited, which is the first item they return.  -->
-<!-- MCMC_chain <- MCMC[[1]] -->
-<!-- MC3_cold_chain <- MC3[[1]][,,1] # we are only interested in the first (cold) chain -->
-<!-- ``` -->
-<!-- Once we have sampled the distribution we can compare how different samplers behaved, with a series plot -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- a <- plot_series(direct_sampling) + ggtitle("Direct Sampling") -->
-<!-- b <- plot_series(MCMC_chain) + ggtitle("MCMC") -->
-<!-- c <- plot_series(MC3_cold_chain) + ggtitle("MC3") -->
-<!-- gridExtra::grid.arrange(a,b,c) -->
-<!-- ``` -->
-<!-- A Change Series plot -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- a <- plot_change(direct_sampling) + ggtitle("Direct Sampling") -->
-<!-- b <- plot_change(MCMC_chain) + ggtitle("MCMC") -->
-<!-- c <- plot_change(MC3_cold_chain) + ggtitle("MC3") -->
-<!-- gridExtra::grid.arrange(a,b,c) -->
-<!-- ``` -->
-<!-- And so on. A way to get a quick diagnostic look is to use the `plot_all` function -->
-<!-- ```{r, fig.align="center", fig.width=10, fig.height=5} -->
-<!-- plot_all(MCMC_chain, title = "MCMC") -->
-<!-- ``` -->
-<!-- With the other functions as a start for custom editing -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- plot_sigma_scaling(MCMC_chain) + ggtitle("MCMC") + theme_void() -->
-<!-- ``` -->
-<!-- ## A note about timing -->
-<!-- When it comes to density functions, `distr6` is generally slower than `distr`. -->
-<!-- ```{r} -->
-<!-- chain <- stats::rnorm(2^10) -->
-<!-- target <- distr::Norm() -->
-<!-- target6 <- distr6::Normal$new() -->
-<!-- # stats::dnorm time -->
-<!-- system.time(for (i in 1:length(chain)){stats::dnorm(chain[i])}) -->
-<!-- # distr time -->
-<!-- system.time(for (i in 1:length(chain)){distr::d(target)(chain[i])}) -->
-<!-- # distr6 time -->
-<!-- system.time(for (i in 1:length(chain)){target6$pdf(chain[i])}) -->
-<!-- ``` -->
-<!-- However, it doesn't make much of a difference. For multivariate normals, `distr` doesn't yet have multivariate normals. We recommend using `mvtnorm` instead of `distr6` as the speed difference here is more considerable (especially in mixture distributions) -->
-<!-- ```{r} -->
-<!--   chain <- mvtnorm::rmvnorm(2^10, mean = c(0,0)) -->
-<!--   target6 <- distr6::MultivariateNormal$new() -->
-<!--   print("mvtnorm -> dmvnorm") -->
-<!--   system.time(for (i in 1:length(chain[,1])){mvtnorm::dmvnorm(chain[i,])}) -->
-<!--   print("distr6 -> pdf") -->
-<!--   system.time(target6$pdf(data=chain)) -->
-<!-- ``` -->
+<p>Different algorithms are available in the <code>samplr</code> package. For our example, we will use Metropolis Hastings. To use a sampler, we will always need the three previously mentioned items. For Metropolis Hastings and MC3, it is convenient to provide the variance of the proposal distribution, so we do that before sampling.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span>
+<span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mcmc.html">sampler_mcmc</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">params</span>, <span class="va">start</span>, <span class="va">proposal_variance</span><span class="op">)</span></code></pre></div>
+<p>If we plot our results:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="how-to-sample_files/figure-html/unnamed-chunk-4-1.png" width="700" style="display: block; margin: auto;"></p>
+<p>Notice that the same approach is used for all other samplers:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">MC3_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">params</span>, <span class="va">start</span>, <span class="va">proposal_variance</span><span class="op">)</span>
+
+<span class="va">HMC_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">params</span>, <span class="va">start</span><span class="op">)</span>
+
+<span class="va">NUTS_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_nuts.html">sampler_nuts</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">params</span>, <span class="va">start</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="mixture-distributions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#mixture-distributions" class="anchor"></a>Mixture Distributions</h3>
+<p>If we want to sample from a mixture distribution, the following change:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Distribution Name</strong>: A vector of distribution names, e.g. <code><a href="https://rdrr.io/r/base/c.html">c("norm", "norm")</a></code>
+</li>
+<li>
+<strong>Distribution Parameters</strong>: A list of vectors, each containing the distribution parameters.</li>
+<li>
+<strong>Distribution Weights (optional)</strong>: A vector with the weights given to each distribution. The sum of weights equals 1.</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="st">"norm"</span><span class="op">)</span>
+<span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.6</span><span class="op">)</span></code></pre></div>
+<p>We’ll make a custom density function to plot the curve with our results (this is not necessary for the samplers to work)</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">customDensity</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.4</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.6</span>
+<span class="op">}</span></code></pre></div>
+<p>We proceed as we did before:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Sample (more iterations as MH struggles to change hills)</span>
+<span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+<span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mcmc.html">sampler_mcmc</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">params</span>, <span class="va">start</span>, <span class="va">proposal_variance</span>, iterations <span class="op">=</span> <span class="fl">2</span><span class="op">**</span><span class="fl">12</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>
+<span class="co"># plot</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu">customDensity</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="how-to-sample_files/figure-html/unnamed-chunk-8-1.png" width="700" style="display: block; margin: auto;"></p>
+<p>See <a href="multivariate-mixtures.html">the Multivariate Mixtures Vignette</a> for examples on how to mix multivariate distributions, as well as a comparison between the performance of different samplers in a ‘patchy’ environment.</p>
 </div>
   </div>
 

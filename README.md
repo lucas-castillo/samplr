@@ -10,7 +10,8 @@ The goal of samplr is to provide tools to understand human performance
 from the perspective of sampling, both looking at how people generate
 samples and how people use the samples they have generated. A longer
 overview and other resources can be found at
-[sampling.warwick.ac.uk](sampling.warwick.ac.uk)
+[sampling.warwick.ac.uk](sampling.warwick.ac.uk). Get started
+[here](vignettes/how-to-sample.html).
 
 ## Installation
 
@@ -29,10 +30,10 @@ library(samplr)
 set.seed(1)
 chain <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1) * .5, iterations = 2048)
 print(chain[[1]][1:20])
-#>  [1]  1.00000000  0.55703026  0.68688570  0.09600704  1.22404092  0.13513180
-#>  [7] -0.52146425 -0.72986307 -0.73394108  0.96640564  1.50634775  1.78200855
-#> [13]  1.57732831  1.57732831  1.75567722  1.75567722  0.88060541  0.72202406
-#> [19]  0.98888308  1.08316613
+#>  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684
+#>  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605
+#> [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723
+#> [19]  1.01645509  1.45473808
 ```
 
 As well as tools to diagnose the patterns both from samplers and
