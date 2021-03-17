@@ -1,17 +1,5 @@
-checkDistrInfo <- function(distr_name, distr_params, start){
-  no_name = is.null(distr_name);
-  no_params = is.null(distr_params)
+checkNamesMatchParams <- function(distr_name, distr_params){
 
-  if (no_name && no_params){
-    stop("No distribution provided. Please provide a value for distr_name and for distr_params")
-  } else if (no_name){
-    stop("No distribution name provided. Please provide a value for distr_name.")
-  } else if (no_params){
-    stop("No distribution parameters provided. Please provide a value for distr_params")
-  }
-
-  # if info provided, make sense of it
-  # possible distr names
   names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
                   "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
 
@@ -25,47 +13,81 @@ checkDistrInfo <- function(distr_name, distr_params, start){
   parameters_discr <- c(2,2,2,1,1,3,2,1)
   parameters_cont_mv <- c(2, 3)
 
-  isContinuous = is.element(distr_name, names_cont) || is.element(distr_name, names_cont_mv);
-  isDiscrete = is.element(distr_name, names_discr);
+  c_uv = is.element(distr_name, names_cont)
+  c_mv = is.element(distr_name, names_cont_mv);
+  d_uv = is.element(distr_name, names_discr);
 
-  isValidName = isContinuous || isDiscrete
 
   isValidParameters = FALSE
 
-  if (isValidName){
-    if (isContinuous){
-      if (is.element(distr_name, names_cont)){
-        isValidParameters = parameters_cont[match(distr_name, names_cont)] == length(distr_params)
-      } else{
-        isValidParameters = parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params)
-      }
+  # if name in one of these three, check parameters correct. Else stop and throw error.
+
+  if (c_uv){
+    isValidParameters = parameters_cont[match(distr_name, names_cont)] == length(distr_params)
+  } else if(c_mv){
+    isValidParameters = parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && is.list(distr_params)
+  } else if (d_uv){
+    isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
+  } else{
+    stop(paste("Distribution", name, "is not supported"))
+  }
+
+
+
+  if(isValidParameters){
+    # if (length(start) == 1 && substr(returnString, 3, 4) == "mv"){
+    #   stop("Start is length 1 but distribution is multivariate")
+    # } else if (length(start) != 1 && substr(returnString, 3,4) == "uv"){
+    #   stop("Distribution is univariate but start is not length 1")
+    # }
+    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)
+  } else{
+    if (substr(returnVector, 3, 4) == "mv"){
+      stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont_mv[match(distr_name, names_cont_mv)], "parameters are expected in a list"))
+    } else if (substr(returnVector, 1, 1) == "c"){
+      stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont[match(distr_name, names_cont)], "parameters are expected in a vector"))
     } else{
-      isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
+      stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_discr[match(distr_name, names_discr)], "parameters are expected in a vector"))
     }
   }
 
-
-  if (!isValidName){
-    stop("Distribution name given is not currently supported")
-  } else if (!isValidParameters){
-    stop("Parameters given do not match Distribution name given (either too many, or too few, or not given in a list?)")
-  }
-  if (!is.element(distr_name, names_cont_mv)){
-    if (length(start) != 1) {
-      stop("Start position has more variables than the distribution")
-    }
-  } else {
-    if (length(start) != 2){
-      stop("Start position should have 2 variables")
-    }
-  }
-  return (isDiscrete)
 }
 
-check_sigma_prop <- function(sigma_prop, n_dim){
+checkStart <- function(info, start){
+  dim = length(start)
+  if (dim == 1 && info[2]){
+    stop("Start is length 1 but distribution is multivariate")
+  } else if (dim != 1 && !info[2]){
+    stop("Distribution is univariate but start is longer than length 1")
+  }
+}
+
+checkWeights <- function(weights, distr_num){
+  if (distr_num != 1){
+    if (is.null(weights)){
+      weights = rep(1 / distr_num, length.out = distr_num)
+      message("Equal weights given to all distributions")
+    } else{
+      if (distr_num != length(weights)){
+        stop("The vector of distribution names and the vector list of distribution parameters must be of equal length")
+      } else if (sum(weights) != 1){
+        stop("The sum of the weights must equal 1")
+      }
+    }
+  } else{
+    if (!is.null(weights)){
+      warning("Weights were provided for a single distribution and thus will be ignored")
+    } else{
+      weights = 1
+    }
+  }
+  return(weights)
+}
+
+checkSigmaProp <- function(sigma_prop, n_dim){
   # If no variance for the proposal distribution was given...
   if (is.null(sigma_prop)){
-    if (length(start) == 1){
+    if (n_dim == 1){
       warning("The variance of the proposal distribution was not given and defaulted to 1")
     } else{
       warning("The variance of the proposal distribution was not given and defaulted to the identity matrix")
@@ -77,6 +99,39 @@ check_sigma_prop <- function(sigma_prop, n_dim){
       return(matrix(sigma_prop))
     }
     return(sigma_prop)
+  }
+}
+
+checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, sigma_prop = NULL){
+  dim = length(start)
+  if (caller == "mcmc" || caller == "mc3"){
+    sigma_prop = checkSigmaProp(sigma_prop, dim)
+  }
+
+  ### Is mixture
+  if (length(distr_name) > 1){
+    # same amount of distr and parameters
+    if (length(distr_name) != length(distr_params)){
+      stop("The vector of distribution names and the list of distribution parameters must be of equal length")
+    }
+
+    for (i in 1:length(distr_name)){
+      info = checkNamesMatchParams(distr_name[i], distr_params[[i]])
+      if (info[1]){
+        stop(paste("Mixture Distributions are only supported if all distributions are continuous. Distribution", distr_name[[i]], "is discrete."))
+      }
+      checkStart(info, start)
+    }
+    weights = checkWeights(weights, length(distr_name))
+    return(list(FALSE, TRUE, weights, sigma_prop))
+
+
+  ### Is not mixture
+  } else {
+      info = checkNamesMatchParams(distr_name, distr_params)
+      checkStart(info, start)
+      weights = checkWeights(weights, 1)
+      return (list(info[1], FALSE, weights, sigma_prop))
   }
 }
 
@@ -109,12 +164,17 @@ check_sigma_prop <- function(sigma_prop, n_dim){
 #' metropolis_hastings <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1)
 #'
 #'
-sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iterations = 1024L){
-  isDiscrete = checkDistrInfo(distr_name, distr_params, start)
-  sigma_prop = check_sigma_prop(sigma_prop, length(start))
 
+sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iterations = 1024L, weights = NULL){
 
-  return (sampler_mcmc_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete))
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mcmc", sigma_prop)
+  isDiscrete = distrInfo[[1]]
+  isMix = distrInfo[[2]]
+  print(paste("Is mix = ", isMix))
+  weights = distrInfo[[3]]
+  sigma_prop = distrInfo[[4]]
+
+  return (sampler_mcmc_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights))
 }
 
 #' Metropolis-coupled MCMC sampler (MC3)
@@ -137,13 +197,14 @@ sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iter
 #'
 #' # Sample from a normal distribution
 #' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
-sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop = NULL, delta_T = 4, swap_all = TRUE, iterations = 1024L){
-  isDiscrete = checkDistrInfo(distr_name, distr_params, start)
-  sigma_prop = check_sigma_prop(sigma_prop, length(start))
+sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop = NULL, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL){
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mc3", sigma_prop)
+  isDiscrete = distrInfo[[1]]
+  isMix = distrInfo[[2]]
+  weights = distrInfo[[3]]
+  sigma_prop = distrInfo[[4]]
 
-
-
-  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete)
+  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights)
 
   M <- array(0, dim = (c(iterations, length(start), nChains)))
   for (i in 1:nChains){
@@ -153,7 +214,7 @@ sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop 
   }
 
   swap_hist = samplerResults[[3]][1:samplerResults[[4]][2], ]
-  # colnames(swap_hist) <- c("Iteration", "Chain 1", "Chain 2")
+  colnames(swap_hist) <- c("Iteration", "Chain 1", "Chain 2")
 
 
 
@@ -185,11 +246,16 @@ sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop 
 #' @examples
 #'
 #' HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
-sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, iterations=1024) {
-  isDiscrete = checkDistrInfo(distr_name, distr_params, start)
+sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, iterations=1024, weights = NULL) {
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "hmc")
+  isDiscrete = distrInfo[[1]]
+  isMix = distrInfo[[2]]
+  weights = distrInfo[[3]]
+  if (isDiscrete){
+    stop("Hamiltonian Monte-Carlo is not supported with discrete distributions")
+  }
 
-
-  samplerResults <- sampler_hmc_cpp(start, distr_name, distr_params, epsilon, L, iterations)
+  samplerResults <- sampler_hmc_cpp(start, distr_name, distr_params, epsilon, L, iterations, isMix = isMix, weights = weights)
 
   return(
     list(
@@ -218,15 +284,20 @@ sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, itera
 #'
 #' @examples
 #' NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
+#'
 sampler_nuts <- function(distr_name, distr_params, start, epsilon=.5, delta_max=1000, iterations=1024) {
-  isDiscrete = checkDistrInfo(distr_name, distr_params, start)
-
-  samplerResults <- sampler_nuts_cpp(start, distr_name, distr_params, epsilon, iterations, delta_max)
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "nuts")
+  isDiscrete = distrInfo[[1]]
+  isMix = distrInfo[[2]]
+  weights = distrInfo[[3]]
+  if (isDiscrete){
+    stop("NUTS is not supported with discrete distributions")
+  }
+  samplerResults <- sampler_nuts_cpp(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix = isMix, weights = weights)
 
   return(
     list(
       "Samples" = samplerResults[[1]]
     )
   )
-
 }
