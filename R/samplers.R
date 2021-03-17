@@ -147,7 +147,9 @@ checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, sig
 #' @param distr_params Distribution parameters.
 #' @param start Vector. Starting position of the sampler.
 #' @param sigma_prop Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.
+#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param iterations Number of iterations of the sampler.
+#'
 #' @return A list containing
 #' \enumerate{
 #'  \item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
@@ -190,6 +192,7 @@ sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iter
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
 #' @param iterations Number of iterations of the sampler.
+#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #'
 #' @export
 #'
@@ -233,7 +236,7 @@ sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop 
 #' Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read [here](http://arxiv.org/abs/1701.02434)
 #'
 #'
-#' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I) )
+#' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -241,7 +244,7 @@ sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop 
 #' @param epsilon Size of the leapfrog step
 #' @param L Number of leapfrog steps per iteration
 #' @param iterations Number of iterations of the sampler.
-#'
+#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @export
 #' @examples
 #'
@@ -271,7 +274,7 @@ sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, itera
 #'
 #' Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found [here](https://arxiv.org/abs/1111.4246)
 #'
-#'
+#' Like Hamiltonian MonteCarlo, it does not support discrete distributions.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -279,13 +282,13 @@ sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, itera
 #' @param epsilon Size of the leapfrog step
 #' @param delta_max Measure of the required accuracy of the simulation. The authors recommend a large value (1000)
 #' @param iterations Number of iterations of the sampler.
-#'
+#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @export
 #'
 #' @examples
 #' NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
 #'
-sampler_nuts <- function(distr_name, distr_params, start, epsilon=.5, delta_max=1000, iterations=1024) {
+sampler_nuts <- function(distr_name, distr_params, start, epsilon=.5, delta_max=1000, iterations=1024, weights = NULL) {
   distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "nuts")
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
