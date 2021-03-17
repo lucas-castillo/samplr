@@ -199,7 +199,11 @@ sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iter
 #'
 #' # Sample from a normal distribution
 #' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
-sampler_mc3<- function(distr_name, distr_params, start, nChains = 6, sigma_prop = NULL, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL){
+sampler_mc3<- function(distr_name, distr_params, start, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL){
+  if (floor(nChains) != nChains){
+    stop("nChains must be a whole number")
+  }
+
   distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mc3", sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]

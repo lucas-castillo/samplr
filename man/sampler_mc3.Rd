@@ -8,8 +8,8 @@ sampler_mc3(
   distr_name,
   distr_params,
   start,
-  nChains = 6,
   sigma_prop = NULL,
+  nChains = 6,
   delta_T = 4,
   swap_all = TRUE,
   iterations = 1024L,
@@ -23,9 +23,9 @@ sampler_mc3(
 
 \item{start}{Vector. Starting position of the sampler.}
 
-\item{nChains}{Number of chains to run.}
-
 \item{sigma_prop}{Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.}
+
+\item{nChains}{Number of chains to run.}
 
 \item{delta_T}{numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain}
 
