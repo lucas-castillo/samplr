@@ -95,6 +95,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+    </li>
+    <li>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
       <a href="../articles/supported-distributions.html">Supported Distributions</a>
     </li>
     <li>
@@ -153,26 +162,26 @@
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='img'><img src='plot_sigma_scaling-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   [1] 0.7462984 0.9967371 1.1686469 1.3002975 1.3886138 1.4657430 1.5207912
-#&gt;   [8] 1.5362467 1.5556786 1.5624490 1.5729226 1.5888925 1.6138107 1.6421450
-#&gt;  [15] 1.6648751 1.6756023 1.6701865 1.6608909 1.6423838 1.6199695 1.6035684
-#&gt;  [22] 1.5988625 1.5864555 1.5884850 1.5921402 1.5752027 1.5453772 1.5224437
-#&gt;  [29] 1.5129250 1.5241096 1.5399425 1.5586670 1.5880518 1.6089522 1.6352175
-#&gt;  [36] 1.6495986 1.6471017 1.6547899 1.6485007 1.6355298 1.6229134 1.6077815
-#&gt;  [43] 1.6041117 1.6233252 1.6477648 1.6684871 1.6697560 1.6677194 1.6705073
-#&gt;  [50] 1.6568019 1.6338977 1.6254614 1.6280203 1.6303466 1.6419994 1.6359258
-#&gt;  [57] 1.6290840 1.6255261 1.6245577 1.6351575 1.6384434 1.6343391 1.6224909
-#&gt;  [64] 1.6092573 1.6121913 1.6232225 1.6324477 1.6343102 1.6449688 1.6543489
-#&gt;  [71] 1.6550382 1.6736156 1.6886427 1.6913357 1.7031233 1.6974455 1.6951426
-#&gt;  [78] 1.6913987 1.6809351 1.6744163 1.6709509 1.6618981 1.6453573 1.6424729
-#&gt;  [85] 1.6311415 1.6089316 1.5884544 1.5844043 1.5889529 1.5890100 1.5963473
-#&gt;  [92] 1.6106310 1.6167173 1.6353517 1.6343343 1.6305610 1.6387745 1.6459140
-#&gt;  [99] 1.6424140 1.6471589 1.6506242 1.6453793</div></pre>
+</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'><span class='fu'>plot_sigma_scaling</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   [1] 0.6554206 0.8710101 1.0034985 1.0960127 1.1611904 1.2049326 1.2345926
+#&gt;   [8] 1.2595104 1.2708884 1.2669402 1.2742124 1.2834349 1.2885459 1.2800990
+#&gt;  [15] 1.2812005 1.2898789 1.3049639 1.3189057 1.3222918 1.3357071 1.3343457
+#&gt;  [22] 1.3233383 1.3081025 1.2886969 1.2883123 1.3034216 1.3252610 1.3175539
+#&gt;  [29] 1.3092352 1.3001075 1.2856377 1.2780053 1.2676980 1.2528074 1.2547195
+#&gt;  [36] 1.2857501 1.3102554 1.3237884 1.3461923 1.3697272 1.3894854 1.4087657
+#&gt;  [43] 1.4140893 1.4080247 1.3902201 1.3822379 1.3871251 1.3843969 1.3807283
+#&gt;  [50] 1.3975809 1.4106889 1.3969380 1.3793140 1.3618938 1.3494642 1.3317206
+#&gt;  [57] 1.3257360 1.3304557 1.3284470 1.3248134 1.3465174 1.3648130 1.3731731
+#&gt;  [64] 1.3813399 1.3887305 1.4074104 1.4092117 1.3949106 1.3785142 1.3713388
+#&gt;  [71] 1.3842391 1.3986769 1.4043774 1.4047372 1.4261118 1.4445472 1.4442605
+#&gt;  [78] 1.4562652 1.4732892 1.4809510 1.4795165 1.4825966 1.4697102 1.4489517
+#&gt;  [85] 1.4395264 1.4443550 1.4339104 1.4222052 1.4209442 1.4279155 1.4270024
+#&gt;  [92] 1.4427819 1.4421180 1.4364234 1.4426135 1.4429096 1.4425540 1.4512988
+#&gt;  [99] 1.4525725 1.4543142 1.4518143 1.4363062</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

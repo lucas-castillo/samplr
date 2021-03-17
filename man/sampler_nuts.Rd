@@ -10,7 +10,8 @@ sampler_nuts(
   start,
   epsilon = 0.5,
   delta_max = 1000,
-  iterations = 1024
+  iterations = 1024,
+  weights = NULL
 )
 }
 \arguments{
@@ -25,10 +26,16 @@ sampler_nuts(
 \item{delta_max}{Measure of the required accuracy of the simulation. The authors recommend a large value (1000)}
 
 \item{iterations}{Number of iterations of the sampler.}
+
+\item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \description{
 Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found \href{https://arxiv.org/abs/1111.4246}{here}
 }
+\details{
+Like Hamiltonian MonteCarlo, it does not support discrete distributions.
+}
 \examples{
 NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
+
 }

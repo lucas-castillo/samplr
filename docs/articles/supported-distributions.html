@@ -54,6 +54,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+    </li>
+    <li>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
       <a href="../articles/supported-distributions.html">Supported Distributions</a>
     </li>
     <li>
@@ -340,13 +349,13 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mvnorm</td>
+<td align="left"><em>mvnorm</em></td>
 <td align="left">Multivariate Normal</td>
 <td align="left">
 <code>mean</code> (vector); <code>covariance_matrix</code> (matrix)</td>
 </tr>
 <tr class="even">
-<td align="left">mvt</td>
+<td align="left"><em>mvt</em></td>
 <td align="left">Multivariate t</td>
 <td align="left">
 <code>location</code> (vector); <code>scale_matrix</code> (matrix), <code>df</code> (number)</td>
@@ -368,6 +377,7 @@
   start <span class="op">=</span> <span class="fl">0</span>, <span class="co"># starting point for the sampler</span>
   sigma_prop <span class="op">=</span> <span class="fl">1</span>, <span class="co"># variance of the proposal distribution</span>
 <span class="op">)</span>
+<span class="co">#&gt; [1] "Is mix =  FALSE"</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <p><img src="supported-distributions_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>

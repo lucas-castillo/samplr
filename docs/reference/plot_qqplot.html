@@ -95,6 +95,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
+    </li>
+    <li>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
       <a href="../articles/supported-distributions.html">Supported Distributions</a>
     </li>
     <li>
@@ -149,7 +158,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mcmc.html'>sampler_mcmc</a></span><span class='op'>(</span><span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plot_qqplot</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'><span class='fu'>plot_qqplot</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='img'><img src='plot_qqplot-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

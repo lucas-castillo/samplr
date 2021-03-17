@@ -172,7 +172,6 @@ sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iter
   distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mcmc", sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
-  print(paste("Is mix = ", isMix))
   weights = distrInfo[[3]]
   sigma_prop = distrInfo[[4]]
 
