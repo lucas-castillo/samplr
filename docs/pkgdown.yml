@@ -2,7 +2,10 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  how-to-sample: how-to-sample.html
+  mixture-distributions: mixture-distributions.html
+  multivariate-mixtures: multivariate-mixtures.html
   supported-distributions: supported-distributions.html
   time-comparisons: time-comparisons.html
-last_built: 2021-03-15T17:00Z
+last_built: 2021-03-17T14:32Z
 

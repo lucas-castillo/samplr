@@ -95,10 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/supported-distributions.html">supported-distributions</a>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
     </li>
     <li>
-      <a href="../articles/time-comparisons.html">time-comparisons</a>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
+      <a href="../articles/supported-distributions.html">Supported Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/time-comparisons.html">Time Comparisons</a>
     </li>
   </ul>
 </li>
@@ -133,7 +142,8 @@
   <span class='va'>start</span>,
   epsilon <span class='op'>=</span> <span class='fl'>0.5</span>,
   delta_max <span class='op'>=</span> <span class='fl'>1000</span>,
-  iterations <span class='op'>=</span> <span class='fl'>1024</span>
+  iterations <span class='op'>=</span> <span class='fl'>1024</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -163,11 +173,19 @@
       <th>iterations</th>
       <td><p>Number of iterations of the sampler.</p></td>
     </tr>
+    <tr>
+      <th>weights</th>
+      <td><p>If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Like Hamiltonian MonteCarlo, it does not support discrete distributions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>NUTS</span> <span class='op'>&lt;-</span> <span class='fu'>sampler_nuts</span><span class='op'>(</span>distr_name <span class='op'>=</span> <span class='st'>"norm"</span>, distr_params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, start <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

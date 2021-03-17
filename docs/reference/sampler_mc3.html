@@ -95,10 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/supported-distributions.html">supported-distributions</a>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
     </li>
     <li>
-      <a href="../articles/time-comparisons.html">time-comparisons</a>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
+      <a href="../articles/supported-distributions.html">Supported Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/time-comparisons.html">Time Comparisons</a>
     </li>
   </ul>
 </li>
@@ -135,7 +144,8 @@
   sigma_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
   delta_T <span class='op'>=</span> <span class='fl'>4</span>,
   swap_all <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  iterations <span class='op'>=</span> <span class='fl'>1024L</span>
+  iterations <span class='op'>=</span> <span class='fl'>1024L</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -172,6 +182,10 @@
     <tr>
       <th>iterations</th>
       <td><p>Number of iterations of the sampler.</p></td>
+    </tr>
+    <tr>
+      <th>weights</th>
+      <td><p>If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.</p></td>
     </tr>
     </table>
 

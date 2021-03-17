@@ -10,7 +10,8 @@ sampler_hmc(
   start,
   epsilon = 0.5,
   L = 10,
-  iterations = 1024
+  iterations = 1024,
+  weights = NULL
 )
 }
 \arguments{
@@ -25,12 +26,14 @@ sampler_hmc(
 \item{L}{Number of leapfrog steps per iteration}
 
 \item{iterations}{Number of iterations of the sampler.}
+
+\item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \description{
 Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read \href{http://arxiv.org/abs/1701.02434}{here}
 }
 \details{
-This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I) )
+This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.
 }
 \examples{
 

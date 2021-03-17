@@ -12,7 +12,8 @@ sampler_mc3(
   sigma_prop = NULL,
   delta_T = 4,
   swap_all = TRUE,
-  iterations = 1024L
+  iterations = 1024L,
+  weights = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ sampler_mc3(
 \item{swap_all}{Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.}
 
 \item{iterations}{Number of iterations of the sampler.}
+
+\item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \description{
 This sampler is a variant of MCMC in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MCMC). Because of this, an MC3 sampler can explore far-off regions, whereas an MCMC sampler may become stuck in a particular point of high density.

@@ -1,0 +1,139 @@
+---
+title: "Multivariate Mixtures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{multivariate-mixtures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(samplr)
+library(ggplot2)
+library(stats)
+```
+
+This vignette aims to show how different sampling algorithms may navigate a 'patchy' environment. Let's start by creating such an environment. 
+
+First, we create a matrix with what will be the means of 15 different Gaussians
+
+```{r}
+set.seed(1)
+# Create a matrix with the means of 15 different Gaussians
+names <- rep("mvnorm", 15)
+parameters <- list()
+for (i in 1:15){
+  parameters[[i]] <- list(runif(2) * 18 - 9, diag(2))
+}
+```
+We'll also require a set of weights (which in this case will all be the same), which we will use in our probability density function, as well as a set of cumulative weights, for our random sampler.  
+```{r} 
+weights <- rep(1/15, length.out = 15)
+```
+
+The probability density function is the weighted sum of each of the density functions
+```{r}
+pd_func <- function(x, log = FALSE){
+  densities <- vector()
+  for (i in 1:length(weights)){
+    densities[i] <- mvtnorm::dmvnorm(x, mean = parameters[[i]][[1]], sigma = diag(2), log = log)
+  }
+  return(sum(densities * weights))
+}
+```
+<!-- The random function chooses a random distribution from the mixture to draw a sample from (with weighted probabilities) -->
+<!-- ```{r} -->
+<!-- rand_func <- function(x){ -->
+<!--   randNums <- matrix(ncol = dims, nrow = x) -->
+<!--   for (j in 1:x){ -->
+<!--     randomN <- stats::runif(1) -->
+<!--     finish = F -->
+<!--     i = 0 -->
+<!--     while (!finish){ -->
+<!--       i = i + 1 -->
+<!--       if (randomN <= cumulative_weights[i]){ -->
+<!--         dist <- listDistr[[i]] -->
+<!--         randNums[j,] <- unlist(unname(dist$rand(1))) -->
+<!--         finish = T -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!--   return(randNums) -->
+<!-- } -->
+<!-- ``` -->
+
+We can now draw a map of the density
+```{r, dpi=150, fig.align="center"}
+mapDensity <- function(pdf, start, size, cellsPerRow = 50){
+  # start is a vector <- c(x, y)
+  # size is a number n so that the map ranges from x, y to x + n, y + n
+  xRange <- seq(from = start[1], to = start[1] + size, length.out = cellsPerRow)
+  xxRange <- rep(xRange, cellsPerRow)
+
+  yRange <- seq(from = start[2], to = start[2] + size, length.out = cellsPerRow)
+  
+  for (i in 1:cellsPerRow){
+    if (i == 1){
+      yyRange <- rep(yRange[i], cellsPerRow)
+    } else {
+      yyRange <- c(yyRange, rep(yRange[i], cellsPerRow))
+    }
+  }
+
+  density <- vector()
+
+
+  for (i in 1:length(yyRange)){
+    density[i] <- pdf(c(xxRange[i],yyRange[i]))
+    }
+
+  df <- data.frame(x = xxRange, y = yyRange, density = density)
+  return(df)
+}
+
+
+
+hills_df <- mapDensity(pd_func, c(-10,-10), 20, 150)
+
+hill_map <- ggplot(hills_df) + 
+  geom_raster(mapping = aes(x = x, y = y, fill = density)) + 
+  scale_fill_viridis_c() + 
+  theme_void()
+print(hill_map)
+```
+An MCMC sampler may not be able to explore the whole of the space, as it is unable to make long jumps
+```{r ,dpi=150, fig.align="center"}
+iterations = 2**10
+MCMC <- sampler_mcmc_cpp(
+  start = c(5,5), sigma_prop = diag(2) / 8, iterations = iterations,
+  distr_name = names, distr_params = parameters, discreteValues = FALSE, isMix = TRUE, weights = weights)
+
+MCMC_df <- data.frame(x = MCMC[[1]][,1], y = MCMC[[1]][,2])
+MCMC_path <- hill_map +
+  geom_path(MCMC_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) +
+  geom_point(MCMC_df, mapping = aes(x,y), colour = "white",size =.1)
+print(MCMC_path)
+```
+An MC3 sampler, on the other hand, runs hotter chains under the hood with which it switches stochastically, which allows it to visit far-off regions and thus explore the whole hypothesis space
+```{r, dpi=150, fig.align="center"}
+
+MC3 <-  sampler_mc3_cpp(
+  start = c(5,5), nChains = 6, delta_T = 4, swap_all = FALSE,
+  sigma_prop = diag(2) / 8, iterations = iterations,
+  distr_name = names, distr_params = parameters,
+  discreteValues = FALSE, isMix = TRUE, weights = weights
+)
+
+MC3_df <- data.frame(x = MC3[[1]][1:iterations,1], y = MC3[[1]][1:iterations,2])
+MC3_path <- hill_map +
+  geom_path(MC3_df, mapping = aes(x, y), colour = "red", linetype = "dashed", size = .3) +
+  geom_point(MC3_df, mapping = aes(x,y), colour = "white", size =.1)
+print(MC3_path)
+```

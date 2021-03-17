@@ -9,7 +9,8 @@ sampler_mcmc(
   distr_params,
   start,
   sigma_prop = NULL,
-  iterations = 1024L
+  iterations = 1024L,
+  weights = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ sampler_mcmc(
 \item{sigma_prop}{Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.}
 
 \item{iterations}{Number of iterations of the sampler.}
+
+\item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \value{
 A list containing

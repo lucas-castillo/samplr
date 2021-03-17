@@ -95,10 +95,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/supported-distributions.html">supported-distributions</a>
+      <a href="../articles/how-to-sample.html">How to Sample From a Distribution</a>
     </li>
     <li>
-      <a href="../articles/time-comparisons.html">time-comparisons</a>
+      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
+    </li>
+    <li>
+      <a href="../articles/supported-distributions.html">Supported Distributions</a>
+    </li>
+    <li>
+      <a href="../articles/time-comparisons.html">Time Comparisons</a>
     </li>
   </ul>
 </li>
@@ -132,7 +141,8 @@
   <span class='va'>distr_params</span>,
   <span class='va'>start</span>,
   sigma_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
-  iterations <span class='op'>=</span> <span class='fl'>1024L</span>
+  iterations <span class='op'>=</span> <span class='fl'>1024L</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -158,6 +168,10 @@
       <th>iterations</th>
       <td><p>Number of iterations of the sampler.</p></td>
     </tr>
+    <tr>
+      <th>weights</th>
+      <td><p>If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -175,10 +189,10 @@
     <pre class="examples"><div class='input'>
 <span class='co'># Sample from a normal distribution</span>
 <span class='va'>metropolis_hastings</span> <span class='op'>&lt;-</span> <span class='fu'>sampler_mcmc</span><span class='op'>(</span>distr_name <span class='op'>=</span> <span class='st'>"norm"</span>, distr_params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, start <span class='op'>=</span> <span class='fl'>1</span>, sigma_prop <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'>
 <span class='co'># Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value</span>
 <span class='va'>metropolis_hastings</span> <span class='op'>&lt;-</span> <span class='fu'>sampler_mcmc</span><span class='op'>(</span>distr_name <span class='op'>=</span> <span class='st'>"norm"</span>, distr_params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, start <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The variance of the proposal distribution was not given and defaulted to 1</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The variance of the proposal distribution was not given and defaulted to 1</span></div><div class='output co'>#&gt; [1] "Is mix =  FALSE"</div><div class='input'>
 
 </div></pre>
   </div>
