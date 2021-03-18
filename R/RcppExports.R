@@ -17,3 +17,7 @@ sampler_nuts_cpp <- function(start, distr_name, distr_params, epsilon, iteration
     .Call(`_samplr_sampler_nuts_cpp`, start, distr_name, distr_params, epsilon, iterations, delta_max, isMix, weights)
 }
 
+gridDensity <- function(distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow) {
+    .Call(`_samplr_gridDensity`, distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow)
+}
+

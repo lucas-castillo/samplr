@@ -723,9 +723,16 @@ List sampler_nuts_cpp(
 }
 
 
-////////////   ///////////////////
-  ///       TESTS///////
+// Plot Aid //
 
-  //////////////////////////
+// [[Rcpp::export]]
+NumericVector gridDensity(StringVector distr_name, List distr_params, bool isMix, NumericVector weights, NumericVector xxRange, NumericVector yyRange, int cellsPerRow){
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
+  NumericVector density(yyRange.size());
+  for (int i = 0; i <yyRange.size(); i++){
+    density(i) = pdf(NumericVector::create(xxRange[i],yyRange[i]));
+  }
+  return density;
+}
 
 
