@@ -39,118 +39,79 @@ weights <- runif(15)
 weights <- weights / rep(sum(weights), 15)
 ```
 
-The probability density function is the weighted sum of each of the density functions
-```{r}
-pd_func <- function(x, log = FALSE){
-  densities <- vector()
-  for (i in 1:length(weights)){
-    densities[i] <- mvtnorm::dmvnorm(x, mean = parameters[[i]][[1]], sigma = diag(2), log = log)
-  }
-  return(sum(densities * weights))
-}
-```
-<!-- The random function chooses a random distribution from the mixture to draw a sample from (with weighted probabilities) -->
-<!-- ```{r} -->
-<!-- rand_func <- function(x){ -->
-<!--   randNums <- matrix(ncol = dims, nrow = x) -->
-<!--   for (j in 1:x){ -->
-<!--     randomN <- stats::runif(1) -->
-<!--     finish = F -->
-<!--     i = 0 -->
-<!--     while (!finish){ -->
-<!--       i = i + 1 -->
-<!--       if (randomN <= cumulative_weights[i]){ -->
-<!--         dist <- listDistr[[i]] -->
-<!--         randNums[j,] <- unlist(unname(dist$rand(1))) -->
-<!--         finish = T -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!--   return(randNums) -->
-<!-- } -->
-<!-- ``` -->
-
-We can now draw a map of the density
-```{r, dpi=150, fig.align="center"}
-mapDensity <- function(pdf, start, size, cellsPerRow = 50){
-  # start is a vector <- c(x, y)
-  # size is a number n so that the map ranges from x, y to x + n, y + n
-  xRange <- seq(from = start[1], to = start[1] + size, length.out = cellsPerRow)
-  xxRange <- rep(xRange, cellsPerRow)
-
-  yRange <- seq(from = start[2], to = start[2] + size, length.out = cellsPerRow)
-  
-  for (i in 1:cellsPerRow){
-    if (i == 1){
-      yyRange <- rep(yRange[i], cellsPerRow)
-    } else {
-      yyRange <- c(yyRange, rep(yRange[i], cellsPerRow))
-    }
-  }
-
-  density <- vector()
-
-
-  for (i in 1:length(yyRange)){
-    density[i] <- pdf(c(xxRange[i],yyRange[i]))
-    }
-
-  df <- data.frame(x = xxRange, y = yyRange, density = density)
-  return(df)
-}
-
-
-
-hills_df <- mapDensity(pd_func, c(-10,-10), 20, 150)
+We can use the `getDensityGrid()` function to quickly get a dataframe with the density of each point in our space, for easy plotting.
+```{r ,dpi=150, fig.align="center"}
+hills_df <- getDensityGrid(names, parameters, weights, c(-10,-10), 20, 150)
 
 hill_map <- ggplot(hills_df) + 
-  geom_raster(mapping = aes(x = x, y = y, fill = density)) + 
-  scale_fill_viridis_c() + 
+  geom_raster(mapping = aes(x = x, y = y, fill = density)) +
+  scale_fill_viridis_c() +
   theme_void()
 print(hill_map)
 ```
-```{r}
-plotPath <- function(df){
-  path <- hill_map +
-  geom_path(df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) +
-  geom_point(df, mapping = aes(x,y), colour = "white",size =.1)
-  print(path)
-}
 
-```
-An MCMC sampler may not be able to explore the whole of the space, as it is unable to make long jumps
+#### Metropolis Hastings
+
+An MH sampler may not be able to explore the whole of the space, as it is unable to make long jumps
 ```{r ,dpi=150, fig.align="center"}
 iterations = 2**10
 MCMC <- sampler_mcmc(distr_name = names, distr_params = parameters, start = c(5,5), 
                      sigma_prop = diag(2) / 8, iterations = iterations, weights = weights)
 
 MCMC_df <- data.frame(x = MCMC[[1]][,1], y = MCMC[[1]][,2])
-plotPath(MCMC_df)
+
+hill_map + 
+  geom_path(MCMC_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) + 
+  geom_point(MCMC_df, mapping = aes(x,y), colour = "white",size =.1)
 ```
+
+#### MC3
 An MC3 sampler, on the other hand, runs hotter chains under the hood with which it switches stochastically, which allows it to visit far-off regions and thus explore the whole hypothesis space
 ```{r, dpi=150, fig.align="center"}
 
 MC3 <- sampler_mc3(names, parameters, c(5,5), sigma_prop = diag(2) / 8, 
                    swap_all = FALSE, iterations = iterations, weights = weights)
 MC3_df <- data.frame(x = MC3[[1]][,1,1], y = MC3[[1]][,2,1])
-plotPath(MC3_df)
+
+hill_map + 
+  geom_path(MC3_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) + 
+  geom_point(MC3_df, mapping = aes(x,y), colour = "white",size =.1)
 ```
 
-<!-- Hamiltonian -->
+#### Hamiltonian
+HMC needs tuning of the epsilon and L parameters for optimal performance. Compare the performance of HMC in this space depending on the size of epsilon and L (small = red, large = blue)
+```{r, dpi=150, fig.align="center"}
+# epsilon = .5, L = 10
+HMC_.5 <-  sampler_hmc(names, parameters, c(5,5), iterations = iterations, weights = weights)
+HMC_.5_df <- data.frame(x = HMC_.5[[1]][,1], y = HMC_.5[[1]][,2])
+
+# epsilon = 1, L = 50
+HMC_1 <-  sampler_hmc(names, parameters, c(5,5), L = 50, iterations = iterations, weights = weights, epsilon = 1)
+HMC_1_df <- data.frame(x = HMC_1[[1]][,1], y = HMC_1[[1]][,2])
+
+hill_map + 
+  geom_path(HMC_.5_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) + 
+  geom_point(HMC_.5_df, mapping = aes(x,y), colour = "white",size =.1) + 
+  
+  geom_path(HMC_1_df, mapping = aes(x,y), colour = "blue", linetype = "dashed", size = .3) + 
+  geom_point(HMC_1_df, mapping = aes(x,y), colour = "white",size =.1)
+```
+The optimal sizes of epsilon and L depend on the space to be sampled: if the space is smaller than the current one (we do have 15 multivariate normal distributions!), large values will be inefficient as the sampler will turn on itself. Too small values, on the other hand, require many iterations to sample the whole space. 
+
+<!-- #### NUTS -->
+<!-- The same is true for NUTS and the size of epsilon -->
 <!-- ```{r, dpi=150, fig.align="center"} -->
+<!-- NUTS_.5 <-  sampler_nuts(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
+<!-- NUTS_1 <-  sampler_nuts(names, parameters, c(5,5), iterations = iterations, weights = weights, epsilon = 1, ) -->
 
-<!-- HMC <-  sampler_hmc(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
+<!-- NUTS_.5_df <- data.frame(x = NUTS_.5[[1]][,1], y = NUTS_.5[[1]][,2]) -->
+<!-- NUTS_1_df <- data.frame(x = NUTS_1[[1]][,1], y = NUTS_1[[1]][,2]) -->
 
-<!-- HMC_df <- data.frame(x = HMC[[1]][,1], y = HMC[[1]][,2]) -->
-<!-- plotPath(HMC_df) -->
-<!-- ``` -->
+<!-- hill_map +  -->
+<!--   geom_path(NUTS_.5_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) +  -->
+<!--   geom_point(NUTS_.5_df, mapping = aes(x,y), colour = "white",size =.1) +  -->
 
-<!-- NUTS -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- NUTS <-  sampler_hmc(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
-
-<!-- NUTS_df <- data.frame(x = NUTS[[1]][,1], y = NUTS[[1]][,2]) -->
-<!-- plotPath(HMC_df) -->
-
+<!--   geom_path(NUTS_1_df, mapping = aes(x,y), colour = "blue", linetype = "dashed", size = .3) +  -->
+<!--   geom_point(NUTS_1_df, mapping = aes(x,y), colour = "white",size =.1) -->
 <!-- ``` -->
 
