@@ -57,9 +57,6 @@
       <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
-      <a href="../articles/mixture-distributions.html">Using Mixture Distributions</a>
-    </li>
-    <li>
       <a href="../articles/multivariate-mixtures.html">Multivariate Mixtures</a>
     </li>
     <li>
@@ -96,8 +93,10 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">samplr</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></code></pre></div>
+<div id="setup" class="section level4">
+<h4 class="hasAnchor">
+<a href="#setup" class="anchor"></a>Setup</h4>
 <p>This vignette aims to show how different sampling algorithms may navigate a ‘patchy’ environment. Let’s start by creating such an environment.</p>
 <p>First, we create a matrix with what will be the means of 15 different Gaussians</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -112,109 +111,82 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span>
 <span class="va">weights</span> <span class="op">&lt;-</span> <span class="va">weights</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span>, <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<p>The probability density function is the weighted sum of each of the density functions</p>
+<p>We can use the <code>getDensityGrid()</code> function to quickly get a dataframe with the density of each point in our space, for easy plotting.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pd_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">log</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">densities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">densities</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">mvtnorm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html">dmvnorm</a></span><span class="op">(</span><span class="va">x</span>, mean <span class="op">=</span> <span class="va">parameters</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, log <span class="op">=</span> <span class="va">log</span><span class="op">)</span>
-  <span class="op">}</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">densities</span> <span class="op">*</span> <span class="va">weights</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
-<!-- The random function chooses a random distribution from the mixture to draw a sample from (with weighted probabilities) -->
-<!-- ```{r} -->
-<!-- rand_func <- function(x){ -->
-<!--   randNums <- matrix(ncol = dims, nrow = x) -->
-<!--   for (j in 1:x){ -->
-<!--     randomN <- stats::runif(1) -->
-<!--     finish = F -->
-<!--     i = 0 -->
-<!--     while (!finish){ -->
-<!--       i = i + 1 -->
-<!--       if (randomN <= cumulative_weights[i]){ -->
-<!--         dist <- listDistr[[i]] -->
-<!--         randNums[j,] <- unlist(unname(dist$rand(1))) -->
-<!--         finish = T -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!--   return(randNums) -->
-<!-- } -->
-<!-- ``` -->
-<p>We can now draw a map of the density</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mapDensity</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">pdf</span>, <span class="va">start</span>, <span class="va">size</span>, <span class="va">cellsPerRow</span> <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">{</span>
-  <span class="co"># start is a vector &lt;- c(x, y)</span>
-  <span class="co"># size is a number n so that the map ranges from x, y to x + n, y + n</span>
-  <span class="va">xRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">start</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, to <span class="op">=</span> <span class="va">start</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">size</span>, length.out <span class="op">=</span> <span class="va">cellsPerRow</span><span class="op">)</span>
-  <span class="va">xxRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">xRange</span>, <span class="va">cellsPerRow</span><span class="op">)</span>
-
-  <span class="va">yRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">start</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, to <span class="op">=</span> <span class="va">start</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">size</span>, length.out <span class="op">=</span> <span class="va">cellsPerRow</span><span class="op">)</span>
-  
-  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">cellsPerRow</span><span class="op">)</span><span class="op">{</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>
-      <span class="va">yyRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">yRange</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">cellsPerRow</span><span class="op">)</span>
-    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-      <span class="va">yyRange</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">yyRange</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">yRange</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">cellsPerRow</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-
-  <span class="va">density</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span><span class="op">)</span>
-
-
-  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">yyRange</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">density</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">xxRange</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,<span class="va">yyRange</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">}</span>
-
-  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xxRange</span>, y <span class="op">=</span> <span class="va">yyRange</span>, density <span class="op">=</span> <span class="va">density</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
-<span class="op">}</span>
-
-
-
-<span class="va">hills_df</span> <span class="op">&lt;-</span> <span class="fu">mapDensity</span><span class="op">(</span><span class="va">pd_func</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>,<span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fl">20</span>, <span class="fl">150</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">hills_df</span> <span class="op">&lt;-</span> <span class="fu">getDensityGrid</span><span class="op">(</span><span class="va">names</span>, <span class="va">parameters</span>, <span class="va">weights</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>,<span class="op">-</span><span class="fl">10</span><span class="op">)</span>, <span class="fl">20</span>, <span class="fl">150</span><span class="op">)</span>
 
 <span class="va">hill_map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">hills_df</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_raster</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">density</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_raster</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, fill <span class="op">=</span> <span class="va">density</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">hill_map</span><span class="op">)</span></code></pre></div>
-<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-5-1.png" width="1093.75" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">plotPath</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">path</span> <span class="op">&lt;-</span> <span class="va">hill_map</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="va">df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, size <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="va">df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"white"</span>,size <span class="op">=</span><span class="fl">.1</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
-<p>An MCMC sampler may not be able to explore the whole of the space, as it is unable to make long jumps</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-4-1.png" width="1093.75" style="display: block; margin: auto;"></p>
+</div>
+<div id="metropolis-hastings" class="section level4">
+<h4 class="hasAnchor">
+<a href="#metropolis-hastings" class="anchor"></a>Metropolis Hastings</h4>
+<p>An MH sampler may not be able to explore the whole of the space, as it is unable to make long jumps</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">iterations</span> <span class="op">=</span> <span class="fl">2</span><span class="op">**</span><span class="fl">10</span>
 <span class="va">MCMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mcmc.html">sampler_mcmc</a></span><span class="op">(</span>distr_name <span class="op">=</span> <span class="va">names</span>, distr_params <span class="op">=</span> <span class="va">parameters</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, 
                      sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fl">8</span>, iterations <span class="op">=</span> <span class="va">iterations</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>
 
 <span class="va">MCMC_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">MCMC</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">MCMC</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
-<span class="fu">plotPath</span><span class="op">(</span><span class="va">MCMC_df</span><span class="op">)</span></code></pre></div>
-<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-7-1.png" width="1093.75" style="display: block; margin: auto;"> An MC3 sampler, on the other hand, runs hotter chains under the hood with which it switches stochastically, which allows it to visit far-off regions and thus explore the whole hypothesis space</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+
+<span class="va">hill_map</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="va">MCMC_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, size <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="va">MCMC_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"white"</span>,size <span class="op">=</span><span class="fl">.1</span><span class="op">)</span></code></pre></div>
+<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-5-1.png" width="1093.75" style="display: block; margin: auto;"></p>
+</div>
+<div id="mc3" class="section level4">
+<h4 class="hasAnchor">
+<a href="#mc3" class="anchor"></a>MC3</h4>
+<p>An MC3 sampler, on the other hand, runs hotter chains under the hood with which it switches stochastically, which allows it to visit far-off regions and thus explore the whole hypothesis space</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">MC3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">parameters</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fl">8</span>, 
                    swap_all <span class="op">=</span> <span class="cn">FALSE</span>, iterations <span class="op">=</span> <span class="va">iterations</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>
 <span class="va">MC3_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">MC3</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">MC3</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>
-<span class="fu">plotPath</span><span class="op">(</span><span class="va">MC3_df</span><span class="op">)</span></code></pre></div>
-<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-8-1.png" width="1093.75" style="display: block; margin: auto;"></p>
-<!-- Hamiltonian -->
+
+<span class="va">hill_map</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="va">MC3_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, size <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="va">MC3_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"white"</span>,size <span class="op">=</span><span class="fl">.1</span><span class="op">)</span></code></pre></div>
+<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-6-1.png" width="1093.75" style="display: block; margin: auto;"></p>
+</div>
+<div id="hamiltonian" class="section level4">
+<h4 class="hasAnchor">
+<a href="#hamiltonian" class="anchor"></a>Hamiltonian</h4>
+<p>HMC needs tuning of the epsilon and L parameters for optimal performance. Compare the performance of HMC in this space depending on the size of epsilon and L (small = red, large = blue)</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># epsilon = .5, L = 10</span>
+<span class="va">HMC_.5</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">parameters</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, iterations <span class="op">=</span> <span class="va">iterations</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>
+<span class="va">HMC_.5_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">HMC_.5</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">HMC_.5</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
+
+<span class="co"># epsilon = 1, L = 50</span>
+<span class="va">HMC_1</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">parameters</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, L <span class="op">=</span> <span class="fl">50</span>, iterations <span class="op">=</span> <span class="va">iterations</span>, weights <span class="op">=</span> <span class="va">weights</span>, epsilon <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="va">HMC_1_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">HMC_1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">HMC_1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
+
+<span class="va">hill_map</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="va">HMC_.5_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, size <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="va">HMC_.5_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"white"</span>,size <span class="op">=</span><span class="fl">.1</span><span class="op">)</span> <span class="op">+</span> 
+  
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span><span class="op">(</span><span class="va">HMC_1_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"blue"</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, size <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="va">HMC_1_df</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"white"</span>,size <span class="op">=</span><span class="fl">.1</span><span class="op">)</span></code></pre></div>
+<p><img src="multivariate-mixtures_files/figure-html/unnamed-chunk-7-1.png" width="1093.75" style="display: block; margin: auto;"> The optimal sizes of epsilon and L depend on the space to be sampled: if the space is smaller than the current one (we do have 15 multivariate normal distributions!), large values will be inefficient as the sampler will turn on itself. Too small values, on the other hand, require many iterations to sample the whole space.</p>
+<!-- #### NUTS -->
+<!-- The same is true for NUTS and the size of epsilon -->
 <!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- HMC <-  sampler_hmc(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
-<!-- HMC_df <- data.frame(x = HMC[[1]][,1], y = HMC[[1]][,2]) -->
-<!-- plotPath(HMC_df) -->
+<!-- NUTS_.5 <-  sampler_nuts(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
+<!-- NUTS_1 <-  sampler_nuts(names, parameters, c(5,5), iterations = iterations, weights = weights, epsilon = 1, ) -->
+<!-- NUTS_.5_df <- data.frame(x = NUTS_.5[[1]][,1], y = NUTS_.5[[1]][,2]) -->
+<!-- NUTS_1_df <- data.frame(x = NUTS_1[[1]][,1], y = NUTS_1[[1]][,2]) -->
+<!-- hill_map +  -->
+<!--   geom_path(NUTS_.5_df, mapping = aes(x,y), colour = "red", linetype = "dashed", size = .3) +  -->
+<!--   geom_point(NUTS_.5_df, mapping = aes(x,y), colour = "white",size =.1) +  -->
+<!--   geom_path(NUTS_1_df, mapping = aes(x,y), colour = "blue", linetype = "dashed", size = .3) +  -->
+<!--   geom_point(NUTS_1_df, mapping = aes(x,y), colour = "white",size =.1) -->
 <!-- ``` -->
-<!-- NUTS -->
-<!-- ```{r, dpi=150, fig.align="center"} -->
-<!-- NUTS <-  sampler_hmc(names, parameters, c(5,5), iterations = iterations, weights = weights) -->
-<!-- NUTS_df <- data.frame(x = NUTS[[1]][,1], y = NUTS[[1]][,2]) -->
-<!-- plotPath(HMC_df) -->
-<!-- ``` -->
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
