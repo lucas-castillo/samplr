@@ -135,6 +135,26 @@ checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, sig
   }
 }
 
+getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50){
+
+  xRange <- seq(from = start[1], to = start[1] + size, length.out = cellsPerRow)
+  xxRange <- rep(xRange, cellsPerRow)
+
+  yRange <- seq(from = start[2], to = start[2] + size, length.out = cellsPerRow)
+
+  for (i in 1:cellsPerRow){
+    if (i == 1){
+      yyRange <- rep(yRange[i], cellsPerRow)
+    } else {
+      yyRange <- c(yyRange, rep(yRange[i], cellsPerRow))
+    }
+  }
+
+
+  density <- gridDensity(names, params, length(names) > 1, weights, xxRange, yyRange, cellsPerRow)
+  df <- data.frame(x = xxRange, y = yyRange, density = density)
+  return(df)
+}
 
 #' Markov Chain Monte Carlo Sampler
 #'

@@ -81,12 +81,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gridDensity
+NumericVector gridDensity(StringVector distr_name, List distr_params, bool isMix, NumericVector weights, NumericVector xxRange, NumericVector yyRange, int cellsPerRow);
+RcppExport SEXP _samplr_gridDensity(SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP xxRangeSEXP, SEXP yyRangeSEXP, SEXP cellsPerRowSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
+    Rcpp::traits::input_parameter< List >::type distr_params(distr_paramsSEXP);
+    Rcpp::traits::input_parameter< bool >::type isMix(isMixSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xxRange(xxRangeSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type yyRange(yyRangeSEXP);
+    Rcpp::traits::input_parameter< int >::type cellsPerRow(cellsPerRowSEXP);
+    rcpp_result_gen = Rcpp::wrap(gridDensity(distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_samplr_sampler_mcmc_cpp", (DL_FUNC) &_samplr_sampler_mcmc_cpp, 8},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 11},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 8},
     {"_samplr_sampler_nuts_cpp", (DL_FUNC) &_samplr_sampler_nuts_cpp, 8},
+    {"_samplr_gridDensity", (DL_FUNC) &_samplr_gridDensity, 7},
     {NULL, NULL, 0}
 };
 

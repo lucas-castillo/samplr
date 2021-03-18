@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(samplr)
 library(ggplot2)
-library(stats)
 ```
 
+#### Setup
 This vignette aims to show how different sampling algorithms may navigate a 'patchy' environment. Let's start by creating such an environment. 
 
 First, we create a matrix with what will be the means of 15 different Gaussians
