@@ -3,6 +3,7 @@
 // we only include RcppArmadillo.h which pulls Rcpp.h in for us
 #include "RcppArmadillo.h"
 #include <RcppDist.h>
+#include <math.h>       /* log */
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
@@ -243,17 +244,30 @@ dfunc getPDF(String distr_name, List distr_params, bool log=false)
   return pdf;
 }
 
+double safe_log(double x){
+  if (x <= 0){
+    return 1e-8;
+  } else {
+    return log(x);
+  }
 
-dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights){
+
+}
+
+dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights, bool logarithm = false){
   dfunc pdf;
-  pdf = [pdfs, weights](NumericVector x){
+  pdf = [pdfs, weights, logarithm](NumericVector x){
     double total_density = 0;
     for (unsigned i = 0; i < weights.size(); i++){
       dfunc p = pdfs[i];
 
       total_density +=  p(x) * weights[i];
     }
-    return total_density;
+    if (logarithm){
+      return safe_log(total_density);
+    } else{
+      return total_density;
+    }
   };
   return pdf;
 
@@ -269,9 +283,9 @@ dfunc managePDF(const StringVector &distr_name, const List &distr_params, const 
   } else
   {
     for (int i = 0; i < distr_name.size(); i++){
-      pdfs.push_back(getPDF(distr_name(i), distr_params(i), log));
+      pdfs.push_back(getPDF(distr_name(i), distr_params(i), false));
     }
-    pdf = getMixturePDF(pdfs, weights);
+    pdf = getMixturePDF(pdfs, weights, log);
     // stop("Mixture distributions not yet supported");
   }
   return pdf;
@@ -462,8 +476,6 @@ List sampler_hmc_cpp(
   return List::create(chain, momentums, ((double)(acceptances)/(double)(iterations)));
 
 }
-
-
 
 // // // NUTS // // //
 
