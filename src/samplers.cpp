@@ -634,7 +634,7 @@ NumericMatrix build_tree(const NumericVector &theta, const NumericVector &moment
     return tree;
   }
 }
-
+//'@export
 //[[Rcpp::export]]
 List sampler_nuts_cpp(
     NumericVector start,
