@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Time Comparisons • samplr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/custom-density-functions.html">Custom Density Functions</a>
+    </li>
+    <li>
       <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
@@ -92,27 +95,15 @@
     
     
 <p>All samplers run for 1024 iterations.</p>
-<!-- ## R -->
-<!-- ```{r} -->
-<!-- pdf <- SampleR::make_distr_pdf(distr::Norm()) -->
-<!-- X <- bench::mark( -->
-<!--     SampleR::sampler_mcmc(pdf, 1, sigma_prop = 1), -->
-<!--     SampleR::sampler_mc3(pdf, 1, sigma_prop = 1), -->
-<!--     SampleR::sampler_hmc(pdf, 1), -->
-<!--     SampleR::sampler_nuts(pdf, 1, .5), -->
-<!--     check = FALSE, -->
-<!-- ) -->
-<!-- knitr::kable(as.data.frame(X[,c("expression", "min", "median")])) -->
-<!-- ``` -->
 <div id="c" class="section level2">
 <h2 class="hasAnchor">
 <a href="#c" class="anchor"></a>C++</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bench/man/mark.html">mark</a></span><span class="op">(</span>
-    <span class="st">"Metropolis-Hastings"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mcmc.html">sampler_mcmc</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fl">1</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
-    <span class="st">"MC3"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fl">1</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
-    <span class="st">"Hamiltonian Monte-Carlo"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
-    <span class="st">"NUTS"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_nuts.html">sampler_nuts</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
+    <span class="st">"Metropolis-Hastings"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
+    <span class="st">"MC3"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,
+    <span class="st">"Hamiltonian Monte-Carlo"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
+    <span class="st">"NUTS"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_nuts.html">sampler_nuts</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
     check <span class="op">=</span> <span class="cn">FALSE</span>,
 <span class="op">)</span>
 <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"expression"</span>, <span class="st">"min"</span>, <span class="st">"median"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -125,23 +116,23 @@
 <tbody>
 <tr class="odd">
 <td align="left">Metropolis-Hastings</td>
-<td align="right">2.75ms</td>
-<td align="right">2.91ms</td>
+<td align="right">546.2us</td>
+<td align="right">578.2us</td>
 </tr>
 <tr class="even">
 <td align="left">MC3</td>
-<td align="right">25.37ms</td>
-<td align="right">27.79ms</td>
+<td align="right">6.07ms</td>
+<td align="right">6.25ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Hamiltonian Monte-Carlo</td>
-<td align="right">34.65ms</td>
-<td align="right">45.45ms</td>
+<td align="right">6.38ms</td>
+<td align="right">6.71ms</td>
 </tr>
 <tr class="even">
 <td align="left">NUTS</td>
-<td align="right">60.98ms</td>
-<td align="right">72.74ms</td>
+<td align="right">13.33ms</td>
+<td align="right">14.22ms</td>
 </tr>
 </tbody>
 </table>
@@ -165,7 +156,7 @@
 </tr>
 </tbody>
 </table>
-<!-- ## C++ --><!-- ```{r bench.all_columns = TRUE} --><!-- options(width = 300) --><!-- X <- bench::mark( --><!--     samplr::sampler_mcmc("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), --><!--     samplr::sampler_mc3("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), --><!--     samplr::sampler_hmc("mvnorm", list(c(0,1), diag(2)), c(0,0)), --><!--     # samplr::sampler_nuts("mvnorm", list(c(0,1), diag(2)), c(0,0)), --><!--     check = FALSE, --><!-- ) --><!-- print(X[,c("expression", "min", "median")]) --><!-- ``` -->
+<!-- ## C++ --><!-- ```{r bench.all_columns = TRUE} --><!-- options(width = 300) --><!-- X <- bench::mark( --><!--     samplr::sampler_mh("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), --><!--     samplr::sampler_mc3("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), --><!--     samplr::sampler_hmc("mvnorm", list(c(0,1), diag(2)), c(0,0)), --><!--     # samplr::sampler_nuts("mvnorm", list(c(0,1), diag(2)), c(0,0)), --><!--     check = FALSE, --><!-- ) --><!-- print(X[,c("expression", "min", "median")]) --><!-- ``` -->
 </div>
   </div>
 

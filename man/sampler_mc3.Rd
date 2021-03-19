@@ -5,23 +5,24 @@
 \title{Metropolis-coupled MCMC sampler (MC3)}
 \usage{
 sampler_mc3(
-  distr_name,
-  distr_params,
   start,
+  distr_name = NULL,
+  distr_params = NULL,
   sigma_prop = NULL,
   nChains = 6,
   delta_T = 4,
   swap_all = TRUE,
   iterations = 1024L,
-  weights = NULL
+  weights = NULL,
+  custom_density = NULL
 )
 }
 \arguments{
+\item{start}{Vector. Starting position of the sampler.}
+
 \item{distr_name}{Name of the distribution from which to sample from.}
 
 \item{distr_params}{Distribution parameters.}
-
-\item{start}{Vector. Starting position of the sampler.}
 
 \item{sigma_prop}{Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.}
 
@@ -36,7 +37,7 @@ sampler_mc3(
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \description{
-This sampler is a variant of MCMC in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MCMC). Because of this, an MC3 sampler can explore far-off regions, whereas an MCMC sampler may become stuck in a particular point of high density.
+This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 }
 \examples{
 

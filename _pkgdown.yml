@@ -1,0 +1,14 @@
+template:
+  params:
+    bootswatch: flatly
+
+reference:
+- title: "Sampling Functions"
+  desc: "Functions for sampling a distribution"
+- contents:
+  - starts_with("sampler")
+
+- title: "Plotting Functions"
+  desc: "Functions for plotting various aspects of the sampling process. Most only work with univariate distributions"
+- contents:
+  - starts_with("plot")

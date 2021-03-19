@@ -2,24 +2,25 @@
 % Please edit documentation in R/samplers.R
 \name{sampler_hmc}
 \alias{sampler_hmc}
-\title{Hamiltonian Monte-Carlo Sampler.}
+\title{Hamiltonian Monte-Carlo Sampler (HMC)}
 \usage{
 sampler_hmc(
-  distr_name,
-  distr_params,
   start,
+  distr_name = NULL,
+  distr_params = NULL,
   epsilon = 0.5,
   L = 10,
   iterations = 1024,
-  weights = NULL
+  weights = NULL,
+  custom_density = NULL
 )
 }
 \arguments{
+\item{start}{Vector. Starting position of the sampler.}
+
 \item{distr_name}{Name of the distribution from which to sample from.}
 
 \item{distr_params}{Distribution parameters.}
-
-\item{start}{Vector. Starting position of the sampler.}
 
 \item{epsilon}{Size of the leapfrog step}
 
@@ -30,7 +31,7 @@ sampler_hmc(
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 }
 \description{
-Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read \href{http://arxiv.org/abs/1701.02434}{here}
+Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read \href{http://arxiv.org/abs/1701.02434}{here}
 }
 \details{
 This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.

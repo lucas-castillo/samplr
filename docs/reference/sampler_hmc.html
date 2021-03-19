@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hamiltonian Monte-Carlo Sampler. — sampler_hmc • samplr</title>
+<title>Hamiltonian Monte-Carlo Sampler (HMC) — sampler_hmc • samplr</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Hamiltonian Monte-Carlo Sampler. — sampler_hmc" />
-<meta property="og:description" content="Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read here" />
+<meta property="og:title" content="Hamiltonian Monte-Carlo Sampler (HMC) — sampler_hmc" />
+<meta property="og:description" content="Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read here" />
 
 
 
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/custom-density-functions.html">Custom Density Functions</a>
+    </li>
+    <li>
       <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
@@ -124,28 +127,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hamiltonian Monte-Carlo Sampler.</h1>
+    <h1>Hamiltonian Monte-Carlo Sampler (HMC)</h1>
     
     <div class="hidden name"><code>sampler_hmc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read <a href='http://arxiv.org/abs/1701.02434'>here</a></p>
+    <p>Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read <a href='http://arxiv.org/abs/1701.02434'>here</a></p>
     </div>
 
     <pre class="usage"><span class='fu'>sampler_hmc</span><span class='op'>(</span>
-  <span class='va'>distr_name</span>,
-  <span class='va'>distr_params</span>,
   <span class='va'>start</span>,
+  distr_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  distr_params <span class='op'>=</span> <span class='cn'>NULL</span>,
   epsilon <span class='op'>=</span> <span class='fl'>0.5</span>,
   L <span class='op'>=</span> <span class='fl'>10</span>,
   iterations <span class='op'>=</span> <span class='fl'>1024</span>,
-  weights <span class='op'>=</span> <span class='cn'>NULL</span>
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  custom_density <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>start</th>
+      <td><p>Vector. Starting position of the sampler.</p></td>
+    </tr>
     <tr>
       <th>distr_name</th>
       <td><p>Name of the distribution from which to sample from.</p></td>
@@ -153,10 +161,6 @@
     <tr>
       <th>distr_params</th>
       <td><p>Distribution parameters.</p></td>
-    </tr>
-    <tr>
-      <th>start</th>
-      <td><p>Vector. Starting position of the sampler.</p></td>
     </tr>
     <tr>
       <th>epsilon</th>

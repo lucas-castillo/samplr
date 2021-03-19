@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Metropolis-coupled MCMC sampler (MC3) — sampler_mc3" />
-<meta property="og:description" content="This sampler is a variant of MCMC in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MCMC). Because of this, an MC3 sampler can explore far-off regions, whereas an MCMC sampler may become stuck in a particular point of high density." />
+<meta property="og:description" content="This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density." />
 
 
 
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/custom-density-functions.html">Custom Density Functions</a>
+    </li>
+    <li>
       <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
@@ -130,24 +133,29 @@
     </div>
 
     <div class="ref-description">
-    <p>This sampler is a variant of MCMC in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MCMC). Because of this, an MC3 sampler can explore far-off regions, whereas an MCMC sampler may become stuck in a particular point of high density.</p>
+    <p>This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sampler_mc3</span><span class='op'>(</span>
-  <span class='va'>distr_name</span>,
-  <span class='va'>distr_params</span>,
   <span class='va'>start</span>,
+  distr_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  distr_params <span class='op'>=</span> <span class='cn'>NULL</span>,
   sigma_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
   nChains <span class='op'>=</span> <span class='fl'>6</span>,
   delta_T <span class='op'>=</span> <span class='fl'>4</span>,
   swap_all <span class='op'>=</span> <span class='cn'>TRUE</span>,
   iterations <span class='op'>=</span> <span class='fl'>1024L</span>,
-  weights <span class='op'>=</span> <span class='cn'>NULL</span>
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  custom_density <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>start</th>
+      <td><p>Vector. Starting position of the sampler.</p></td>
+    </tr>
     <tr>
       <th>distr_name</th>
       <td><p>Name of the distribution from which to sample from.</p></td>
@@ -155,10 +163,6 @@
     <tr>
       <th>distr_params</th>
       <td><p>Distribution parameters.</p></td>
-    </tr>
-    <tr>
-      <th>start</th>
-      <td><p>Vector. Starting position of the sampler.</p></td>
     </tr>
     <tr>
       <th>sigma_prop</th>

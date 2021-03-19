@@ -134,17 +134,22 @@
     </div>
 
     <pre class="usage"><span class='fu'>sampler_mcmc</span><span class='op'>(</span>
-  <span class='va'>distr_name</span>,
-  <span class='va'>distr_params</span>,
   <span class='va'>start</span>,
+  distr_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  distr_params <span class='op'>=</span> <span class='cn'>NULL</span>,
   sigma_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
   iterations <span class='op'>=</span> <span class='fl'>1024L</span>,
-  weights <span class='op'>=</span> <span class='cn'>NULL</span>
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  custom_density <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>start</th>
+      <td><p>Vector. Starting position of the sampler.</p></td>
+    </tr>
     <tr>
       <th>distr_name</th>
       <td><p>Name of the distribution from which to sample from.</p></td>
@@ -152,10 +157,6 @@
     <tr>
       <th>distr_params</th>
       <td><p>Distribution parameters.</p></td>
-    </tr>
-    <tr>
-      <th>start</th>
-      <td><p>Vector. Starting position of the sampler.</p></td>
     </tr>
     <tr>
       <th>sigma_prop</th>

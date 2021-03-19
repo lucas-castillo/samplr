@@ -26,6 +26,6 @@ Markets display no significant autocorrelations in the returns of a given asset.
 }
 \examples{
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_autocorr(chain1[[1]])
 }

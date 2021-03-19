@@ -90,7 +90,7 @@ change_1d <- function(X){
 #'
 #' Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging [(Viswanathan et al., 1999)](https://www.nature.com/articles/44831). See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
-#'  @param chain Matrix of n x d dimensions, n = iterations, d = dimensions
+#' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions
 #' @param plot Boolean. plot Boolean. Whether to return a plot or the elements used to make it.
 #'
 #' @return
@@ -99,7 +99,7 @@ change_1d <- function(X){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_levy(chain1[[1]])
 plot_levy <- function(chain, plot=TRUE){
   distances <- vector()
@@ -186,7 +186,7 @@ plot_levy <- function(chain, plot=TRUE){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_PSD(chain1[[1]])
 plot_PSD <- function(chain, plot = TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -247,7 +247,7 @@ plot_PSD <- function(chain, plot = TRUE){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_qqplot(chain1[[1]])
 plot_qqplot <- function(chain, change = TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -282,11 +282,11 @@ plot_qqplot <- function(chain, change = TRUE){
 #' @examples
 #'
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_sigma_scaling(chain1[[1]])
 #'
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_sigma_scaling(chain1[[1]], plot = FALSE)
 plot_sigma_scaling <- function(chain, plot=TRUE){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -345,7 +345,7 @@ plot_sigma_scaling <- function(chain, plot=TRUE){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_autocorr(chain1[[1]])
 plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -390,7 +390,7 @@ plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
 plot_series <- function(chain){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -412,7 +412,7 @@ plot_series <- function(chain){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_change(chain1[[1]])
 plot_change <- function(chain){
   if (is.matrix(chain) && ncol(chain)>1){
@@ -435,7 +435,7 @@ plot_change <- function(chain){
 #'
 #' @examples
 #' set.seed(1)
-#' chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_all(chain1[[1]])
 plot_all <- function(chain, title = NULL){
   if (is.matrix(chain) && ncol(chain)>1){

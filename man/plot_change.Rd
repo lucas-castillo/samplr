@@ -17,6 +17,6 @@ Plots a change series against iterations. Useful to see if there is clustering o
 }
 \examples{
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_change(chain1[[1]])
 }

@@ -3,11 +3,15 @@
 // we only include RcppArmadillo.h which pulls Rcpp.h in for us
 #include "RcppArmadillo.h"
 #include <RcppDist.h>
-#include <math.h>       /* log */
+
+// we need R.h to manage RNG when repeated calls to R functions (see customPDF)
+#include <R.h>
+
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
+
 
 using namespace Rcpp;
 
@@ -15,7 +19,7 @@ typedef std::function<double(NumericVector)> dfunc;
 
 // UTILS
 
-NumericVector gradient(dfunc &func, NumericVector &x)
+NumericVector gradient(dfunc &func, const NumericVector &x)
 {
 
   int n_dim = x.size();
@@ -37,7 +41,7 @@ NumericVector gradient(dfunc &func, NumericVector &x)
   return returnVector;
 }
 
-double dotProduct(NumericVector &x, NumericVector &y)
+double dotProduct(const NumericVector &x, const NumericVector &y)
 {
   if (x.size() != y.size()){
     stop("Cannot calculate the dot product of vectors of different length");
@@ -50,19 +54,25 @@ double dotProduct(NumericVector &x, NumericVector &y)
 }
 
 
-double joint_d(NumericVector theta, NumericVector &momentum, dfunc &log_func){
+double joint_d(const NumericVector &theta, const NumericVector &momentum, dfunc &log_func){
     return (log_func(theta) - .5 * dotProduct(momentum, momentum));
 }
 
-
-
-NumericVector metropolis_step_cpp(NumericMatrix &chain, int currentIndex, double lastP, NumericMatrix &sigma_prop, dfunc &pdf, bool &discreteValues, double beta){
+NumericVector metropolis_step_cpp(NumericMatrix &chain, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
   NumericVector current_x = chain.row(currentIndex - 1);
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
+
   NumericVector proposal = NumericVector(proposal_.begin(), proposal_.end());
+  // Rcout << "PDF Test in MetropolisStep = ";
+  // Rcout << pdf(1) << "\n";
+
+  // Rcout << "Proposal in MetropolisStep = ";
+  // Rcout << pdf(1) << "\n";
 
   // if dist is discrete round the proposal to nearest int
   if (discreteValues){
+    // Rcout << "This shouldn't print...\n";
+
     for (int i = 0; i < proposal.length(); i++){
       proposal(i) = round(proposal(i));
     }
@@ -71,35 +81,37 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, int currentIndex, double
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
+  // Rcout << "Proposal probability in MetropolisStep = ";
+  // Rcout << prob_prop << "\n";
+
+  // Rcout << "Last probability in MetropolisStep = ";
+  // Rcout << lastP << "\n";
+
 
   // proposal is accepted with probability prob_prop / prob_curr
   if (lastP != 0){
     double ratio = prob_prop / lastP;
-    if (ratio >= 1){
+    if ((ratio >= 1) || (R::runif(0,1) < pow(ratio, beta))){
       chain.row(currentIndex) = proposal;
+      // Rcout << "A\n";
+
       return NumericVector::create(prob_prop, 1);
       // The beta parameter (temperature), beta <= 1, increases the value of the ratio making hotter chains more likely to accept proposals
-    } else if (R::runif(0,1) < pow(ratio, beta)){
+    }
+  } else if (prob_prop > 0) {
+      // Rcout << "B\n";
       chain.row(currentIndex) = proposal;
       return NumericVector::create(prob_prop, 1);
-    }
-  } else {
-    if (prob_prop > 0) {
-      chain.row(currentIndex) = proposal;
-      return NumericVector::create(prob_prop, 1);
-    }
   }
+  // Rcout << "C\n";
   chain.row(currentIndex) = current_x;
   return NumericVector::create(lastP, 0);
 }
 
+
 void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L, bool symmetric = true)
 {
-  // NumericMatrix M(2, theta.size());
-
   // start with half step for momentum
-  // NumericVector momentum0 = momentum, theta0 = theta;
-
   momentum = momentum + (epsilon/2) * gradient(log_pdf, theta);
 
   // alternate full steps for position and momentum
@@ -120,11 +132,6 @@ void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const doub
     momentum = -1 * momentum;
   }
 
-//
-//   M.row(0) = theta0;
-//   M.row(1) = momentum0;
-//
-//   return M;
 }
 
 
@@ -163,7 +170,7 @@ double estimate_epsilon(NumericVector theta, dfunc log_pdf){
 }
 
 
-dfunc getPDF(String distr_name, List distr_params, bool log=false)
+dfunc getPDF(const String &distr_name, const List &distr_params, const bool &log=false)
 {
   dfunc pdf;
   // CONTINUOUS
@@ -244,9 +251,9 @@ dfunc getPDF(String distr_name, List distr_params, bool log=false)
   return pdf;
 }
 
-double safe_log(double x){
+double safe_log(const double &x){
   if (x <= 0){
-    return 1e-8;
+    return log(1e-8);
   } else {
     return log(x);
   }
@@ -254,8 +261,9 @@ double safe_log(double x){
 
 }
 
-dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights, bool logarithm = false){
+dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights, const bool &logarithm = false){
   dfunc pdf;
+
   pdf = [pdfs, weights, logarithm](NumericVector x){
     double total_density = 0;
     for (unsigned i = 0; i < weights.size(); i++){
@@ -273,27 +281,44 @@ dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights, bool
 
 }
 
-
-dfunc managePDF(const StringVector &distr_name, const List &distr_params, const bool &isMix, const NumericVector &weights, const bool &log){
-  dfunc pdf;
-  std::vector<dfunc> pdfs;
-  if (!isMix){
-    pdf = getPDF(distr_name(0), distr_params, log);
-
-  } else
-  {
-    for (int i = 0; i < distr_name.size(); i++){
-      pdfs.push_back(getPDF(distr_name(i), distr_params(i), false));
+dfunc customPDF (const Function &f, const bool log = false){
+  dfunc pdf = [f, log](NumericVector x){
+    double d = 0;
+    PutRNGstate();
+    d = as<double>(f(x));
+    GetRNGstate();
+    if (log){
+      d = safe_log(d);
     }
-    pdf = getMixturePDF(pdfs, weights, log);
-    // stop("Mixture distributions not yet supported");
-  }
+    return d;
+  };
   return pdf;
 }
 
 
+
+dfunc managePDF(const StringVector &distr_name, const List &distr_params, const bool &isMix, const NumericVector &weights, const bool &log, const Function &custom_func, const bool &useCustom){
+  dfunc pdf;
+  std::vector<dfunc> pdfs;
+
+  if (useCustom){
+    pdf  = customPDF(custom_func);
+  } else if (!isMix){
+    pdf = getPDF(distr_name(0), distr_params, log);
+  } else {
+    for (int i = 0; i < distr_name.size(); i++){
+      pdfs.push_back(getPDF(distr_name(i), distr_params(i), false));
+    }
+    pdf = getMixturePDF(pdfs, weights, log);
+  }
+
+  return pdf;
+}
+
+
+
 //[[Rcpp::export]]
-List sampler_mcmc_cpp(
+List sampler_mh_cpp(
     NumericVector start,
     NumericMatrix sigma_prop,
     int iterations,
@@ -301,13 +326,15 @@ List sampler_mcmc_cpp(
     List distr_params,
     bool discreteValues,
     bool isMix,
-    NumericVector weights
+    NumericVector weights,
+    Function custom_func,
+    bool useCustom
 )
 {
   // Initialize variables ---------------------------------
   int acceptances = 0;
   int n_dim = start.size();
-  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
 
   NumericMatrix chain(iterations, n_dim);
   NumericMatrix ps(1, iterations);
@@ -338,8 +365,10 @@ List sampler_mc3_cpp(
     StringVector distr_name,
     List distr_params,
     bool discreteValues,
-    bool isMix = false,
-    NumericVector weights = NumericVector::create(1)
+    bool isMix,
+    NumericVector weights,
+    Function custom_func,
+    bool useCustom
 )
 {
   NumericVector acceptances(nChains);
@@ -352,7 +381,7 @@ List sampler_mc3_cpp(
   NumericVector beta(nChains);
   NumericMatrix ps(nChains, iterations);
 
-  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
   double initial_probability = pdf(start);
 
 
@@ -424,12 +453,14 @@ List sampler_hmc_cpp(
   double epsilon,
   int L,
   int iterations,
-  bool isMix = false,
-  NumericVector weights = NumericVector::create(1)
+  bool isMix,
+  NumericVector weights,
+  Function custom_func,
+  bool useCustom
   )
 {
   // init vars
-  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true);
+  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true, custom_func, useCustom);
   int dim = start.size();
   NumericMatrix chain(iterations, dim);
   NumericMatrix momentums(iterations, dim);
@@ -612,12 +643,14 @@ List sampler_nuts_cpp(
     double epsilon,
     int iterations,
     double delta_max,
-    bool isMix = false,
-    NumericVector weights = NumericVector::create(1)
+    bool isMix,
+    NumericVector weights,
+    Function custom_func,
+    bool useCustom
   )
 {
   //// init vars
-  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true);
+  dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true, custom_func, useCustom);
   int dim = start.size();
   NumericMatrix chain(iterations, dim);
   chain.row(0) = start;
@@ -739,12 +772,13 @@ List sampler_nuts_cpp(
 
 // [[Rcpp::export]]
 NumericVector gridDensity(StringVector distr_name, List distr_params, bool isMix, NumericVector weights, NumericVector xxRange, NumericVector yyRange, int cellsPerRow){
-  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false);
+  Function f("rnorm");
+  dfunc pdf=  managePDF(distr_name, distr_params, isMix, weights, false, f, false);
+
   NumericVector density(yyRange.size());
   for (int i = 0; i <yyRange.size(); i++){
     density(i) = pdf(NumericVector::create(xxRange[i],yyRange[i]));
   }
   return density;
 }
-
 

@@ -23,10 +23,10 @@ Markets show sigma scaling exponents around 0.5.
 \examples{
 
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_sigma_scaling(chain1[[1]])
 
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_sigma_scaling(chain1[[1]], plot = FALSE)
 }

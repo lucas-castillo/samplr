@@ -102,37 +102,51 @@ checkSigmaProp <- function(sigma_prop, n_dim){
   }
 }
 
-checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, sigma_prop = NULL){
+checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, custom_density, sigma_prop = NULL){
   dim = length(start)
-  if (caller == "mcmc" || caller == "mc3"){
+  if (caller == "mh" || caller == "mc3"){
     sigma_prop = checkSigmaProp(sigma_prop, dim)
   }
-
-  ### Is mixture
-  if (length(distr_name) > 1){
-    # same amount of distr and parameters
-    if (length(distr_name) != length(distr_params)){
-      stop("The vector of distribution names and the list of distribution parameters must be of equal length")
+  if (is.null(custom_density)){
+    if (is.null(distr_name) || is.null(distr_params)){
+      stop("Please provide a distribution name and parameters")
     }
-
-    for (i in 1:length(distr_name)){
-      info = checkNamesMatchParams(distr_name[i], distr_params[[i]])
-      if (info[1]){
-        stop(paste("Mixture Distributions are only supported if all distributions are continuous. Distribution", distr_name[[i]], "is discrete."))
+    ### Is mixture
+    if (length(distr_name) > 1){
+      # same amount of distr and parameters
+      if (length(distr_name) != length(distr_params)){
+        stop("The vector of distribution names and the list of distribution parameters must be of equal length")
       }
-      checkStart(info, start)
+
+      for (i in 1:length(distr_name)){
+        info = checkNamesMatchParams(distr_name[i], distr_params[[i]])
+        if (info[1]){
+          stop(paste("Mixture Distributions are only supported if all distributions are continuous. Distribution", distr_name[[i]], "is discrete."))
+        }
+        checkStart(info, start)
+      }
+      weights = checkWeights(weights, length(distr_name))
+      return(list(FALSE, TRUE, weights, sigma_prop))
+
+
+    ### Is not mixture
+    } else {
+        info = checkNamesMatchParams(distr_name, distr_params)
+        checkStart(info, start)
+        weights = checkWeights(weights, 1)
+        return (list(info[1], FALSE, weights, sigma_prop))
     }
-    weights = checkWeights(weights, length(distr_name))
-    return(list(FALSE, TRUE, weights, sigma_prop))
-
-
-  ### Is not mixture
-  } else {
-      info = checkNamesMatchParams(distr_name, distr_params)
-      checkStart(info, start)
-      weights = checkWeights(weights, 1)
-      return (list(info[1], FALSE, weights, sigma_prop))
+  } else{
+    if (!is.null(distr_name) || !is.null(distr_params)){
+      warning("Both (1) a custom density function and (2) distribution name and parameters were provided. Only the custom density function will be used.")
+    }
+    if (!is.null(weights)){
+      warning("Weights were provided for a custom density function but will not be used.")
+    }
+    return(list(FALSE, FALSE, 1, sigma_prop))
   }
+
+
 }
 
 getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50){
@@ -156,7 +170,7 @@ getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50
   return(df)
 }
 
-#' Markov Chain Monte Carlo Sampler
+#' Metropolis-Hastings (MH) Sampler
 #'
 #'
 #' This sampler navigates the proposal distribution following a random walk. At each step, it generates a new proposal from a proposal distribution (in this case a Gaussian centered at the current position) and chooses to accept it or reject it following the Metropolis-Hastings rule: it accepts it if the density of the posterior distribution at the proposed point is higher than at the current point. If the current position is denser, it still may accept the proposal with probability `proposal_density / current_density`.
@@ -180,27 +194,34 @@ getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' metropolis_hastings <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+#' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
 #'
 #' # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-#' metropolis_hastings <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1)
+#' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
 #'
 #'
 
-sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iterations = 1024L, weights = NULL){
-
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mcmc", sigma_prop)
+sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL){
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
   sigma_prop = distrInfo[[4]]
+  if (is.null(custom_density)){
+    custom_density <- function(x){}
+    use_custom = FALSE
+  } else{
+    distr_name = ""
+    distr_params = c(0,1)
+    use_custom = TRUE
+  }
 
-  return (sampler_mcmc_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights))
+  return (sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom))
 }
 
 #' Metropolis-coupled MCMC sampler (MC3)
 #'
-#' This sampler is a variant of MCMC in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MCMC). Because of this, an MC3 sampler can explore far-off regions, whereas an MCMC sampler may become stuck in a particular point of high density.
+#' This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 #'
 #'
 #' @param distr_name Name of the distribution from which to sample from.
@@ -219,18 +240,26 @@ sampler_mcmc<- function(distr_name, distr_params, start, sigma_prop = NULL, iter
 #'
 #' # Sample from a normal distribution
 #' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
-sampler_mc3<- function(distr_name, distr_params, start, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL){
+sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
   if (floor(nChains) != nChains){
     stop("nChains must be a whole number")
   }
 
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mc3", sigma_prop)
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mc3", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
   sigma_prop = distrInfo[[4]]
+  if (is.null(custom_density)){
+    custom_density <- function(x){}
+    use_custom = FALSE
+  } else{
+    distr_name = ""
+    distr_params = c(0,1)
+    use_custom = TRUE
+  }
 
-  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights)
+  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
 
   M <- array(0, dim = (c(iterations, length(start), nChains)))
   for (i in 1:nChains){
@@ -254,9 +283,9 @@ sampler_mc3<- function(distr_name, distr_params, start, sigma_prop = NULL, nChai
 
 }
 
-#' Hamiltonian Monte-Carlo Sampler.
+#' Hamiltonian Monte-Carlo Sampler (HMC)
 #'
-#' Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MCMC and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read [here](http://arxiv.org/abs/1701.02434)
+#' Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read [here](http://arxiv.org/abs/1701.02434)
 #'
 #'
 #' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.
@@ -272,16 +301,29 @@ sampler_mc3<- function(distr_name, distr_params, start, sigma_prop = NULL, nChai
 #' @examples
 #'
 #' HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
-sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, iterations=1024, weights = NULL) {
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "hmc")
+sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, iterations=1024, weights = NULL, custom_density = NULL) {
+
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
+  if (is.null(custom_density)){
+    custom_density <- function(x){}
+    use_custom = FALSE
+  } else{
+    distr_name = ""
+    distr_params = c(0,1)
+    use_custom = TRUE
+  }
+
+
+
+
   if (isDiscrete){
     stop("Hamiltonian Monte-Carlo is not supported with discrete distributions")
   }
 
-  samplerResults <- sampler_hmc_cpp(start, distr_name, distr_params, epsilon, L, iterations, isMix = isMix, weights = weights)
+  samplerResults <- sampler_hmc_cpp(start, distr_name, distr_params, epsilon, L, iterations, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
 
   return(
     list(
@@ -293,7 +335,7 @@ sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, itera
 
 }
 
-#' No U-Turn Sampler.
+#' No U-Turn Sampler (NUTS)
 #'
 #' Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found [here](https://arxiv.org/abs/1111.4246)
 #'
@@ -311,15 +353,24 @@ sampler_hmc <- function(distr_name, distr_params, start, epsilon=.5, L=10, itera
 #' @examples
 #' NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
 #'
-sampler_nuts <- function(distr_name, distr_params, start, epsilon=.5, delta_max=1000, iterations=1024, weights = NULL) {
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "nuts")
+sampler_nuts <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, delta_max=1000, iterations=1024, weights = NULL, custom_density = NULL) {
+  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "nuts", custom_density)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
+  if (is.null(custom_density)){
+    custom_density <- function(x){}
+    use_custom = FALSE
+  } else{
+    distr_name = ""
+    distr_params = c(0,1)
+    use_custom = TRUE
+  }
+
   if (isDiscrete){
     stop("NUTS is not supported with discrete distributions")
   }
-  samplerResults <- sampler_nuts_cpp(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix = isMix, weights = weights)
+  samplerResults <- sampler_nuts_cpp(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
 
   return(
     list(

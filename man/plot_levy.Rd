@@ -7,6 +7,8 @@
 plot_levy(chain, plot = TRUE)
 }
 \arguments{
+\item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions}
+
 \item{plot}{Boolean. plot Boolean. Whether to return a plot or the elements used to make it.}
 }
 \value{
@@ -17,11 +19,9 @@ This plotter analyses if the length of the jumps the sampler is making (\eqn{l})
 }
 \details{
 Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging \href{https://www.nature.com/articles/44831}{(Viswanathan et al., 1999)}. See \href{https://dl.acm.org/doi/abs/10.5555/3327345.3327477}{Zhu et al. 2018} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
-
-@param chain Matrix of n x d dimensions, n = iterations, d = dimensions
 }
 \examples{
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_levy(chain1[[1]])
 }
