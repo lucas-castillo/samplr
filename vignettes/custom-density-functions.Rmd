@@ -30,7 +30,7 @@ customDensity_r <- function(x){
     return (0)                    }
 }
 # Sample
-Y <- sampler_mh(start = c(0,0), custom_density = customDensity_r)
+Y <- samplr::sampler_mh(start = c(0,0), custom_density = customDensity_r)
 
 # Plot results
 x <- Y[[1]][,1]
@@ -52,9 +52,9 @@ Rcpp::cppFunction("double customDensity_cpp(NumericVector x){
                     }
                   }")
 X <- bench::mark(
-  "CPP Density" = {sampler_mh(start = c(0,0), custom_density = customDensity_cpp, sigma_prop = diag(2))},
-  "R Density" = {sampler_mh(start = c(0,0), custom_density = customDensity_r, sigma_prop = diag(2))},
-  "Supported Density" = {sampler_mh(start = c(0,0), distr_name = "mvnorm", distr_params = list(c(0,1), diag(2)), sigma_prop = diag(2))},
+  "CPP Density" = {samplr::sampler_mh(start = c(0,0), custom_density = customDensity_cpp, sigma_prop = diag(2))},
+  "R Density" = {samplr::sampler_mh(start = c(0,0), custom_density = customDensity_r, sigma_prop = diag(2))},
+  "Supported Density" = {samplr::sampler_mh(start = c(0,0), distr_name = "mvnorm", distr_params = list(c(0,1), diag(2)), sigma_prop = diag(2))},
   check = FALSE,
 )
 knitr::kable(as.data.frame(X[,c("expression", "min", "median")]))
