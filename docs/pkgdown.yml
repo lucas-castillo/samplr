@@ -2,9 +2,10 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  custom-density-functions: custom-density-functions.html
   how-to-sample: how-to-sample.html
   multivariate-mixtures: multivariate-mixtures.html
   supported-distributions: supported-distributions.html
   time-comparisons: time-comparisons.html
-last_built: 2021-03-18T09:50Z
+last_built: 2021-03-19T17:23Z
 

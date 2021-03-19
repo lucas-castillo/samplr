@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -94,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/custom-density-functions.html">Custom Density Functions</a>
+    </li>
+    <li>
       <a href="../articles/how-to-sample.html">Getting Started: How to Sample From a Distribution</a>
     </li>
     <li>
@@ -137,8 +140,45 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-sampling-functions" class="hasAnchor"><a href="#section-sampling-functions" class="anchor"></a>Sampling Functions</h2>
+          <p class="section-desc"><p>Functions for sampling a distribution</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="sampler_hmc.html">sampler_hmc()</a></code> </p>
+        </td>
+        <td><p>Hamiltonian Monte-Carlo Sampler (HMC)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sampler_mc3.html">sampler_mc3()</a></code> </p>
+        </td>
+        <td><p>Metropolis-coupled MCMC sampler (MC3)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sampler_mh.html">sampler_mh()</a></code> </p>
+        </td>
+        <td><p>Metropolis-Hastings (MH) Sampler</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sampler_nuts.html">sampler_nuts()</a></code> </p>
+        </td>
+        <td><p>No U-Turn Sampler (NUTS)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-plotting-functions" class="hasAnchor"><a href="#section-plotting-functions" class="anchor"></a>Plotting Functions</h2>
+          <p class="section-desc"><p>Functions for plotting various aspects of the sampling process. Most only work with univariate distributions</p></p>
         </th>
       </tr>
       
@@ -194,36 +234,6 @@
           <p><code><a href="plot_sigma_scaling.html">plot_sigma_scaling()</a></code> </p>
         </td>
         <td><p>Sigma Scaling Plotter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sampler_hmc.html">sampler_hmc()</a></code> </p>
-        </td>
-        <td><p>Hamiltonian Monte-Carlo Sampler.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sampler_mc3.html">sampler_mc3()</a></code> </p>
-        </td>
-        <td><p>Metropolis-coupled MCMC sampler (MC3)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sampler_mcmc.html">sampler_mcmc()</a></code> </p>
-        </td>
-        <td><p>Markov Chain Monte Carlo Sampler</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sampler_nuts.html">sampler_nuts()</a></code> </p>
-        </td>
-        <td><p>No U-Turn Sampler.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="samplr-package.html">samplr-package</a></code> </p>
-        </td>
-        <td><p>Tools To Compare Human Performance To Sampling Algorithms</p></td>
       </tr>
     </tbody>
     </table>

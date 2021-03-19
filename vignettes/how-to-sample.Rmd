@@ -22,20 +22,20 @@ set.seed(123)
 ### Choosing a distibution
 To sample from a distribution, check the abbreviation, as well as the distribution parameters, in [the Supported Distributions Vignette](supported-distributions.html). Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:
 
-1. **Distribution Name**: `"norm"`,
-2. **Distribution Parameters**: A vector with the distribution parameters. In our case, `mean` and `std`, that is: `c(0,1)`,
-3. A **starting point**: Any point in the sampling space. We'll choose the mean of our distribution, `0`.,
+1. A **starting point**: Any point in the sampling space. We'll choose the mean of our distribution, `0`.,
+2. **Distribution Name**: `"norm"`,
+3. **Distribution Parameters**: A vector with the distribution parameters. In our case, `mean` and `std`, that is: `c(0,1)`,
 
 ```{r}
+start = 0
 name = "norm"
 params = c(0,1)
-start = 0
 ```
 ### Different Sampling Algorithms
 Different algorithms are available in the `samplr` package. For our example, we will use Metropolis Hastings. To use a sampler, we will always need the three previously mentioned items. For Metropolis Hastings and MC3, it is convenient to provide the variance of the proposal distribution, so we do that before sampling.
 ```{r}
 proposal_variance <- 1 / 2
-MH_samples <- sampler_mcmc(name, params, start, proposal_variance)
+MH_samples <- sampler_mh(start, name, params, proposal_variance)
 ```
 
 If we plot our results:
@@ -46,11 +46,11 @@ curve(dnorm(x, 0,1), add=TRUE)
 
 Notice that the same approach is used for all other samplers:
 ```{r}
-MC3_samples <- sampler_mc3(name, params, start, proposal_variance)
+MC3_samples <- sampler_mc3(start, name, params, proposal_variance)
 
-HMC_samples <- sampler_hmc(name, params, start)
+HMC_samples <- sampler_hmc(start, name, params)
 
-NUTS_samples <- sampler_nuts(name, params, start)
+NUTS_samples <- sampler_nuts(start, name, params)
 ```
 
 ### Mixture Distributions
@@ -61,6 +61,7 @@ If we want to sample from a mixture distribution, the following change:
 3. **Distribution Weights (optional)**: A vector with the weights given to each distribution. The sum of weights equals 1. 
 
 ```{r}
+
 name <- c("norm", "norm")
 params <- list(c(-2, 1), c(2, 1))
 weights <- c(.4, .6)
@@ -75,7 +76,7 @@ We proceed as we did before:
 ```{r}
 # Sample (more iterations as MH struggles to change hills)
 proposal_variance <- 1
-MH_samples <- sampler_mcmc(name, params, start, proposal_variance, iterations = 2**12, weights = weights)
+MH_samples <- sampler_mh(start, name, params, proposal_variance, iterations = 2**12, weights = weights)
 # plot
 hist(MH_samples[[1]], freq=FALSE, breaks = 20)
 curve(customDensity(x), add=TRUE)

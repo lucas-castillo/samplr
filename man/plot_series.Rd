@@ -17,6 +17,6 @@ Plots the value of a one-dimensional series against the iteration where it occur
 }
 \examples{
 set.seed(1)
-chain1 <- sampler_mcmc("norm", c(0,1), 1, diag(1))
+chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 plot_series(chain1[[1]])
 }

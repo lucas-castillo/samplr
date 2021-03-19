@@ -130,10 +130,10 @@ knitr::kable(X)
 ## Examples
 ### Univariate distribution
 ```{r}
-X <- sampler_mcmc(
+X <- sampler_mh(
+  start = 0, # starting point for the sampler
   distr_name = "truncnorm", # Use abbreviation in distr_name
   distr_params = c(0,1,-5,0), # provide distribution parameters as a vector for univariate distributions
-  start = 0, # starting point for the sampler
   sigma_prop = 1, # variance of the proposal distribution
 )
 hist(X[[1]])
@@ -142,9 +142,9 @@ hist(X[[1]])
 ### Multivariate distribution
 ```{r}
 X <- sampler_hmc(
+  start = c(0,0), 
   distr_name = "mvnorm", # as before
   list(c(0,0), diag(2)), # provide distribution parameters as a list for multivariate distributions
-  start = c(0,0), 
 )
 
 x <- X[[1]][,1]

@@ -2,24 +2,25 @@
 % Please edit documentation in R/samplers.R
 \name{sampler_nuts}
 \alias{sampler_nuts}
-\title{No U-Turn Sampler.}
+\title{No U-Turn Sampler (NUTS)}
 \usage{
 sampler_nuts(
-  distr_name,
-  distr_params,
   start,
+  distr_name = NULL,
+  distr_params = NULL,
   epsilon = 0.5,
   delta_max = 1000,
   iterations = 1024,
-  weights = NULL
+  weights = NULL,
+  custom_density = NULL
 )
 }
 \arguments{
+\item{start}{Vector. Starting position of the sampler.}
+
 \item{distr_name}{Name of the distribution from which to sample from.}
 
 \item{distr_params}{Distribution parameters.}
-
-\item{start}{Vector. Starting position of the sampler.}
 
 \item{epsilon}{Size of the leapfrog step}
 
