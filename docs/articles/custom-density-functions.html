@@ -95,8 +95,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">samplr</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/bench">bench</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">samplr</span><span class="op">)</span></code></pre></div>
 <p>To sample from a custom density function, create said function, then use it as the <code>custom_density</code> parameter with one of the samplers, instead of giving <code>distr_name</code>, <code>distr_params</code> (see <a href="supported-distributions.html">Supported Distributions</a> and <a href="how-to-sample.html">How to Sample</a>) and <code>weights</code>, if applicable.</p>
 <p>In this example we create a 2D uniform distribution, which is not supported by Rcpp and RcppDist at the time of writing.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -145,18 +144,18 @@
 <tbody>
 <tr class="odd">
 <td align="left">CPP Density</td>
-<td align="right">59.86ms</td>
-<td align="right">75.6ms</td>
+<td align="right">61.24ms</td>
+<td align="right">68.11ms</td>
 </tr>
 <tr class="even">
 <td align="left">R Density</td>
-<td align="right">77.74ms</td>
-<td align="right">80.1ms</td>
+<td align="right">55.41ms</td>
+<td align="right">62.49ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Supported Density</td>
-<td align="right">2.22ms</td>
-<td align="right">4.13ms</td>
+<td align="right">1.79ms</td>
+<td align="right">2.59ms</td>
 </tr>
 </tbody>
 </table>
@@ -226,8 +225,8 @@
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">Bespoke MH</td>
-<td align="right">833ms</td>
-<td align="right">833ms</td>
+<td align="right">810ms</td>
+<td align="right">810ms</td>
 </tr></tbody>
 </table>
 </div>

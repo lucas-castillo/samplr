@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(samplr)
-library(bench)
 ```
 
 To sample from a custom density function, create said function, then use it as the `custom_density` parameter with one of the samplers, instead of giving `distr_name`, `distr_params` (see [Supported Distributions](supported-distributions.html) and [How to Sample](how-to-sample.html)) and `weights`, if applicable.
