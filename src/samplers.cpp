@@ -397,11 +397,10 @@ List sampler_mc3_cpp(
     nSwaps = 1;
   }
 
-  std::vector<int> v(nChains) ; // vector with nChains ints.
-  std::iota (std::begin(v), std::end(v), 0); // Fill with 0, 1, ..., 99.
+  NumericVector v(nChains);
+  v = seq(0, nChains - 1);
 
-
-  // run the sampler ------------------------------------------------
+    // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
 
     for (int ch = 0; ch < nChains; ch++){
@@ -414,7 +413,9 @@ List sampler_mc3_cpp(
      // once a step in every chain has been done, proceed to swap chains
     if (nChains > 1){
       // arrange chains randomly
-      std::random_shuffle (v.begin(), v.end()); // shuffle
+
+      v = sample(v, nChains, false);
+
 
       // swap nSwaps times (depending on swap_all)
       for (int k = 0; k < nSwaps; k++){

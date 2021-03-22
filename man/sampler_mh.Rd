@@ -26,6 +26,8 @@ sampler_mh(
 \item{iterations}{Number of iterations of the sampler.}
 
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
+
+\item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
 \value{
 A list containing
@@ -43,7 +45,10 @@ As mentioned, the proposal distribution is a Normal distribution. Its mean is th
 \examples{
 
 # Sample from a normal distribution
-metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+metropolis_hastings <- sampler_mh(
+                       distr_name = "norm", distr_params = c(0,1),
+                       start = 1, sigma_prop = diag(1)
+                       )
 
 # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
 metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)

@@ -29,7 +29,7 @@
   } else if (d_uv){
     isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
   } else{
-    stop(paste("Distribution", name, "is not supported"))
+    stop(paste("Distribution", distr_name, "is not supported"))
   }
 
 
@@ -42,9 +42,9 @@
     # }
     return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)
   } else{
-    if (substr(returnVector, 3, 4) == "mv"){
+    if (c_mv){
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont_mv[match(distr_name, names_cont_mv)], "parameters are expected in a list"))
-    } else if (substr(returnVector, 1, 1) == "c"){
+    } else if (!d_uv){
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont[match(distr_name, names_cont)], "parameters are expected in a vector"))
     } else{
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_discr[match(distr_name, names_discr)], "parameters are expected in a vector"))
@@ -249,6 +249,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @param sigma_prop Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param iterations Number of iterations of the sampler.
+#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
 #'
 #' @return A list containing
 #' \enumerate{
@@ -260,7 +261,10 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+#' metropolis_hastings <- sampler_mh(
+#'                        distr_name = "norm", distr_params = c(0,1),
+#'                        start = 1, sigma_prop = diag(1)
+#'                        )
 #'
 #' # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
 #' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
@@ -299,7 +303,7 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
-#'
+#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
 #' @export
 #'
 #' @examples
@@ -363,6 +367,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #' @param L Number of leapfrog steps per iteration
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
+#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
 #' @export
 #' @examples
 #'
@@ -414,6 +419,7 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param delta_max Measure of the required accuracy of the simulation. The authors recommend a large value (1000)
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
+#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
 #' @export
 #'
 #' @examples

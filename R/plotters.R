@@ -296,7 +296,7 @@ plot_sigma_scaling <- function(chain, plot=TRUE){
   maxLag = round(length(chain) / 10)
   for (i in 1:maxLag){
     distances <- (chain[1:(length(chain)-i)] - matrix(chain[-1:-i,]))
-    s_devs[i] <- stats::sd(na.omit(distances))
+    s_devs[i] <- stats::sd(stats::na.omit(distances))
   }
 
 
@@ -405,9 +405,8 @@ plot_series <- function(chain){
 #' Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#'
-#'
-#' @return
+
+#' @return A plot of the change series
 #' @export
 #'
 #' @examples
