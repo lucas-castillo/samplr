@@ -14,11 +14,12 @@ Description: The goal of samplr is to provide tools to understand human performa
 License: MIT + file LICENSE
 Imports: 
   Rcpp (>= 1.0.6),
-  ggplot2, gridExtra, latex2exp, pracma
+  ggplot2, gridExtra, latex2exp, pracma, stats
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    bench, mvtnorm
 LinkingTo: 
   Rcpp, 
   RcppArmadillo, 
