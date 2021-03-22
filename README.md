@@ -20,6 +20,23 @@ You can install the released version of SampleR from
 
     devtools::install_github("lucas-castillo/samplr")
 
+### Installing on MacOS
+
+If installing on MacOS, you will need the following prior to
+installation:
+
+1.  Apple’s ‘Command Line Tools’: these can be (re-)installed by running
+    `xcode-select --install` in a terminal. You may also check if those
+    are already installed by running `pkgbuild::check_build_tools()`
+    in R.
+2.  A Fortran compiler. An installer for gfortran is available
+    [here](https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg.81).
+    This installs into `/usr/local/gfortran`.
+
+Read more about it on the [macOS Prerequisites section in the R
+Installation and Administration
+Manual](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites).
+
 ## Example
 
 samplr provides tools to generate samples following particular

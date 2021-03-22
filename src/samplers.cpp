@@ -316,7 +316,7 @@ dfunc managePDF(const StringVector &distr_name, const List &distr_params, const 
 }
 
 
-
+//'@export
 //[[Rcpp::export]]
 List sampler_mh_cpp(
     NumericVector start,
@@ -353,7 +353,7 @@ List sampler_mh_cpp(
 
   return List::create(chain, (double)(acceptances) / (double)(iterations));
 }
-
+//'@export
 // [[Rcpp::export]]
 List sampler_mc3_cpp(
     NumericVector start,
@@ -445,7 +445,7 @@ List sampler_mc3_cpp(
 
   return List::create(chain, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
 }
-
+//'@export
 // [[Rcpp::export]]
 List sampler_hmc_cpp(
   NumericVector start,
@@ -636,7 +636,7 @@ NumericMatrix build_tree(const NumericVector &theta, const NumericVector &moment
   }
 }
 
-
+//'@export
 //[[Rcpp::export]]
 List sampler_nuts_cpp(
     NumericVector start,
