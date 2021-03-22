@@ -37,9 +37,11 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
+      - name: Compile Attributes
+        run: 'Rcpp::compileAttributes()'
 
       - name: Install package
-        run: r 'Rcpp::compileAttributes()'
+
         run: R CMD INSTALL .
 
       - name: Deploy package
