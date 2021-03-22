@@ -94,6 +94,16 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the released version of SampleR from <a href="https://github.com/lucas-castillo/samplr">Github</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"lucas-castillo/samplr"</span>)</span></code></pre></div>
+<div id="installing-on-macos" class="section level3">
+<h3 class="hasAnchor">
+<a href="#installing-on-macos" class="anchor"></a>Installing on MacOS</h3>
+<p>If installing on MacOS, you will need the following prior to installation:</p>
+<ol>
+<li>Apple’s ‘Command Line Tools’: these can be (re-)installed by running <code>xcode-select --install</code> in a terminal. You may also check if those are already installed by running <code><a href="https://rdrr.io/pkg/pkgbuild/man/has_build_tools.html">pkgbuild::check_build_tools()</a></code> in R.</li>
+<li>A Fortran compiler. An installer for gfortran is available <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg.81">here</a>. This installs into <code>/usr/local/gfortran</code>.</li>
+</ol>
+<p>Read more about it on the <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites">macOS Prerequisites section in the R Installation and Administration Manual</a>.</p>
+</div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
