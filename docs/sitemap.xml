@@ -4,6 +4,9 @@
     <loc>https://lucas-castillo.github.io/samplr/index.html</loc>
   </url>
   <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/plot_2d_density.html</loc>
+  </url>
+  <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/plot_all.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/sampler_nuts.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/samplr.html</loc>
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/articles/custom-density-functions.html</loc>
