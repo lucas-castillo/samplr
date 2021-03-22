@@ -35,6 +35,8 @@ sampler_mc3(
 \item{iterations}{Number of iterations of the sampler.}
 
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
+
+\item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
 \description{
 This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.

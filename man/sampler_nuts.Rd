@@ -29,6 +29,8 @@ sampler_nuts(
 \item{iterations}{Number of iterations of the sampler.}
 
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
+
+\item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
 \description{
 Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found \href{https://arxiv.org/abs/1111.4246}{here}

@@ -10,7 +10,7 @@ plot_change(chain)
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
 }
 \value{
-
+A plot of the change series
 }
 \description{
 Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets

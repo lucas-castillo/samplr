@@ -29,6 +29,8 @@ sampler_hmc(
 \item{iterations}{Number of iterations of the sampler.}
 
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
+
+\item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
 \description{
 Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read \href{http://arxiv.org/abs/1701.02434}{here}
