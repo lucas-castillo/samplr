@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // sampler_mh_cpp
 List sampler_mh_cpp(NumericVector start, NumericMatrix sigma_prop, int iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
 RcppExport SEXP _samplr_sampler_mh_cpp(SEXP startSEXP, SEXP sigma_propSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP) {
