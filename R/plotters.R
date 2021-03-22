@@ -393,7 +393,7 @@ plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
 plot_series <- function(chain){
-  if (is.matrix(chain) && ncol(chain)>1){
+  if (is.matrix(chain) && ncol(chain)>1){ #
     stop("Please input a one-dimensional vector")
   }
   df = data.frame(t = 1:length(chain), X = chain)
