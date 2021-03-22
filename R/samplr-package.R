@@ -1,6 +1,6 @@
 
 #' @useDynLib samplr, .registration=TRUE
-#' @importFrom Rcpp evalCpp
+#' @importFrom Rcpp evalCpp sourceCpp
 #' @keywords internal
 "_PACKAGE"
 
