@@ -149,7 +149,41 @@ checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, cus
 
 }
 
-getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50){
+#' Density Plotter
+#'
+#' Plots a 2D map of the density of a distribution. If plot = FALSE, returns a dataframe with the density for each cell in the grid
+#'
+#' @param start Vector c(x, y) with the coordinates of the bottom-left corner of the map.
+#' @param size Distance covered by the map. In other words, the top-right corner of the map has coordinates c(x + size, y + size)
+#' @param cellsPerRow Number of cells to plot in every row. The higher, the more resolution
+#' @param names Name of the distribution from which to sample from.
+#' @param params Distribution parameters.
+#' @param weights Distribution weights (if it's a mix of distributions)
+#' @param customDensity Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @param plot Whether to return a plot or a dataframe with the density in each coordinate
+#'
+#' @return Density Plot or dataframe
+#' @export
+#'
+#' @examples
+#' # plot supported distribution
+#' plot_2d_density(
+#' c(-5, -5), 10, cellsPerRow = 100, names = c("mvnorm", "mvnorm"),
+#' params = list(list(c(-2,1), diag(2)), list(c(2,1), diag(2)))
+#' )
+#'
+#' # plot custom distribution
+#' customDensity_r <- function(x){
+#'     if (x[1] > 0 && x[1] < 3 && x[2] < 0 && x[2] > -3){
+#'         return (1)
+#'     } else {
+#'         return (0)
+#'     }
+#'}
+#' plot_2d_density(start = c(0,-4), size = 5, customDensity = customDensity_r)
+#'
+#'
+plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params = NULL, weights = NULL, customDensity = NULL, plot = TRUE){
 
   xRange <- seq(from = start[1], to = start[1] + size, length.out = cellsPerRow)
   xxRange <- rep(xRange, cellsPerRow)
@@ -164,10 +198,31 @@ getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50
     }
   }
 
+  info <- .checkGivenInfo(names, params, NULL, weights, "grid", customDensity)
+  weights = info[[3]]
+  if (is.null(customDensity)){
+    useCustom = FALSE
+    customDensity = function(){}
+    density <- gridDensity_cpp(names, params, length(names) > 1, weights, xxRange, yyRange, cellsPerRow, densityFunc = customDensity, useCustomDensity = useCustom)
+  } else{
+    useCustom = TRUE
+    density <- gridDensity_cpp("names", c(0,1), FALSE, weights, xxRange, yyRange, cellsPerRow, densityFunc = customDensity, useCustomDensity = useCustom)
+  }
 
-  density <- gridDensity(names, params, length(names) > 1, weights, xxRange, yyRange, cellsPerRow)
+
   df <- data.frame(x = xxRange, y = yyRange, density = density)
-  return(df)
+
+  if (plot){
+    map <- ggplot2::ggplot(df) +
+      ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = density)) +
+      ggplot2::scale_fill_viridis_c() +
+      ggplot2::theme_void()
+
+    return(map)
+  }
+  else{
+    return(df)
+  }
 }
 
 #' Metropolis-Hastings (MH) Sampler
@@ -202,7 +257,7 @@ getDensityGrid <- function(names, params, weights, start, size, cellsPerRow = 50
 #'
 
 sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL){
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
+  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
@@ -245,7 +300,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
     stop("nChains must be a whole number")
   }
 
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "mc3", custom_density, sigma_prop)
+  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mc3", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
@@ -303,7 +358,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #' HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
 sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, iterations=1024, weights = NULL, custom_density = NULL) {
 
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
+  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
@@ -354,7 +409,7 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
 #'
 sampler_nuts <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, delta_max=1000, iterations=1024, weights = NULL, custom_density = NULL) {
-  distrInfo = checkGivenInfo(distr_name, distr_params, start, weights, "nuts", custom_density)
+  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "nuts", custom_density)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
   weights = distrInfo[[3]]
