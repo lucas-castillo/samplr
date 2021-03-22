@@ -1,0 +1,14 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  custom-density-functions: custom-density-functions.html
+  how-to-sample: how-to-sample.html
+  multivariate-mixtures: multivariate-mixtures.html
+  supported-distributions: supported-distributions.html
+  time-comparisons: time-comparisons.html
+last_built: 2021-03-22T16:18Z
+urls:
+  reference: https://lucas-castillo.github.io/samplr/reference
+  article: https://lucas-castillo.github.io/samplr/articles
+
