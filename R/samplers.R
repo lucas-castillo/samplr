@@ -1,4 +1,4 @@
-checkNamesMatchParams <- function(distr_name, distr_params){
+.checkNamesMatchParams <- function(distr_name, distr_params){
 
   names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
                   "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
@@ -53,7 +53,7 @@ checkNamesMatchParams <- function(distr_name, distr_params){
 
 }
 
-checkStart <- function(info, start){
+.checkStart <- function(info, start){
   dim = length(start)
   if (dim == 1 && info[2]){
     stop("Start is length 1 but distribution is multivariate")
@@ -62,7 +62,7 @@ checkStart <- function(info, start){
   }
 }
 
-checkWeights <- function(weights, distr_num){
+.checkWeights <- function(weights, distr_num){
   if (distr_num != 1){
     if (is.null(weights)){
       weights = rep(1 / distr_num, length.out = distr_num)
@@ -84,7 +84,7 @@ checkWeights <- function(weights, distr_num){
   return(weights)
 }
 
-checkSigmaProp <- function(sigma_prop, n_dim){
+.checkSigmaProp <- function(sigma_prop, n_dim){
   # If no variance for the proposal distribution was given...
   if (is.null(sigma_prop)){
     if (n_dim == 1){
@@ -102,10 +102,17 @@ checkSigmaProp <- function(sigma_prop, n_dim){
   }
 }
 
-checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, custom_density, sigma_prop = NULL){
-  dim = length(start)
+.checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, custom_density, sigma_prop = NULL){
+  # returns list:
+  # isDiscrete = distrInfo[[1]]
+  # isMix = distrInfo[[2]]
+  # weights = distrInfo[[3]]
+  # sigma_prop = distrInfo[[4]]
+
+
+
   if (caller == "mh" || caller == "mc3"){
-    sigma_prop = checkSigmaProp(sigma_prop, dim)
+        sigma_prop = .checkSigmaProp(sigma_prop, length(start))
   }
   if (is.null(custom_density)){
     if (is.null(distr_name) || is.null(distr_params)){
@@ -119,21 +126,25 @@ checkGivenInfo <- function(distr_name, distr_params, start, weights, caller, cus
       }
 
       for (i in 1:length(distr_name)){
-        info = checkNamesMatchParams(distr_name[i], distr_params[[i]])
+        info = .checkNamesMatchParams(distr_name[i], distr_params[[i]])
         if (info[1]){
           stop(paste("Mixture Distributions are only supported if all distributions are continuous. Distribution", distr_name[[i]], "is discrete."))
         }
-        checkStart(info, start)
+        if (caller != "grid"){
+          .checkStart(info, start)
+        }
       }
-      weights = checkWeights(weights, length(distr_name))
+      weights = .checkWeights(weights, length(distr_name))
       return(list(FALSE, TRUE, weights, sigma_prop))
 
 
     ### Is not mixture
     } else {
-        info = checkNamesMatchParams(distr_name, distr_params)
-        checkStart(info, start)
-        weights = checkWeights(weights, 1)
+        info = .checkNamesMatchParams(distr_name, distr_params)
+        if (caller != "grid"){
+          .checkStart(info, start)
+        }
+        weights = .checkWeights(weights, 1)
         return (list(info[1], FALSE, weights, sigma_prop))
     }
   } else{
