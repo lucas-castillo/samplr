@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Change Plotter — plot_change • samplr</title>
+<title>samplr: Tools To Compare Human Performance To Sampling Algorithms — samplr-package • samplr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Change Plotter — plot_change" />
-<meta property="og:description" content="Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets" />
+<meta property="og:title" content="samplr: Tools To Compare Human Performance To Sampling Algorithms — samplr-package" />
+<meta property="og:description" content="The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk." />
 
 
 
@@ -127,35 +127,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Change Plotter</h1>
+    <h1>samplr: Tools To Compare Human Performance To Sampling Algorithms</h1>
     
-    <div class="hidden name"><code>plot_change.Rd</code></div>
+    <div class="hidden name"><code>samplr-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets</p>
+    <p>The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_change</span><span class='op'>(</span><span class='va'>chain</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>chain</th>
-      <td><p>Vector of n length, where n is the number of trials or sampler iterations</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>A plot of the change series</p>
+    <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://lucas-castillo.github.io/samplr'>https://lucas-castillo.github.io/samplr</a></p></li>
+</ul>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>chain1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sampler_mh.html'>sampler_mh</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"norm"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>plot_change</span><span class='op'>(</span><span class='va'>chain1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='img'><img src='plot_change-1.png' alt='' width='700' height='433' /></div></pre>
+</div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p><strong>Maintainer</strong>: Lucas Castillo <a href='mailto:lucas.castillo@warwick.ac.uk'>lucas.castillo@warwick.ac.uk</a> (<a href='https://orcid.org/YOUR-ORCID-ID'>ORCID</a>)</p>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
