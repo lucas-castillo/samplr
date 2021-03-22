@@ -1,10 +1,13 @@
-#' mypackage: A package for computating the notorious bar statistic.
+#' samplr: A package for comparing human performance to sampling algorithms
 #'
-#' The mypackage package provides three categories of important functions:
-#' foo, bar and baz.
+#' The samplr package provides two categories of functions:
+#' sampler_, plot_.
 #'
-#' @section Mypackage functions:
-#' The mypackage functions ...
+#' @section sampler_ functions:
+#' The sampler_ functions obtain samples from a given distribution following the specified algorithm.
+#'
+#' @section plot_ functions:
+#' The plot_ functions provide diagnostic tools on the performance of either the sampling algorithms, or people.
 #'
 #' @docType package
 #' @name samplr
