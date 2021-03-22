@@ -3,13 +3,18 @@
 \docType{package}
 \name{samplr}
 \alias{samplr}
-\title{mypackage: A package for computating the notorious bar statistic.}
+\title{samplr: A package for comparing human performance to sampling algorithms}
 \description{
-The mypackage package provides three categories of important functions:
-foo, bar and baz.
+The samplr package provides two categories of functions:
+sampler_, plot_.
 }
-\section{Mypackage functions}{
+\section{sampler_ functions}{
 
-The mypackage functions ...
+The sampler_ functions obtain samples from a given distribution following the specified algorithm.
+}
+
+\section{plot_ functions}{
+
+The plot_ functions provide diagnostic tools on the performance of either the sampling algorithms, or people.
 }
 
