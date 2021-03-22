@@ -302,7 +302,7 @@ dfunc managePDF(const StringVector &distr_name, const List &distr_params, const 
   std::vector<dfunc> pdfs;
 
   if (useCustom){
-    pdf  = customPDF(custom_func);
+    pdf  = customPDF(custom_func, log);
   } else if (!isMix){
     pdf = getPDF(distr_name(0), distr_params, log);
   } else {
@@ -772,9 +772,13 @@ List sampler_nuts_cpp(
 // Plot Aid //
 
 // [[Rcpp::export]]
-NumericVector gridDensity(StringVector distr_name, List distr_params, bool isMix, NumericVector weights, NumericVector xxRange, NumericVector yyRange, int cellsPerRow){
-  Function f("rnorm");
-  dfunc pdf=  managePDF(distr_name, distr_params, isMix, weights, false, f, false);
+NumericVector gridDensity_cpp(
+    StringVector distr_name, List distr_params, bool isMix,
+    NumericVector weights, NumericVector xxRange, NumericVector yyRange,
+    int cellsPerRow, Function densityFunc, bool useCustomDensity
+)
+{
+  dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, densityFunc, useCustomDensity);
 
   NumericVector density(yyRange.size());
   for (int i = 0; i <yyRange.size(); i++){
