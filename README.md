@@ -28,7 +28,7 @@ algorithms
 ``` r
 library(samplr)
 set.seed(1)
-chain <- sampler_mcmc(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1) * .5, iterations = 2048)
+chain <- sampler_mh(start = 1, distr_name = "norm", distr_params = c(0,1), sigma_prop = diag(1) * .5, iterations = 2048)
 print(chain[[1]][1:20])
 #>  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684
 #>  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605
