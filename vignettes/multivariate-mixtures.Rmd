@@ -41,12 +41,7 @@ weights <- weights / rep(sum(weights), 15)
 
 We can use the `getDensityGrid()` function to quickly get a dataframe with the density of each point in our space, for easy plotting.
 ```{r ,dpi=150, fig.align="center"}
-hills_df <- getDensityGrid(names, parameters, weights, start = c(-10,-10), size = 20, cellsPerRow = 150)
-
-hill_map <- ggplot(hills_df) + 
-  geom_raster(mapping = aes(x = x, y = y, fill = density)) +
-  scale_fill_viridis_c() +
-  theme_void()
+hill_map <- plot_2d_density(start = c(-10,-10), size = 20, cellsPerRow = 150, names, parameters, weights)
 print(hill_map)
 ```
 
