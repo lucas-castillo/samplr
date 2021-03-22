@@ -38,7 +38,7 @@ jobs:
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
       - name: Compile Attributes
-        run: 'Rcpp::compileAttributes()'
+        run: Rscript -e 'Rcpp::compileAttributes()'
 
       - name: Install package
 
