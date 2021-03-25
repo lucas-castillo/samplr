@@ -332,7 +332,7 @@ List sampler_mh_cpp(
 )
 {
   // Initialize variables ---------------------------------
-  int acceptances = 0;
+  LogicalVector acceptances(iterations);
   int n_dim = start.size();
   dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
 
@@ -348,11 +348,12 @@ List sampler_mh_cpp(
     // NumericVector current_x = chain.row(i-1);
     NumericVector accept = metropolis_step_cpp(chain, i, ps(0,i-1), sigma_prop, pdf, discreteValues, 1);
     ps(0,i) = accept(0);
-    acceptances += accept(1);
+    acceptances(i) = (bool)(accept(1));
   }
 
-  return List::create(chain, (double)(acceptances) / (double)(iterations));
+  return List::create(chain, acceptances);
 }
+
 //'@export
 // [[Rcpp::export]]
 List sampler_mc3_cpp(
@@ -797,3 +798,4 @@ NumericVector gridDensity_cpp(
 }
 
 //// TEST ////
+
