@@ -490,7 +490,7 @@ List sampler_hmc_cpp(
     // initialize vars
 
     NumericVector theta_prime  = chain.row(i-1);
-    NumericVector momentum_prime = momentum;
+    NumericVector momentum_prime = clone(momentum);
 
 
     // leapfrog for each L step
@@ -500,7 +500,7 @@ List sampler_hmc_cpp(
     // Metropolis - Hastings Acceptance, using the joint density of position + momentum
 //
     double top =  exp(joint_d(theta_prime, momentum_prime, log_pdf));
-    double bottom =  exp(joint_d(chain.row(i-1), momentum_prime, log_pdf));
+    double bottom =  exp(joint_d(chain.row(i-1), momentum, log_pdf));
 
     double alpha = top/bottom;
   //
@@ -862,4 +862,3 @@ List sampler_hmc_cpp(
 
   return List::create(chain, momentums, ((double)(acceptances)/(double)(iterations)));
 
-}
