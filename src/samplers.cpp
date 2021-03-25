@@ -416,7 +416,6 @@ List sampler_mc3_cpp(
 
       v = sample(v, nChains, false);
 
-
       // swap nSwaps times (depending on swap_all)
       for (int k = 0; k < nSwaps; k++){
         swap_attempts++;
@@ -425,10 +424,14 @@ List sampler_mc3_cpp(
         // chains are swapped with probability alpha, which is the ratio between:
         // - the product of the density of each chain's location at the temperature of the other chain, and
         // - the product of the density of each chain's location at their own temperatures
+        NumericVector t1 = chain.row(i+iterations * m);
+        NumericVector t2 = chain.row(i+iterations * n);
         double m_pdf = pdf(chain.row(i + iterations * m));
         double n_pdf = pdf(chain.row(i + iterations * n));
-        double top = pow(m_pdf, (double)(beta(n))) * pow(n_pdf, (double)(beta(m)));
-        double bottom = pow(m_pdf, (double)(beta(m))) * pow(n_pdf, (double)(beta(n)));
+
+        double top = pow(m_pdf, beta(n)) * pow(n_pdf, beta(m));
+        double bottom = pow(m_pdf,beta(m)) * pow(n_pdf, beta(n));
+
 
         if ((bottom != 0 && R::runif(0,1) <= top/bottom) || (bottom == 0 && top > 0)){
 
@@ -437,6 +440,11 @@ List sampler_mc3_cpp(
           chain.row(i + iterations * n) = temp;
           swaps.row(swap_accepts) = NumericVector::create(i+1, m, n);
           swap_accepts++;
+          t1 = chain.row(i+iterations * m);
+          t2 = chain.row(i+iterations * n);
+          double TEMP = ps(m, i);
+          ps(m,i) = ps(n, i);
+          ps(n,i) = TEMP;
         }
       }
     }
@@ -788,3 +796,4 @@ NumericVector gridDensity_cpp(
   return density;
 }
 
+//// TEST ////

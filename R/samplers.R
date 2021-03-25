@@ -339,7 +339,9 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
   }
 
   swap_hist = samplerResults[[3]][1:samplerResults[[4]][2], ]
-  colnames(swap_hist) <- c("Iteration", "Chain 1", "Chain 2")
+  if (nChains > 1){
+    colnames(swap_hist) <- c("Iteration", "Chain 1", "Chain 2")
+  }
 
 
 
