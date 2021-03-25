@@ -254,7 +254,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @return A list containing
 #' \enumerate{
 #'  \item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
-#'  \item{acceptance ratio - the proportions of proposals that were accepted (numeric)}
+#'  \item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
 #' }
 #' @export
 #'
