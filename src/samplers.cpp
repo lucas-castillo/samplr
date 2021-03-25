@@ -109,7 +109,7 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, const int &currentIndex,
 }
 
 
-void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L, bool symmetric = true)
+void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L)
 {
   // start with half step for momentum
   momentum = momentum + (epsilon/2) * gradient(log_pdf, theta);
@@ -128,9 +128,8 @@ void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const doub
   momentum = momentum + (epsilon/2) * gradient(log_pdf, theta);
 
 // negate momentum to make the proposal symmetric
-  if (symmetric){
-    momentum = -1 * momentum;
-  }
+
+  momentum = -1 * momentum;
 
 }
 
@@ -149,7 +148,7 @@ double estimate_epsilon(NumericVector theta, dfunc log_pdf){
   NumericVector theta_prime = theta;
   NumericVector momentum_prime = momentum;
 
-  leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1, false);
+  leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1);
 
   double top = exp(joint_d(theta_prime, momentum_prime, log_pdf));
   double bottom = exp(joint_d(theta, momentum, log_pdf));
@@ -160,7 +159,7 @@ double estimate_epsilon(NumericVector theta, dfunc log_pdf){
     epsilon = epsilon * pow(2, alpha);
     theta_prime = theta;
     momentum_prime = momentum;
-    leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1, false);
+    leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1);
 
     // top = exp(joint_d(theta_prime, momentum_prime, log_pdf));
     bottom = exp(joint_d(theta_prime, momentum_prime, log_pdf));
@@ -294,8 +293,6 @@ dfunc customPDF (const Function &f, const bool log = false){
   };
   return pdf;
 }
-
-
 
 dfunc managePDF(const StringVector &distr_name, const List &distr_params, const bool &isMix, const NumericVector &weights, const bool &log, const Function &custom_func, const bool &useCustom){
   dfunc pdf;
@@ -455,6 +452,15 @@ List sampler_mc3_cpp(
   return List::create(chain, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
 }
 
+
+NumericVector drawMomentum(int dimensions){
+  NumericVector retV(dimensions);
+  for (int i = 0; i < dimensions; i++){
+    retV(i) = R::rnorm(0,1);
+  }
+  return retV;
+
+}
 ///'@export
 // [[Rcpp::export]]
 List sampler_hmc_cpp(
@@ -477,16 +483,17 @@ List sampler_hmc_cpp(
   NumericMatrix momentums(iterations, dim);
   int acceptances = 0;
   chain.row(0) = start;
-  arma::mat identityMatrix(dim, dim, arma::fill::eye);
-  arma::colvec zeroes(dim, arma::fill::zeros);
-  arma::mat momentum_ = rmvnorm(1,  zeroes, identityMatrix);
-  NumericVector momentum = NumericVector(momentum_.begin(), momentum_.end());
+  // arma::mat identityMatrix(dim, dim, arma::fill::eye);
+  // arma::colvec zeroes(dim, arma::fill::zeros);
+  // arma::mat momentum_;
+  NumericVector momentum;
 
   for (int i = 1; i < iterations; i++){
     // draw a sample of momentum
 
-    momentum_ = rmvnorm(1,  zeroes, identityMatrix);
-    momentum = NumericVector(momentum_.begin(), momentum_.end());
+    // momentum_ = rmvnorm(1,  zeroes, identityMatrix);
+    // momentum = NumericVector(momentum_.begin(), momentum_.end());
+    momentum = drawMomentum(dim);
     // initialize vars
 
     NumericVector theta_prime  = chain.row(i-1);
@@ -537,10 +544,10 @@ NumericMatrix build_tree(const NumericVector &theta, const NumericVector &moment
   if (j == 0)
   {
     // base case -> Step in direction v
-    NumericVector theta_prime = theta;
-    NumericVector momentum_prime = momentum;
+    NumericVector theta_prime = clone(theta);
+    NumericVector momentum_prime = clone(momentum);
     // is the new point in the slice?
-    leapfrog_step_cpp(theta_prime, momentum_prime, v * epsilon, log_pdf, 1, false);
+    leapfrog_step_cpp(theta_prime, momentum_prime, v * epsilon, log_pdf, 1);
 
     double n_prime = (double)(u <= exp(joint_d(theta_prime, momentum_prime, log_pdf)));
     // is the simulation wildly inaccurate?
@@ -619,7 +626,7 @@ NumericMatrix build_tree(const NumericVector &theta, const NumericVector &moment
       // which subtree to propagate a sample from
       if ((R::runif(0,1)) <= (n_prime_2 / (n_prime + n_prime_2)))
       {
-        theta_prime = theta_prime_2;
+        theta_prime = clone(theta_prime_2);
       }
       // alpha_prime = alpha_prime + alpha_prime_2;
       // n_alpha_prime = n_alpha_prime + n_alpha_prime_2;
@@ -688,94 +695,94 @@ List sampler_nuts_cpp(
   // double t_0 = 10;
   // double kappa = .75;
 
-     // run sampler
-     for (double i = 1; i < iterations; i++){
-       // resample momentum
-       momentum_0 = rmvnorm(1,  zeroes, identityMatrix);
-       momentum0 = NumericVector(momentum_0.begin(), momentum_0.end());
+   // run sampler
+   for (double i = 1; i < iterations; i++){
+     // resample momentum
+     momentum_0 = rmvnorm(1,  zeroes, identityMatrix);
+     momentum0 = NumericVector(momentum_0.begin(), momentum_0.end());
 
-       // get a slice u
-       double u = R::runif(0, exp(joint_d(chain.row(i-1), momentum0, log_pdf)));
+     // get a slice u
+     double u = R::runif(0, exp(joint_d(chain.row(i-1), momentum0, log_pdf)));
 
-       // init variables
-       NumericVector theta_minus = chain.row(i-1);
-       NumericVector theta_plus = chain.row(i-1);
-       NumericVector momentum_minus = momentum0;
-       NumericVector momentum_plus = momentum0;
-       double j = 0;
-       chain.row(i) = chain.row(i-1);
-       double n = 1;
-       double s = 1;
+     // init variables
+     NumericVector theta_minus = chain.row(i-1);
+     NumericVector theta_plus = chain.row(i-1);
+     NumericVector momentum_minus = clone(momentum0);
+     NumericVector momentum_plus = clone(momentum0);
+     double j = 0;
+     chain.row(i) = chain.row(i-1);
+     double n = 1;
+     double s = 1;
 
-       NumericVector theta_prime;
-       double n_prime;
-       double s_prime;
-       // double alpha;
-       // double n_alpha;
-       // NumericVector temp(theta_minus.size());
+     NumericVector theta_prime;
+     double n_prime;
+     double s_prime;
+     // double alpha;
+     // double n_alpha;
+     // NumericVector temp(theta_minus.size());
 
 
-       while (s==1)
+     while (s==1)
+     {
+       // random direction
+
+       if (sampleDirection() == -1)
        {
-         // random direction
+         NumericMatrix bt = build_tree(theta_minus, momentum_minus, u, -1, j, epsilon, delta_max, log_pdf);
 
-         if (sampleDirection() == -1)
-         {
-           NumericMatrix bt = build_tree(theta_minus, momentum_minus, u, -1, j, epsilon, delta_max, log_pdf);
-
-           theta_minus = bt.row(0);
-           momentum_minus = bt.row(1);
-           theta_prime = bt.row(4);
-           n_prime = bt(5,0);
-           s_prime = bt(6,0);
-           // temp = bt.row(7);
-           // alpha = temp(0);
-           // temp = bt.row(8);
-           // n_alpha = temp(0);
-         }
-         else
-         {
-           NumericMatrix bt = build_tree(theta_plus, momentum_minus, u, 1, j, epsilon, delta_max, log_pdf);
-
-           theta_plus = bt.row(2);
-           momentum_plus = bt.row(3);
-           theta_prime = bt.row(4);
-           n_prime = bt(5,0);
-           s_prime = bt(6,0);
-           // temp = bt.row(7);
-           // alpha = temp(0);
-           // temp = bt.row(8);
-           // n_alpha = temp(0);
-         }
-
-         if (s_prime == 1){
-           if (R::runif(0,1) <= (n_prime / n)){
-             chain.row(i) = theta_prime;
-           }
-
-         }
-         n = n + n_prime;
-         NumericVector diff = theta_plus - theta_minus;
-         s = s_prime * (double)(dotProduct(diff, momentum_minus)>= 0) * (double)(dotProduct(diff, momentum_plus)>= 0);
-
-         j++;
+         theta_minus = bt.row(0);
+         momentum_minus = bt.row(1);
+         theta_prime = bt.row(4);
+         n_prime = bt(5,0);
+         s_prime = bt(6,0);
+         // temp = bt.row(7);
+         // alpha = temp(0);
+         // temp = bt.row(8);
+         // n_alpha = temp(0);
        }
-       // if (i <= iterations_adapt)
-       // {
-       //   bar_Hs(i) =
-       //     (1 - (1 / (i + t_0))) * bar_Hs(i-1) +
-       //     (1 / (i + t_0)) * (delta - alpha / n_alpha);
-       //   epsilons(i) = exp(mu - (sqrt(i) / gamma) * bar_Hs(i));
-       //   bar_epsilons(i) = exp(
-       //     pow(i, kappa * -1) * log(epsilons(i)) +
-       //     (1 - pow(i, kappa * -1)) * log(bar_epsilons(i-1))
-       //   );
-       // }
-       // else
-       // {
-       //   epsilons(i) = bar_epsilons(iterations_adapt);
-       // }
+       else
+       {
+         NumericMatrix bt = build_tree(theta_plus, momentum_minus, u, 1, j, epsilon, delta_max, log_pdf);
+
+         theta_plus = bt.row(2);
+         momentum_plus = bt.row(3);
+         theta_prime = bt.row(4);
+         n_prime = bt(5,0);
+         s_prime = bt(6,0);
+         // temp = bt.row(7);
+         // alpha = temp(0);
+         // temp = bt.row(8);
+         // n_alpha = temp(0);
+       }
+
+       if (s_prime == 1){
+         if (R::runif(0,1) <= (n_prime / n)){
+           chain.row(i) = theta_prime;
+         }
+
+       }
+       n = n + n_prime;
+       NumericVector diff = theta_plus - theta_minus;
+       s = s_prime * (double)(dotProduct(diff, momentum_minus)>= 0) * (double)(dotProduct(diff, momentum_plus)>= 0);
+
+       j++;
      }
+     // if (i <= iterations_adapt)
+     // {
+     //   bar_Hs(i) =
+     //     (1 - (1 / (i + t_0))) * bar_Hs(i-1) +
+     //     (1 / (i + t_0)) * (delta - alpha / n_alpha);
+     //   epsilons(i) = exp(mu - (sqrt(i) / gamma) * bar_Hs(i));
+     //   bar_epsilons(i) = exp(
+     //     pow(i, kappa * -1) * log(epsilons(i)) +
+     //     (1 - pow(i, kappa * -1)) * log(bar_epsilons(i-1))
+     //   );
+     // }
+     // else
+     // {
+     //   epsilons(i) = bar_epsilons(iterations_adapt);
+     // }
+   }
     return List::create(chain);
 }
 
@@ -797,5 +804,3 @@ NumericVector gridDensity_cpp(
   }
   return density;
 }
-
-//// TEST ////
