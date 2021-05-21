@@ -253,7 +253,8 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #'
 #' @return A list containing
 #' \enumerate{
-#'  \item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
 #'  \item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
 #' }
 #' @export
@@ -285,8 +286,10 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
     distr_params = c(0,1)
     use_custom = TRUE
   }
+  res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
+  res[[2]][1, ] <- NA
 
-  return (sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom))
+  return (res)
 }
 
 #' Metropolis-coupled MCMC sampler (MC3)
@@ -332,13 +335,18 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
   samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
 
   M <- array(0, dim = (c(iterations, length(start), nChains)))
+  P <- array(0, dim = (c(iterations, length(start), nChains)))
   for (i in 1:nChains){
     start = 1 + (i-1) * iterations
     end = start + iterations - 1
-    M[,,i] = samplerResults[[1]][start:end,]
-  }
 
-  swap_hist = samplerResults[[3]][1:samplerResults[[4]][2], ]
+    M[,,i] = samplerResults[[1]][start:end,]
+
+    P[,,i] = samplerResults[[2]][start:end,]
+  }
+  P[1, , ] <- NA
+
+  swap_hist = samplerResults[[4]][1:samplerResults[[5]][2], ]
   if (nChains > 1){
     colnames(swap_hist) <- c("Iteration", "Chain 1", "Chain 2")
   }
@@ -347,10 +355,11 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 
   return(list(
     "Samples" = M,
-    "Beta Values" = samplerResults[[2]],
+    "Proposals" = P,
+    "Beta Values" = samplerResults[[3]],
     "Swap History" = swap_hist,
-    "Swap Acceptance Ratio" = samplerResults[[4]][1] / samplerResults[[4]][2],
-    "Acceptance Ratios" = samplerResults[[5]]
+    "Swap Acceptance Ratio" = samplerResults[[5]][1] / samplerResults[[5]][2],
+    "Acceptance Ratios" = samplerResults[[6]]
   ))
 
 }

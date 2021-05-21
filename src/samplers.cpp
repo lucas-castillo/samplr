@@ -58,7 +58,7 @@ double joint_d(const NumericVector &theta, const NumericVector &momentum, dfunc 
     return (log_func(theta) - .5 * dotProduct(momentum, momentum));
 }
 
-NumericVector metropolis_step_cpp(NumericMatrix &chain, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
+NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
   NumericVector current_x = chain.row(currentIndex - 1);
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
 
@@ -77,7 +77,10 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, const int &currentIndex,
       proposal(i) = round(proposal(i));
     }
   }
+  // update proposals matrix
+  proposals.row(currentIndex) = proposal;
   // calculate current and proposal probabilities
+
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
@@ -334,7 +337,9 @@ List sampler_mh_cpp(
   dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
 
   NumericMatrix chain(iterations, n_dim);
+  NumericMatrix proposals(iterations, n_dim);
   NumericMatrix ps(1, iterations);
+
   // first row is start
   chain.row(0) = start;
   ps(0,0) = pdf(start);
@@ -343,12 +348,12 @@ List sampler_mh_cpp(
   // Run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
     // NumericVector current_x = chain.row(i-1);
-    NumericVector accept = metropolis_step_cpp(chain, i, ps(0,i-1), sigma_prop, pdf, discreteValues, 1);
+    NumericVector accept = metropolis_step_cpp(chain, proposals, i, ps(0,i-1), sigma_prop, pdf, discreteValues, 1);
     ps(0,i) = accept(0);
     acceptances(i) = (bool)(accept(1));
   }
 
-  return List::create(chain, acceptances);
+  return List::create(chain, proposals, acceptances);
 }
 
 ///'@export
@@ -376,6 +381,7 @@ List sampler_mc3_cpp(
   int n_dim = start.length();
 
   NumericMatrix chain(iterations*nChains, n_dim);
+  NumericMatrix proposals(iterations*nChains, n_dim);
   NumericVector beta(nChains);
   NumericMatrix ps(nChains, iterations);
 
@@ -402,7 +408,7 @@ List sampler_mc3_cpp(
   for (int i = 1; i < iterations; i++){
 
     for (int ch = 0; ch < nChains; ch++){
-      NumericVector accept =  metropolis_step_cpp(chain, i + iterations * ch, ps(ch, i-1), sigma_prop, pdf, discreteValues, beta(ch));
+      NumericVector accept =  metropolis_step_cpp(chain, proposals, i + iterations * ch, ps(ch, i-1), sigma_prop, pdf, discreteValues, beta(ch));
 
       ps(ch, i) = accept(0);
       acceptances(ch) = acceptances(ch) + accept(1);
@@ -449,7 +455,7 @@ List sampler_mc3_cpp(
   }
 
 
-  return List::create(chain, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
+  return List::create(chain, proposals, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
 }
 
 
