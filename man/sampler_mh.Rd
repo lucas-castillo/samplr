@@ -32,7 +32,8 @@ sampler_mh(
 \value{
 A list containing
 \enumerate{
-\item{the history of visited places (a n x d matrix, n = iterations; d = dimensions)}
+\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
 \item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
 }
 }
