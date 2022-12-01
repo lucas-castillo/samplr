@@ -18,7 +18,7 @@ sampler_mc3(
 )
 }
 \arguments{
-\item{start}{Vector. Starting position of the sampler.}
+\item{start}{Either a vector or a matrix. If it is a vector, it will be the starting point of all the chains (with length = number of dimensions). If it's a matrix, every row will be the starting point of one chain (and so it must have as many rows as nChains, and as many columns as number of dimensions in the space).}
 
 \item{distr_name}{Name of the distribution from which to sample from.}
 

@@ -53,12 +53,11 @@
 
 }
 
-.checkStart <- function(info, start){
-  dim = length(start)
-  if (dim == 1 && info[2]){
-    stop("Start is length 1 but distribution is multivariate")
-  } else if (dim != 1 && !info[2]){
-    stop("Distribution is univariate but start is longer than length 1")
+.checkStart <- function(info, start_dim){
+  if (start_dim == 1 && info[2]){
+    stop("Start dimensions is 1 but distribution is multivariate")
+  } else if (start_dim != 1 && !info[2]){
+    stop("Distribution is univariate but start has more than one dimension")
   }
 }
 
@@ -109,10 +108,11 @@
   # weights = distrInfo[[3]]
   # sigma_prop = distrInfo[[4]]
 
+  start_dim <- if (is.matrix(start)) ncol(start) else if (is.vector(start)) length(start) else NULL
 
 
   if (caller == "mh" || caller == "mc3"){
-        sigma_prop = .checkSigmaProp(sigma_prop, length(start))
+        sigma_prop = .checkSigmaProp(sigma_prop, start_dim)
   }
   if (is.null(custom_density)){
     if (is.null(distr_name) || is.null(distr_params)){
@@ -131,7 +131,7 @@
           stop(paste("Mixture Distributions are only supported if all distributions are continuous. Distribution", distr_name[[i]], "is discrete."))
         }
         if (caller != "grid"){
-          .checkStart(info, start)
+          .checkStart(info, start_dim)
         }
       }
       weights = .checkWeights(weights, length(distr_name))
@@ -142,7 +142,7 @@
     } else {
         info = .checkNamesMatchParams(distr_name, distr_params)
         if (caller != "grid"){
-          .checkStart(info, start)
+          .checkStart(info, start_dim)
         }
         weights = .checkWeights(weights, 1)
         return (list(info[1], FALSE, weights, sigma_prop))
@@ -299,7 +299,7 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
-#' @param start Vector. Starting position of the sampler.
+#' @param start Either a vector or a matrix. If it is a vector, it will be the starting point of all the chains (with length = number of dimensions). If it's a matrix, every row will be the starting point of one chain (and so it must have as many rows as nChains, and as many columns as number of dimensions in the space).
 #' @param nChains Number of chains to run.
 #' @param sigma_prop Covariance matrix of the proposal distribution. If sampling in 1D space, it can be instead a number.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
@@ -314,10 +314,23 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' # Sample from a normal distribution
 #' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
 sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
+
+
+  # Check nChains is integer
   if (floor(nChains) != nChains){
     stop("nChains must be a whole number")
   }
-
+  # Chech start is matrix. If vector, make matrix.
+  if (is.matrix(start)){
+    if (nrow(start) != nChains){
+      stop("The start matrix must have as many rows as nChains (and as many columns as number of dimensions in sampling space)")
+    }
+  } else{
+    if (is.vector(start)){
+      start = matrix(data = rep(start, nChains), nrow = nChains, byrow = T)
+    }
+  }
+  start_dim <- if (is.matrix(start)) ncol(start) else if (is.vector(start)) length(start) else NULL
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mc3", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
@@ -334,15 +347,16 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 
   samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
 
-  M <- array(0, dim = (c(iterations, length(start), nChains)))
-  P <- array(0, dim = (c(iterations, length(start), nChains)))
+  M <- array(0, dim = (c(iterations, start_dim, nChains)))
+  P <- array(0, dim = (c(iterations, start_dim, nChains)))
+
   for (i in 1:nChains){
-    start = 1 + (i-1) * iterations
-    end = start + iterations - 1
+    begin = 1 + (i-1) * iterations
+    end = begin + iterations - 1
 
-    M[,,i] = samplerResults[[1]][start:end,]
+    M[,,i] = samplerResults[[1]][begin:end,]
 
-    P[,,i] = samplerResults[[2]][start:end,]
+    P[,,i] = samplerResults[[2]][begin:end,]
   }
   P[1, , ] <- NA
 
