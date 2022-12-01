@@ -67,6 +67,7 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
   // Rcout << pdf(1) << "\n";
 
   // Rcout << "Proposal in MetropolisStep = ";
+
   // Rcout << pdf(1) << "\n";
 
   // if dist is discrete round the proposal to nearest int
@@ -80,7 +81,6 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
   // update proposals matrix
   proposals.row(currentIndex) = proposal;
   // calculate current and proposal probabilities
-
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
@@ -359,7 +359,7 @@ List sampler_mh_cpp(
 ///'@export
 // [[Rcpp::export]]
 List sampler_mc3_cpp(
-    NumericVector start,
+    NumericMatrix start, // Numeric Matrix of starts for each chain.
     int nChains,
     NumericMatrix sigma_prop,
     double delta_T,
@@ -378,7 +378,7 @@ List sampler_mc3_cpp(
   int swap_attempts = 0;
   int swap_accepts= 0;
   NumericMatrix swaps(iterations*nChains, 3);
-  int n_dim = start.length();
+  int n_dim = start.ncol();
 
   NumericMatrix chain(iterations*nChains, n_dim);
   NumericMatrix proposals(iterations*nChains, n_dim);
@@ -386,13 +386,13 @@ List sampler_mc3_cpp(
   NumericMatrix ps(nChains, iterations);
 
   dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
-  double initial_probability = pdf(start);
-
 
   for (int i = 0; i < nChains; i++){
-    chain.row(0 + iterations * i) = start;
+    chain.row(0 + iterations * i) = start.row(i);
+
+
     beta(i) = 1 / (1 + delta_T * i);
-    ps(i,0) = initial_probability;
+    ps(i,0) = pdf(start.row(i));
   }
   int nSwaps;
   if (swap_all){
@@ -403,13 +403,11 @@ List sampler_mc3_cpp(
 
   NumericVector v(nChains);
   v = seq(0, nChains - 1);
-
+  // print(chain);
     // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
-
     for (int ch = 0; ch < nChains; ch++){
       NumericVector accept =  metropolis_step_cpp(chain, proposals, i + iterations * ch, ps(ch, i-1), sigma_prop, pdf, discreteValues, beta(ch));
-
       ps(ch, i) = accept(0);
       acceptances(ch) = acceptances(ch) + accept(1);
     }
@@ -453,7 +451,6 @@ List sampler_mc3_cpp(
       }
     }
   }
-
 
   return List::create(chain, proposals, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
 }

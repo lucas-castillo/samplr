@@ -32,12 +32,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // sampler_mc3_cpp
-List sampler_mc3_cpp(NumericVector start, int nChains, NumericMatrix sigma_prop, double delta_T, bool swap_all, double iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
+List sampler_mc3_cpp(NumericMatrix start, int nChains, NumericMatrix sigma_prop, double delta_T, bool swap_all, double iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
 RcppExport SEXP _samplr_sampler_mc3_cpp(SEXP startSEXP, SEXP nChainsSEXP, SEXP sigma_propSEXP, SEXP delta_TSEXP, SEXP swap_allSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type start(startSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type start(startSEXP);
     Rcpp::traits::input_parameter< int >::type nChains(nChainsSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type sigma_prop(sigma_propSEXP);
     Rcpp::traits::input_parameter< double >::type delta_T(delta_TSEXP);
