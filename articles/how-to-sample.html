@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">samplr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -95,51 +91,51 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></code></pre></div>
-<div id="choosing-a-distibution" class="section level3">
-<h3 class="hasAnchor">
-<a href="#choosing-a-distibution" class="anchor"></a>Choosing a distibution</h3>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="choosing-a-distibution">Choosing a distibution<a class="anchor" aria-label="anchor" href="#choosing-a-distibution"></a>
+</h3>
 <p>To sample from a distribution, check the abbreviation, as well as the distribution parameters, in <a href="supported-distributions.html">the Supported Distributions Vignette</a>. Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:</p>
 <ol style="list-style-type: decimal">
 <li>A <strong>starting point</strong>: Any point in the sampling space. We’ll choose the mean of our distribution, <code>0</code>.,</li>
 <li>
 <strong>Distribution Name</strong>: <code>"norm"</code>,</li>
 <li>
-<strong>Distribution Parameters</strong>: A vector with the distribution parameters. In our case, <code>mean</code> and <code>std</code>, that is: <code><a href="https://rdrr.io/r/base/c.html">c(0,1)</a></code>,</li>
+<strong>Distribution Parameters</strong>: A vector with the distribution parameters. In our case, <code>mean</code> and <code>std</code>, that is: <code>c(0,1)</code>,</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start</span> <span class="op">=</span> <span class="fl">0</span>
-<span class="va">name</span> <span class="op">=</span> <span class="st">"norm"</span>
-<span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">start</span> <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="va">name</span> <span class="op">=</span> <span class="st">"norm"</span></span>
+<span><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="different-sampling-algorithms" class="section level3">
-<h3 class="hasAnchor">
-<a href="#different-sampling-algorithms" class="anchor"></a>Different Sampling Algorithms</h3>
+<div class="section level3">
+<h3 id="different-sampling-algorithms">Different Sampling Algorithms<a class="anchor" aria-label="anchor" href="#different-sampling-algorithms"></a>
+</h3>
 <p>Different algorithms are available in the <code>samplr</code> package. For our example, we will use Metropolis Hastings. To use a sampler, we will always need the three previously mentioned items. For Metropolis Hastings and MC3, it is convenient to provide the variance of the proposal distribution, so we do that before sampling.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span>
-<span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span></span>
+<span><span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span></span></code></pre></div>
 <p>If we plot our results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html" class="external-link">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="how-to-sample_files/figure-html/unnamed-chunk-4-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Notice that the same approach is used for all other samplers:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">MC3_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span>
-
-<span class="va">HMC_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span><span class="op">)</span>
-
-<span class="va">NUTS_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_nuts.html">sampler_nuts</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">MC3_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">HMC_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">NUTS_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_nuts.html">sampler_nuts</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="mixture-distributions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#mixture-distributions" class="anchor"></a>Mixture Distributions</h3>
+<div class="section level3">
+<h3 id="mixture-distributions">Mixture Distributions<a class="anchor" aria-label="anchor" href="#mixture-distributions"></a>
+</h3>
 <p>If we want to sample from a mixture distribution, the following change:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Distribution Name</strong>: A vector of distribution names, e.g. <code><a href="https://rdrr.io/r/base/c.html">c("norm", "norm")</a></code>
+<strong>Distribution Name</strong>: A vector of distribution names, e.g. <code>c("norm", "norm")</code>
 </li>
 <li>
 <strong>Distribution Parameters</strong>: A list of vectors, each containing the distribution parameters.</li>
@@ -147,23 +143,23 @@
 <strong>Distribution Weights (optional)</strong>: A vector with the weights given to each distribution. The sum of weights equals 1.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="st">"norm"</span><span class="op">)</span>
-<span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.6</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="st">"norm"</span><span class="op">)</span></span>
+<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.6</span><span class="op">)</span></span></code></pre></div>
 <p>We’ll make a custom density function to plot the curve with our results (this is not necessary for the samplers to work)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">customDensity</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.4</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.6</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">customDensity</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.4</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.6</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>We proceed as we did before:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Sample (more iterations as MH struggles to change hills)</span>
-<span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span>
-<span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span>, iterations <span class="op">=</span> <span class="fl">2</span><span class="op">**</span><span class="fl">12</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>
-<span class="co"># plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu">customDensity</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Sample (more iterations as MH struggles to change hills)</span></span>
+<span><span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span>, iterations <span class="op">=</span> <span class="fl">2</span><span class="op">**</span><span class="fl">12</span>, weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span></span>
+<span><span class="co"># plot</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html" class="external-link">curve</a></span><span class="op">(</span><span class="fu">customDensity</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="how-to-sample_files/figure-html/unnamed-chunk-8-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>See <a href="multivariate-mixtures.html">the Multivariate Mixtures Vignette</a> for examples on how to mix multivariate distributions, as well as a comparison between the performance of different samplers in a ‘patchy’ environment.</p>
 </div>
@@ -178,11 +174,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Lucas Castillo.</p>
+  <p></p>
+<p>Developed by Lucas Castillo.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -190,6 +188,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://lucas-castillo.github.io/samplr/404.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/custom-density-functions.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/how-to-sample.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/multivariate-mixtures.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/supported-distributions.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/articles/time-comparisons.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/authors.html</loc>
+  </url>
+  <url>
     <loc>https://lucas-castillo.github.io/samplr/index.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/index.html</loc>
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/plot_2d_density.html</loc>
@@ -44,20 +77,5 @@
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/samplr-package.html</loc>
-  </url>
-  <url>
-    <loc>https://lucas-castillo.github.io/samplr/articles/custom-density-functions.html</loc>
-  </url>
-  <url>
-    <loc>https://lucas-castillo.github.io/samplr/articles/how-to-sample.html</loc>
-  </url>
-  <url>
-    <loc>https://lucas-castillo.github.io/samplr/articles/multivariate-mixtures.html</loc>
-  </url>
-  <url>
-    <loc>https://lucas-castillo.github.io/samplr/articles/supported-distributions.html</loc>
-  </url>
-  <url>
-    <loc>https://lucas-castillo.github.io/samplr/articles/time-comparisons.html</loc>
   </url>
 </urlset>

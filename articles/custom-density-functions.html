@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">samplr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -95,46 +91,46 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span></code></pre></div>
 <p>To sample from a custom density function, create said function, then use it as the <code>custom_density</code> parameter with one of the samplers, instead of giving <code>distr_name</code>, <code>distr_params</code> (see <a href="supported-distributions.html">Supported Distributions</a> and <a href="how-to-sample.html">How to Sample</a>) and <code>weights</code>, if applicable.</p>
 <p>In this example we create a 2D uniform distribution, which is not supported by Rcpp and RcppDist at the time of writing.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create function</span>
-<span class="va">customDensity_r</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">3</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">3</span><span class="op">)</span><span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span> <span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span> <span class="op">(</span><span class="fl">0</span><span class="op">)</span>                    <span class="op">}</span>
-<span class="op">}</span>
-<span class="co"># Sample</span>
-<span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_r</span><span class="op">)</span>
-<span class="co">#&gt; Warning in .checkSigmaProp(sigma_prop, length(start)): The variance of the</span>
-<span class="co">#&gt; proposal distribution was not given and defaulted to the identity matrix</span>
-
-<span class="co"># Plot results</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create function</span></span>
+<span><span class="va">customDensity_r</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">3</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">3</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span> <span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span> <span class="op">(</span><span class="fl">0</span><span class="op">)</span>                    <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># Sample</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_r</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in .checkSigmaProp(sigma_prop, length(start)): The variance of the</span></span>
+<span><span class="co">#&gt; proposal distribution was not given and defaulted to the identity matrix</span></span>
+<span></span>
+<span><span class="co"># Plot results</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="custom-density-functions_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<div id="on-timing" class="section level4">
-<h4 class="hasAnchor">
-<a href="#on-timing" class="anchor"></a>On Timing</h4>
-<p>Using a custom function, rather than sampling from a supported distribution, will considerably increase the running time (as the C++ code under the hood has to constantly switch between C++ and R). Creating a density function with <code><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">Rcpp::cppFunction</a></code> doesn’t change this much.</p>
+<div class="section level4">
+<h4 id="on-timing">On Timing<a class="anchor" aria-label="anchor" href="#on-timing"></a>
+</h4>
+<p>Using a custom function, rather than sampling from a supported distribution, will considerably increase the running time (as the C++ code under the hood has to constantly switch between C++ and R). Creating a density function with <code><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html" class="external-link">Rcpp::cppFunction</a></code> doesn’t change this much.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">Rcpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span><span class="op">(</span><span class="st">"double customDensity_cpp(NumericVector x){
-                    if (x(0) &gt; 0 &amp;&amp; x(0) &lt; 3 &amp;&amp; x(1) &lt; 0 &amp;&amp; x(1) &gt; -3){
-                      return 1;
-                    } else {
-                      return 0;
-                    }
-                  }"</span><span class="op">)</span>
-<span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bench/man/mark.html">mark</a></span><span class="op">(</span>
-  <span class="st">"CPP Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_cpp</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
-  <span class="st">"R Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_r</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
-  <span class="st">"Supported Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, distr_name <span class="op">=</span> <span class="st">"mvnorm"</span>, distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
-  check <span class="op">=</span> <span class="cn">FALSE</span>,
-<span class="op">)</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"expression"</span>, <span class="st">"min"</span>, <span class="st">"median"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">Rcpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html" class="external-link">cppFunction</a></span><span class="op">(</span><span class="st">"double customDensity_cpp(NumericVector x){</span></span>
+<span><span class="st">                    if (x(0) &gt; 0 &amp;&amp; x(0) &lt; 3 &amp;&amp; x(1) &lt; 0 &amp;&amp; x(1) &gt; -3){</span></span>
+<span><span class="st">                      return 1;</span></span>
+<span><span class="st">                    } else {</span></span>
+<span><span class="st">                      return 0;</span></span>
+<span><span class="st">                    }</span></span>
+<span><span class="st">                  }"</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<span>  <span class="st">"CPP Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_cpp</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>  <span class="st">"R Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_r</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>  <span class="st">"Supported Density"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, distr_name <span class="op">=</span> <span class="st">"mvnorm"</span>, distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"expression"</span>, <span class="st">"min"</span>, <span class="st">"median"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">expression</th>
@@ -144,79 +140,79 @@
 <tbody>
 <tr class="odd">
 <td align="left">CPP Density</td>
-<td align="right">29.24ms</td>
-<td align="right">31.06ms</td>
+<td align="right">33.21ms</td>
+<td align="right">87.27ms</td>
 </tr>
 <tr class="even">
 <td align="left">R Density</td>
-<td align="right">26.05ms</td>
-<td align="right">27.22ms</td>
+<td align="right">26.73ms</td>
+<td align="right">34.13ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Supported Density</td>
-<td align="right">1.55ms</td>
-<td align="right">1.66ms</td>
+<td align="right">1.76ms</td>
+<td align="right">1.97ms</td>
 </tr>
 </tbody>
 </table>
 <p>Note, however, than this is still much faster than doing everything in R.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">bespoke_mh</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">pdf</span>, <span class="va">start</span>, <span class="va">iterations</span><span class="op">=</span><span class="fl">1024</span>, <span class="va">sigma_prop</span><span class="op">)</span><span class="op">{</span>
-  <span class="co"># Initialize variables ---------------------------------</span>
-  <span class="va">acceptances</span> <span class="op">&lt;-</span> <span class="fl">0</span>
-  <span class="va">n_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>
-  <span class="va">chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow<span class="op">=</span><span class="va">iterations</span>, ncol <span class="op">=</span> <span class="va">n_dim</span><span class="op">)</span>
-  <span class="va">chain</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">start</span>
-  <span class="va">probabilities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span><span class="op">)</span>
-
-  <span class="co"># Run the sampler ------------------------------------------------</span>
-
-  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">iterations</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">current_x</span> <span class="op">&lt;-</span> <span class="va">chain</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span>,<span class="op">]</span>
-    <span class="co"># generate proposal</span>
-    <span class="va">proposal</span> <span class="op">&lt;-</span> <span class="fu">mvtnorm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html">rmvnorm</a></span><span class="op">(</span><span class="fl">1</span>, mean <span class="op">=</span> <span class="va">current_x</span>, sigma <span class="op">=</span> <span class="va">sigma_prop</span><span class="op">)</span>
-    <span class="co"># calculate current and proposal probabilities</span>
-    <span class="va">prob_curr</span> <span class="op">&lt;-</span> <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>
-    <span class="va">prob_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span><span class="va">proposal</span><span class="op">)</span>
-    <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
-
-    <span class="co"># proposal is accepted with probability prob_prop / prob_curr</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">prob_curr</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span>
-      <span class="va">ratio</span> <span class="op">&lt;-</span> <span class="va">prob_prop</span> <span class="op">/</span> <span class="va">prob_curr</span>
-      <span class="kw">if</span> <span class="op">(</span><span class="va">ratio</span> <span class="op">&gt;=</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>
-        <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
-      <span class="co"># The beta parameter (temperature), beta &lt;= 1, increases the value of the ratio making hotter chains more likely to accept proposals</span>
-      <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">ratio</span><span class="op">)</span><span class="op">{</span>
-        <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
-      <span class="op">}</span>
-    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="co"># in case the current probability is 0 (in which case the ratio cannot be calculated), the step is accepted if the probability of the proposal is not 0</span>
-        <span class="kw">if</span> <span class="op">(</span><span class="va">prob_prop</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span>
-          <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
-        <span class="op">}</span>
-    <span class="op">}</span>
-    
-    <span class="kw">if</span> <span class="op">(</span><span class="va">accept</span><span class="op">)</span><span class="op">{</span>
-      <span class="va">chain</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">proposal</span>
-      <span class="va">acceptances</span> <span class="op">&lt;-</span> <span class="va">acceptances</span> <span class="op">+</span>  <span class="fl">1</span>
-      <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">prob_prop</span>
-    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-      <span class="va">chain</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">current_x</span>
-      <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">prob_curr</span>
-    <span class="op">}</span>
-  
-  <span class="op">}</span>
-
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    chain <span class="op">=</span> <span class="va">chain</span>,
-    acceptance_ratio <span class="op">=</span> <span class="va">acceptances</span><span class="op">/</span><span class="op">(</span><span class="va">iterations</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bench/man/mark.html">mark</a></span><span class="op">(</span>
-  <span class="st">"Bespoke MH"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">bespoke_mh</span><span class="op">(</span><span class="va">customDensity_r</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, iterations <span class="op">=</span> <span class="fl">1024</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
-<span class="op">)</span>
-<span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"expression"</span>, <span class="st">"min"</span>, <span class="st">"median"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bespoke_mh</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">pdf</span>, <span class="va">start</span>, <span class="va">iterations</span><span class="op">=</span><span class="fl">1024</span>, <span class="va">sigma_prop</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="co"># Initialize variables ---------------------------------</span></span>
+<span>  <span class="va">acceptances</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  <span class="va">n_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span></span>
+<span>  <span class="va">chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow<span class="op">=</span><span class="va">iterations</span>, ncol <span class="op">=</span> <span class="va">n_dim</span><span class="op">)</span></span>
+<span>  <span class="va">chain</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">start</span></span>
+<span>  <span class="va">probabilities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Run the sampler ------------------------------------------------</span></span>
+<span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">iterations</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">current_x</span> <span class="op">&lt;-</span> <span class="va">chain</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span>,<span class="op">]</span></span>
+<span>    <span class="co"># generate proposal</span></span>
+<span>    <span class="va">proposal</span> <span class="op">&lt;-</span> <span class="fu">mvtnorm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="fl">1</span>, mean <span class="op">=</span> <span class="va">current_x</span>, sigma <span class="op">=</span> <span class="va">sigma_prop</span><span class="op">)</span></span>
+<span>    <span class="co"># calculate current and proposal probabilities</span></span>
+<span>    <span class="va">prob_curr</span> <span class="op">&lt;-</span> <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">prob_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="va">proposal</span><span class="op">)</span></span>
+<span>    <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span></span>
+<span>    <span class="co"># proposal is accepted with probability prob_prop / prob_curr</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">prob_curr</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
+<span>      <span class="va">ratio</span> <span class="op">&lt;-</span> <span class="va">prob_prop</span> <span class="op">/</span> <span class="va">prob_curr</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">ratio</span> <span class="op">&gt;=</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span></span>
+<span>        <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>      <span class="co"># The beta parameter (temperature), beta &lt;= 1, increases the value of the ratio making hotter chains more likely to accept proposals</span></span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">ratio</span><span class="op">)</span><span class="op">{</span></span>
+<span>        <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="co"># in case the current probability is 0 (in which case the ratio cannot be calculated), the step is accepted if the probability of the proposal is not 0</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">prob_prop</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>          <span class="va">accept</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>        <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>    </span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">accept</span><span class="op">)</span><span class="op">{</span></span>
+<span>      <span class="va">chain</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">proposal</span></span>
+<span>      <span class="va">acceptances</span> <span class="op">&lt;-</span> <span class="va">acceptances</span> <span class="op">+</span>  <span class="fl">1</span></span>
+<span>      <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">prob_prop</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="va">chain</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="va">current_x</span></span>
+<span>      <span class="va">probabilities</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">prob_curr</span></span>
+<span>    <span class="op">}</span></span>
+<span>  </span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    chain <span class="op">=</span> <span class="va">chain</span>,</span>
+<span>    acceptance_ratio <span class="op">=</span> <span class="va">acceptances</span><span class="op">/</span><span class="op">(</span><span class="va">iterations</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Bespoke MH"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">bespoke_mh</span><span class="op">(</span><span class="va">customDensity_r</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, iterations <span class="op">=</span> <span class="fl">1024</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"expression"</span>, <span class="st">"min"</span>, <span class="st">"median"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">expression</th>
@@ -225,8 +221,8 @@
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">Bespoke MH</td>
-<td align="right">292ms</td>
-<td align="right">300ms</td>
+<td align="right">812ms</td>
+<td align="right">812ms</td>
 </tr></tbody>
 </table>
 </div>
@@ -241,11 +237,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Lucas Castillo.</p>
+  <p></p>
+<p>Developed by Lucas Castillo.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -253,6 +251,8 @@
 
   
 
+
+  
 
   </body>
 </html>

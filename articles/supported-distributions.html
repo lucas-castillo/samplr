@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">samplr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -95,15 +91,15 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></code></pre></div>
-<p>The current distributions in the samplr package are those supported by <a href="http://rcpp.org/">Rcpp</a> and <a href="https://github.com/duckmayr/RcppDist">RcppDist</a>.</p>
-<div id="univariate-distributions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#univariate-distributions" class="anchor"></a>Univariate Distributions</h2>
-<p>The parameters these distributions take can be provided in a vector, e.g. a vector <code><a href="https://rdrr.io/r/base/c.html">c(0,1)</a></code> for the standard normal distribution.</p>
-<div id="continuous-distributions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#continuous-distributions" class="anchor"></a>Continuous Distributions</h3>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span></code></pre></div>
+<p>The current distributions in the samplr package are those supported by <a href="http://rcpp.org/" class="external-link">Rcpp</a> and <a href="https://github.com/duckmayr/RcppDist" class="external-link">RcppDist</a>.</p>
+<div class="section level2">
+<h2 id="univariate-distributions">Univariate Distributions<a class="anchor" aria-label="anchor" href="#univariate-distributions"></a>
+</h2>
+<p>The parameters these distributions take can be provided in a vector, e.g. a vector <code>c(0,1)</code> for the standard normal distribution.</p>
+<div class="section level3">
+<h3 id="continuous-distributions">Continuous Distributions<a class="anchor" aria-label="anchor" href="#continuous-distributions"></a>
+</h3>
 <table class="table">
 <colgroup>
 <col width="12%">
@@ -265,9 +261,9 @@
 </tbody>
 </table>
 </div>
-<div id="discrete-distributions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#discrete-distributions" class="anchor"></a>Discrete Distributions</h3>
+<div class="section level3">
+<h3 id="discrete-distributions">Discrete Distributions<a class="anchor" aria-label="anchor" href="#discrete-distributions"></a>
+</h3>
 <table class="table">
 <colgroup>
 <col width="9%">
@@ -334,13 +330,13 @@
 </table>
 </div>
 </div>
-<div id="multivariate-distributions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#multivariate-distributions" class="anchor"></a>Multivariate Distributions</h2>
+<div class="section level2">
+<h2 id="multivariate-distributions">Multivariate Distributions<a class="anchor" aria-label="anchor" href="#multivariate-distributions"></a>
+</h2>
 <p>For multivariate distributions, distribution parameters are provided in a list, not a vector.</p>
-<div id="continuous-distributions-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#continuous-distributions-1" class="anchor"></a>Continuous Distributions</h3>
+<div class="section level3">
+<h3 id="continuous-distributions-1">Continuous Distributions<a class="anchor" aria-label="anchor" href="#continuous-distributions-1"></a>
+</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Abbreviation</th>
@@ -364,35 +360,35 @@
 </table>
 </div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
-<div id="univariate-distribution" class="section level3">
-<h3 class="hasAnchor">
-<a href="#univariate-distribution" class="anchor"></a>Univariate distribution</h3>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
+<div class="section level3">
+<h3 id="univariate-distribution">Univariate distribution<a class="anchor" aria-label="anchor" href="#univariate-distribution"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>
-  start <span class="op">=</span> <span class="fl">0</span>, <span class="co"># starting point for the sampler</span>
-  distr_name <span class="op">=</span> <span class="st">"truncnorm"</span>, <span class="co"># Use abbreviation in distr_name</span>
-  distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="op">-</span><span class="fl">5</span>,<span class="fl">0</span><span class="op">)</span>, <span class="co"># provide distribution parameters as a vector for univariate distributions</span>
-  sigma_prop <span class="op">=</span> <span class="fl">1</span>, <span class="co"># variance of the proposal distribution</span>
-<span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span></span>
+<span>  start <span class="op">=</span> <span class="fl">0</span>, <span class="co"># starting point for the sampler</span></span>
+<span>  distr_name <span class="op">=</span> <span class="st">"truncnorm"</span>, <span class="co"># Use abbreviation in distr_name</span></span>
+<span>  distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="op">-</span><span class="fl">5</span>,<span class="fl">0</span><span class="op">)</span>, <span class="co"># provide distribution parameters as a vector for univariate distributions</span></span>
+<span>  sigma_prop <span class="op">=</span> <span class="fl">1</span>, <span class="co"># variance of the proposal distribution</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported-distributions_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
-<div id="multivariate-distribution" class="section level3">
-<h3 class="hasAnchor">
-<a href="#multivariate-distribution" class="anchor"></a>Multivariate distribution</h3>
+<div class="section level3">
+<h3 id="multivariate-distribution">Multivariate distribution<a class="anchor" aria-label="anchor" href="#multivariate-distribution"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span>
-  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, 
-  distr_name <span class="op">=</span> <span class="st">"mvnorm"</span>, <span class="co"># as before</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, <span class="co"># provide distribution parameters as a list for multivariate distributions</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span></span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, </span>
+<span>  distr_name <span class="op">=</span> <span class="st">"mvnorm"</span>, <span class="co"># as before</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, <span class="co"># provide distribution parameters as a list for multivariate distributions</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span></span></code></pre></div>
 <p><img src="supported-distributions_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 </div>
@@ -409,11 +405,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Lucas Castillo.</p>
+  <p></p>
+<p>Developed by Lucas Castillo.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -421,6 +419,8 @@
 
   
 
+
+  
 
   </body>
 </html>
