@@ -83,7 +83,7 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>start</dt>
-<dd><p>Vector. Starting position of the sampler.</p></dd>
+<dd><p>Either a vector or a matrix. If it is a vector, it will be the starting point of all the chains (with length = number of dimensions). If it's a matrix, every row will be the starting point of one chain (and so it must have as many rows as nChains, and as many columns as number of dimensions in the space).</p></dd>
 
 
 <dt>distr_name</dt>

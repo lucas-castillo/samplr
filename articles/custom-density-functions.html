@@ -104,8 +104,8 @@
 <span><span class="op">}</span></span>
 <span><span class="co"># Sample</span></span>
 <span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, custom_density <span class="op">=</span> <span class="va">customDensity_r</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .checkSigmaProp(sigma_prop, length(start)): The variance of the</span></span>
-<span><span class="co">#&gt; proposal distribution was not given and defaulted to the identity matrix</span></span>
+<span><span class="co">#&gt; Warning in .checkSigmaProp(sigma_prop, start_dim): The variance of the proposal</span></span>
+<span><span class="co">#&gt; distribution was not given and defaulted to the identity matrix</span></span>
 <span></span>
 <span><span class="co"># Plot results</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
@@ -140,18 +140,18 @@
 <tbody>
 <tr class="odd">
 <td align="left">CPP Density</td>
-<td align="right">33.21ms</td>
-<td align="right">87.27ms</td>
+<td align="right">28.4ms</td>
+<td align="right">33.33ms</td>
 </tr>
 <tr class="even">
 <td align="left">R Density</td>
-<td align="right">26.73ms</td>
-<td align="right">34.13ms</td>
+<td align="right">27.9ms</td>
+<td align="right">29.89ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Supported Density</td>
-<td align="right">1.76ms</td>
-<td align="right">1.97ms</td>
+<td align="right">1.7ms</td>
+<td align="right">1.89ms</td>
 </tr>
 </tbody>
 </table>
@@ -221,8 +221,8 @@
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">Bespoke MH</td>
-<td align="right">812ms</td>
-<td align="right">812ms</td>
+<td align="right">361ms</td>
+<td align="right">364ms</td>
 </tr></tbody>
 </table>
 </div>
