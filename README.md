@@ -4,6 +4,8 @@
 # samplr
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg)](https://github.com/lucas-castillo/samplr/actions)
 <!-- badges: end -->
 
 The goal of samplr is to provide tools to understand human performance
@@ -29,8 +31,8 @@ installation:
     `xcode-select --install` in a terminal. You may also check if those
     are already installed by running `pkgbuild::check_build_tools()`
     in R.
-2.  A Fortran compiler. An installer for gfortran is available
-    [here](https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg.81).
+2.  A Fortran compiler. Installers for gfortran are available
+    [here](https://github.com/fxcoudert/gfortran-for-macOS/releases/).
     This installs into `/usr/local/gfortran`.
 
 Read more about it on the [macOS Prerequisites section in the R
