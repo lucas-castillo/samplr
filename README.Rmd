@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# samplr
+# samplr: Tools To Compare Human Performance To Sampling Algorithms
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg)](https://github.com/lucas-castillo/samplr/actions)
@@ -23,12 +23,15 @@ The goal of samplr is to provide tools to understand human performance from the 
 
 ## Installation
 
-You can install the released version of SampleR from [Github](https://github.com/lucas-castillo/samplr) with:
+You can install the released version of samplr from [Github](https://github.com/lucas-castillo/samplr) with:
 
 ```
 devtools::install_github("lucas-castillo/samplr")
 ```
-
+or alternatively use the `remotes` package 
+```
+remotes::install_github("lucas-castillo/samplr")
+```
 ### Installing on MacOS
 If installing on MacOS, you will need the following prior to installation:
 
