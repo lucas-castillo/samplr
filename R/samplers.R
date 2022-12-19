@@ -431,6 +431,74 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 
 }
 
+#' Recycled-Momentum HMC Sampler (REC)
+#'
+#' Recycled-Momentum HMC is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike in standard HMC, proposals are autocorrelated, as the momentum of the current trajectory is not independent of the last trajectory, but is instead updated by a parameter alpha (see Details).
+#'
+#' While in HMC the momentum in each iteration is an independent draw,, here the momentum of the last utterance \eqn{p^{n-1}} is also involved. In each iteration, the momentum \eqn{p} is obtained as follows \deqn{p \gets \alpha \times p^{n-1} + (1 - \alpha^2)^{\frac{1}{2}} \times v}; where \eqn{v \sim N(0, I)}.
+#'
+#'
+#' Recycled-Momentum HMC does not support discrete distributions.
+#'
+#' @param distr_name Name of the distribution from which to sample from.
+#' @param distr_params Distribution parameters.
+#' @param start Vector. Starting position of the sampler.
+#' @param epsilon Size of the leapfrog step
+#' @param L Number of leapfrog steps per iteration
+#' @param alpha Recycling factor, from -1 to 1 (see Details).
+#' @param iterations Number of iterations of the sampler.
+#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
+#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @export
+#' @examples
+#'
+#' REC <- sampler_rec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+
+sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, iterations = 1024L, weights = NULL, custom_density = NULL){
+
+  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
+  isDiscrete = distrInfo[[1]]
+  isMix = distrInfo[[2]]
+  weights = distrInfo[[3]]
+  if (is.null(custom_density)){
+    custom_density <- function(x){}
+    use_custom = FALSE
+  } else{
+    distr_name = ""
+    distr_params = c(0,1)
+    use_custom = TRUE
+  }
+
+  if (isDiscrete){
+    stop("Recycled HMC is not supported with discrete distributions")
+  }
+
+  res <- sampler_mc_rec_cpp(
+    start = start,
+    nChains = 1, # for non-tempered versions of HMC and HOR, set this to 1
+    delta_T = 1, #
+    swap_all = F,
+    iterations = iterations,
+    distr_name = distr_name,
+    distr_params=distr_params,
+    discreteValues=isDiscrete,
+    isMix=isMix,
+    weights = weights,
+    custom_func = custom_density,
+    useCustom=use_custom,
+    epsilon=epsilon,
+    L=L,
+    alpha # for HMC, set this to zero
+  )
+
+  return (
+    list(
+      "Samples" = res$chain[,1],
+      "Momentums" = res$momentums[,1],
+      "Acceptance Ratio" = res$acceptances / iterations
+    )
+  )
+}
 #' No U-Turn Sampler (NUTS)
 #'
 #' Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found [here](https://arxiv.org/abs/1111.4246)
