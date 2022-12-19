@@ -19,7 +19,7 @@ typedef std::function<double(NumericVector)> dfunc;
 
 // UTILS
 
-NumericVector gradient(dfunc &func, const NumericVector &x)
+NumericVector gradient(dfunc &func, const NumericVector &x, double Temp = 1)
 {
 
   int n_dim = x.size();
@@ -36,7 +36,7 @@ NumericVector gradient(dfunc &func, const NumericVector &x)
     above(i) = above(i) + h;
     below(i) = below(i) - h;
 
-    returnVector(i) = (func(above) - func(below)) / (2 * h);
+    returnVector(i) = ((func(above)/Temp) - (func(below)/Temp)) / (2 * h);
   }
   return returnVector;
 }
@@ -54,8 +54,8 @@ double dotProduct(const NumericVector &x, const NumericVector &y)
 }
 
 
-double joint_d(const NumericVector &theta, const NumericVector &momentum, dfunc &log_func){
-    return (log_func(theta) - .5 * dotProduct(momentum, momentum));
+double joint_d(const NumericVector &theta, const NumericVector &momentum, dfunc &log_func, double Temp=1){
+  return (log_func(theta) - (.5 * dotProduct(momentum, momentum) / Temp)) / Temp;
 }
 
 NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
@@ -112,28 +112,26 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
 }
 
 
-void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L)
+void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L, double Temp=1)
 {
   // start with half step for momentum
-  momentum = momentum + (epsilon/2) * gradient(log_pdf, theta);
+  momentum = momentum + (epsilon/2) * gradient(log_pdf, theta, Temp);
 
   // alternate full steps for position and momentum
   for (int i = 0; i<L;i++){
     theta = theta + epsilon * momentum;
-
     if (i != (L-1)){
-    // full step for momentum except for the end of trajectory
-        momentum = momentum + epsilon * gradient(log_pdf, theta);
+      // full step for momentum except for the end of trajectory
+      momentum = momentum + epsilon * gradient(log_pdf, theta, Temp);
     }
   }
 
-// make a half step (instead of a full one) for the momentum at the end
-  momentum = momentum + (epsilon/2) * gradient(log_pdf, theta);
+  // make a half step (instead of a full one) for the momentum at the end
+  momentum = momentum + (epsilon/2) * gradient(log_pdf, theta, Temp);
 
-// negate momentum to make the proposal symmetric
+  // negate momentum to make the proposal symmetric
 
   momentum = -1 * momentum;
-
 }
 
 
