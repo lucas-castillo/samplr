@@ -74,6 +74,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sampler_mc_rec_cpp
+List sampler_mc_rec_cpp(NumericVector start, int nChains, double delta_T, bool swap_all, double iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom, double epsilon, int L, double alpha);
+RcppExport SEXP _samplr_sampler_mc_rec_cpp(SEXP startSEXP, SEXP nChainsSEXP, SEXP delta_TSEXP, SEXP swap_allSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP, SEXP epsilonSEXP, SEXP LSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type start(startSEXP);
+    Rcpp::traits::input_parameter< int >::type nChains(nChainsSEXP);
+    Rcpp::traits::input_parameter< double >::type delta_T(delta_TSEXP);
+    Rcpp::traits::input_parameter< bool >::type swap_all(swap_allSEXP);
+    Rcpp::traits::input_parameter< double >::type iterations(iterationsSEXP);
+    Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
+    Rcpp::traits::input_parameter< List >::type distr_params(distr_paramsSEXP);
+    Rcpp::traits::input_parameter< bool >::type discreteValues(discreteValuesSEXP);
+    Rcpp::traits::input_parameter< bool >::type isMix(isMixSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< Function >::type custom_func(custom_funcSEXP);
+    Rcpp::traits::input_parameter< bool >::type useCustom(useCustomSEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< int >::type L(LSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampler_mc_rec_cpp(start, nChains, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, epsilon, L, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sampler_nuts_cpp
 List sampler_nuts_cpp(NumericVector start, StringVector distr_name, List distr_params, double epsilon, int iterations, double delta_max, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
 RcppExport SEXP _samplr_sampler_nuts_cpp(SEXP startSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP epsilonSEXP, SEXP iterationsSEXP, SEXP delta_maxSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP) {
@@ -118,6 +143,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_samplr_sampler_mh_cpp", (DL_FUNC) &_samplr_sampler_mh_cpp, 10},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 13},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
+    {"_samplr_sampler_mc_rec_cpp", (DL_FUNC) &_samplr_sampler_mc_rec_cpp, 15},
     {"_samplr_sampler_nuts_cpp", (DL_FUNC) &_samplr_sampler_nuts_cpp, 10},
     {"_samplr_gridDensity_cpp", (DL_FUNC) &_samplr_gridDensity_cpp, 9},
     {NULL, NULL, 0}
