@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# samplr
+# samplr: Tools To Compare Human Performance To Sampling Algorithms
 
 <!-- badges: start -->
 
@@ -17,10 +17,14 @@ overview and other resources can be found at
 
 ## Installation
 
-You can install the released version of SampleR from
+You can install the released version of samplr from
 [Github](https://github.com/lucas-castillo/samplr) with:
 
     devtools::install_github("lucas-castillo/samplr")
+
+or alternatively use the `remotes` package
+
+    remotes::install_github("lucas-castillo/samplr")
 
 ### Installing on MacOS
 
