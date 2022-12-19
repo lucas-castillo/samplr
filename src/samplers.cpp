@@ -134,6 +134,9 @@ void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const doub
   momentum = -1 * momentum;
 }
 
+NumericVector RecycledMomentumUpdate(NumericVector momentum, double alpha, double Temp=1){
+  return alpha * momentum + pow((1 - pow(alpha, 2)), .5) * Rcpp::rnorm(momentum.size(), 0, Temp);
+}
 
 double estimate_epsilon(NumericVector theta, dfunc log_pdf){
   // initialize vars
