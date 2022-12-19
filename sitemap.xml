@@ -70,10 +70,19 @@
     <loc>https://lucas-castillo.github.io/samplr/reference/sampler_mc3.html</loc>
   </url>
   <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/sampler_mchmc.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/sampler_mcrec.html</loc>
+  </url>
+  <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/sampler_mh.html</loc>
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/sampler_nuts.html</loc>
+  </url>
+  <url>
+    <loc>https://lucas-castillo.github.io/samplr/reference/sampler_rec.html</loc>
   </url>
   <url>
     <loc>https://lucas-castillo.github.io/samplr/reference/samplr-package.html</loc>

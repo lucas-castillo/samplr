@@ -80,15 +80,17 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="samplr">samplr<a class="anchor" aria-label="anchor" href="#samplr"></a>
+<div class="page-header"><h1 id="samplr-tools-to-compare-human-performance-to-sampling-algorithms">samplr: Tools To Compare Human Performance To Sampling Algorithms<a class="anchor" aria-label="anchor" href="#samplr-tools-to-compare-human-performance-to-sampling-algorithms"></a>
 </h1></div>
 <!-- badges: start -->
 <p>The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at <a href="sampling.warwick.ac.uk">sampling.warwick.ac.uk</a>. Get started <a href="vignettes/how-to-sample.html">here</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the released version of SampleR from <a href="https://github.com/lucas-castillo/samplr" class="external-link">Github</a> with:</p>
+<p>You can install the released version of samplr from <a href="https://github.com/lucas-castillo/samplr" class="external-link">Github</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"lucas-castillo/samplr"</span>)</span></code></pre></div>
+<p>or alternatively use the <code>remotes</code> package</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"lucas-castillo/samplr"</span>)</span></code></pre></div>
 <div class="section level3">
 <h3 id="installing-on-macos">Installing on MacOS<a class="anchor" aria-label="anchor" href="#installing-on-macos"></a>
 </h3>
@@ -104,7 +106,7 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>samplr provides tools to generate samples following particular algorithms</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">1</span>, distr_name <span class="op">=</span> <span class="st">"norm"</span>, distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">.5</span>, iterations <span class="op">=</span> <span class="fl">2048</span><span class="op">)</span></span>
@@ -114,10 +116,10 @@
 <span><span class="co">#&gt; [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723</span></span>
 <span><span class="co">#&gt; [19]  1.01645509  1.45473808</span></span></code></pre></div>
 <p>As well as tools to diagnose the patterns both from samplers and participants:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_qqplot.html">plot_qqplot</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, change <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_series.html">plot_series</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-2.png"><!-- --></p>
 </div>
