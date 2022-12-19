@@ -13,6 +13,10 @@ sampler_hmc_cpp <- function(start, distr_name, distr_params, epsilon, L, iterati
     .Call(`_samplr_sampler_hmc_cpp`, start, distr_name, distr_params, epsilon, L, iterations, isMix, weights, custom_func, useCustom)
 }
 
+sampler_mc_rec_cpp <- function(start, nChains, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, epsilon, L, alpha) {
+    .Call(`_samplr_sampler_mc_rec_cpp`, start, nChains, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, epsilon, L, alpha)
+}
+
 sampler_nuts_cpp <- function(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix, weights, custom_func, useCustom) {
     .Call(`_samplr_sampler_nuts_cpp`, start, distr_name, distr_params, epsilon, iterations, delta_max, isMix, weights, custom_func, useCustom)
 }
