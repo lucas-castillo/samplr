@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">samplr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,47 +79,46 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="samplr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#samplr" class="anchor"></a>samplr</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="samplr">samplr<a class="anchor" aria-label="anchor" href="#samplr"></a>
+</h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
 <p>The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at <a href="sampling.warwick.ac.uk">sampling.warwick.ac.uk</a>. Get started <a href="vignettes/how-to-sample.html">here</a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of SampleR from <a href="https://github.com/lucas-castillo/samplr">Github</a> with:</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the released version of SampleR from <a href="https://github.com/lucas-castillo/samplr" class="external-link">Github</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"lucas-castillo/samplr"</span>)</span></code></pre></div>
-<div id="installing-on-macos" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installing-on-macos" class="anchor"></a>Installing on MacOS</h3>
+<div class="section level3">
+<h3 id="installing-on-macos">Installing on MacOS<a class="anchor" aria-label="anchor" href="#installing-on-macos"></a>
+</h3>
 <p>If installing on MacOS, you will need the following prior to installation:</p>
-<ol>
-<li>Apple’s ‘Command Line Tools’: these can be (re-)installed by running <code>xcode-select --install</code> in a terminal. You may also check if those are already installed by running <code><a href="https://rdrr.io/pkg/pkgbuild/man/has_build_tools.html">pkgbuild::check_build_tools()</a></code> in R.</li>
-<li>A Fortran compiler. An installer for gfortran is available <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases/download/8.2/gfortran-8.2-Mojave.dmg.81">here</a>. This installs into <code>/usr/local/gfortran</code>.</li>
+<ol style="list-style-type: decimal">
+<li>Apple’s ‘Command Line Tools’: these can be (re-)installed by running <code>xcode-select --install</code> in a terminal. You may also check if those are already installed by running <code><a href="https://rdrr.io/pkg/pkgbuild/man/has_build_tools.html" class="external-link">pkgbuild::check_build_tools()</a></code> in R.</li>
+<li>A Fortran compiler. Installers for gfortran are available <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases/" class="external-link">here</a>. This installs into <code>/usr/local/gfortran</code>.</li>
 </ol>
-<p>Read more about it on the <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites">macOS Prerequisites section in the R Installation and Administration Manual</a>.</p>
+<p>Read more about it on the <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites" class="external-link">macOS Prerequisites section in the R Installation and Administration Manual</a>.</p>
 </div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <p>samplr provides tools to generate samples following particular algorithms</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-<span class="va">chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">1</span>, distr_name <span class="op">=</span> <span class="st">"norm"</span>, distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">.5</span>, iterations <span class="op">=</span> <span class="fl">2048</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt;  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684</span>
-<span class="co">#&gt;  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605</span>
-<span class="co">#&gt; [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723</span>
-<span class="co">#&gt; [19]  1.01645509  1.45473808</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">1</span>, distr_name <span class="op">=</span> <span class="st">"norm"</span>, distr_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">.5</span>, iterations <span class="op">=</span> <span class="fl">2048</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684</span></span>
+<span><span class="co">#&gt;  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605</span></span>
+<span><span class="co">#&gt; [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723</span></span>
+<span><span class="co">#&gt; [19]  1.01645509  1.45473808</span></span></code></pre></div>
 <p>As well as tools to diagnose the patterns both from samplers and participants:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_qqplot.html">plot_qqplot</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, change <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_qqplot.html">plot_qqplot</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, change <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/plot_series.html">plot_series</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_series.html">plot_series</a></span><span class="op">(</span><span class="va">chain</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-2.png"><!-- --></p>
 </div>
 </div>
@@ -131,16 +126,32 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Lucas Castillo <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0274-0777" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing samplr</a></li>
+</ul>
+</div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Lucas Castillo <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0274-0777" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/lucas-castillo/samplr/actions" class="external-link"><img src="https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
@@ -149,11 +160,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Lucas Castillo.</p>
+  <p></p>
+<p>Developed by Lucas Castillo.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -161,6 +174,8 @@
 
   
 
+
+  
 
   </body>
 </html>
