@@ -137,41 +137,6 @@ NumericVector RecycledMomentumUpdate(
   return alpha * momentum + pow((1 - pow(alpha, 2)), .5) * Rcpp::rnorm(momentum.size(), 0, Temp);
 }
 
-double estimate_epsilon(NumericVector theta, dfunc log_pdf){
-  // initialize vars
-  double epsilon = 1;
-
-  int dim = theta.size();
-  arma::mat identityMatrix(dim, dim, arma::fill::eye);
-  arma::vec zeroes(dim, arma::fill::zeros);
-
-  arma::vec momentum_ = rmvnorm(dim, zeroes, identityMatrix);
-  NumericVector momentum = NumericVector(momentum_.begin(), momentum_.end());
-
-  NumericVector theta_prime = theta;
-  NumericVector momentum_prime = momentum;
-
-  leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1);
-
-  double top = exp(joint_d(theta_prime, momentum_prime, log_pdf));
-  double bottom = exp(joint_d(theta, momentum, log_pdf));
-  double x = top/bottom;
-  double alpha = 2 * (double)(x > .5) - 1;
-  while (pow(x, alpha) > pow(2, -1*alpha))
-  {
-    epsilon = epsilon * pow(2, alpha);
-    theta_prime = theta;
-    momentum_prime = momentum;
-    leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, 1);
-
-    // top = exp(joint_d(theta_prime, momentum_prime, log_pdf));
-    bottom = exp(joint_d(theta_prime, momentum_prime, log_pdf));
-    x = top/bottom;
-  }
-  return epsilon;
-}
-
-
 dfunc getPDF(
     const String &distr_name, 
     const List &distr_params, 
@@ -852,21 +817,6 @@ List sampler_nuts_cpp(
   arma::vec zeroes(dim, arma::fill::zeros);
   arma::mat momentum_0 = rmvnorm(1,  zeroes, identityMatrix);
   NumericVector momentum0 = NumericVector(momentum_0.begin(), momentum_0.end());
-
-  // NumericVector epsilons(iterations);
-  // NumericVector bar_epsilons(iterations);
-  // epsilons(0) = estimate_epsilon(start, log_pdf);
-  // bar_epsilons(0) = 1;
-  // Rcout << "Epsilon_0 = " << epsilons(0) << "\n";
-  // double mu = log(NumericVector::create(10 * epsilons(0)))[0];
-
-  // NumericVector bar_Hs(iterations);
-  // bar_Hs(0) = 0;
-
-  // double gamma = .05;
-
-  // double t_0 = 10;
-  // double kappa = .75;
 
    // run sampler
    for (double i = 1; i < iterations; i++){
