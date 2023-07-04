@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // sampler_mh_cpp
-List sampler_mh_cpp(NumericVector start, NumericMatrix sigma_prop, int iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
-RcppExport SEXP _samplr_sampler_mh_cpp(SEXP startSEXP, SEXP sigma_propSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP) {
+List sampler_mh_cpp(NumericVector start, NumericMatrix sigma_prop, int iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom, double alpha);
+RcppExport SEXP _samplr_sampler_mh_cpp(SEXP startSEXP, SEXP sigma_propSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,13 +27,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< Function >::type custom_func(custom_funcSEXP);
     Rcpp::traits::input_parameter< bool >::type useCustom(useCustomSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom));
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
 // sampler_mc3_cpp
-List sampler_mc3_cpp(NumericMatrix start, int nChains, NumericMatrix sigma_prop, double delta_T, bool swap_all, double iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom);
-RcppExport SEXP _samplr_sampler_mc3_cpp(SEXP startSEXP, SEXP nChainsSEXP, SEXP sigma_propSEXP, SEXP delta_TSEXP, SEXP swap_allSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP) {
+List sampler_mc3_cpp(NumericMatrix start, int nChains, NumericMatrix sigma_prop, double delta_T, bool swap_all, double iterations, StringVector distr_name, List distr_params, bool discreteValues, bool isMix, NumericVector weights, Function custom_func, bool useCustom, double alpha);
+RcppExport SEXP _samplr_sampler_mc3_cpp(SEXP startSEXP, SEXP nChainsSEXP, SEXP sigma_propSEXP, SEXP delta_TSEXP, SEXP swap_allSEXP, SEXP iterationsSEXP, SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP discreteValuesSEXP, SEXP isMixSEXP, SEXP weightsSEXP, SEXP custom_funcSEXP, SEXP useCustomSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -50,7 +51,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< Function >::type custom_func(custom_funcSEXP);
     Rcpp::traits::input_parameter< bool >::type useCustom(useCustomSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom));
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -140,8 +142,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_samplr_sampler_mh_cpp", (DL_FUNC) &_samplr_sampler_mh_cpp, 10},
-    {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 13},
+    {"_samplr_sampler_mh_cpp", (DL_FUNC) &_samplr_sampler_mh_cpp, 11},
+    {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 14},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
     {"_samplr_sampler_mc_rec_cpp", (DL_FUNC) &_samplr_sampler_mc_rec_cpp, 15},
     {"_samplr_sampler_nuts_cpp", (DL_FUNC) &_samplr_sampler_nuts_cpp, 10},
