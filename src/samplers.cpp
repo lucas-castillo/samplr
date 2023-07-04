@@ -54,7 +54,12 @@ double dotProduct(const NumericVector &x, const NumericVector &y)
 }
 
 
-double joint_d(const NumericVector &theta, const NumericVector &momentum, dfunc &log_func, double Temp=1){
+double joint_d(
+    const NumericVector &theta, 
+    const NumericVector &momentum, 
+    dfunc &log_func, 
+    double Temp=1
+){
   return (log_func(theta) - (.5 * dotProduct(momentum, momentum) / Temp)) / Temp;
 }
 
@@ -63,17 +68,8 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
 
   NumericVector proposal = NumericVector(proposal_.begin(), proposal_.end());
-  // Rcout << "PDF Test in MetropolisStep = ";
-  // Rcout << pdf(1) << "\n";
-
-  // Rcout << "Proposal in MetropolisStep = ";
-
-  // Rcout << pdf(1) << "\n";
-
   // if dist is discrete round the proposal to nearest int
   if (discreteValues){
-    // Rcout << "This shouldn't print...\n";
-
     for (int i = 0; i < proposal.length(); i++){
       proposal(i) = round(proposal(i));
     }
@@ -84,39 +80,38 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
 
   // double lastP = ps(currentChain, currentIndex - 1);
   double prob_prop = pdf(proposal);
-  // Rcout << "Proposal probability in MetropolisStep = ";
-  // Rcout << prob_prop << "\n";
-
-  // Rcout << "Last probability in MetropolisStep = ";
-  // Rcout << lastP << "\n";
-
-
   // proposal is accepted with probability prob_prop / prob_curr
   if (lastP != 0){
     double ratio = prob_prop / lastP;
+    // The beta parameter (temperature), beta <= 1, 
+    // increases the value of the ratio making hotter chains 
+    // more likely to accept proposals
     if ((ratio >= 1) || (R::runif(0,1) < pow(ratio, beta))){
       chain.row(currentIndex) = proposal;
-      // Rcout << "A\n";
-
       return NumericVector::create(prob_prop, 1);
-      // The beta parameter (temperature), beta <= 1, increases the value of the ratio making hotter chains more likely to accept proposals
+      
     }
   } else if (prob_prop > 0) {
-      // Rcout << "B\n";
       chain.row(currentIndex) = proposal;
       return NumericVector::create(prob_prop, 1);
   }
-  // Rcout << "C\n";
   chain.row(currentIndex) = current_x;
   return NumericVector::create(lastP, 0);
 }
 
 
-void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const double &epsilon, dfunc &log_pdf, const int &L, double Temp=1)
+void leapfrog_step_cpp(
+    NumericVector &theta, 
+    NumericVector &momentum, 
+    const double &epsilon, 
+    dfunc &log_pdf, 
+    const int &L, 
+    double Temp=1
+)
 {
   // start with half step for momentum
   momentum = momentum + (epsilon/2) * gradient(log_pdf, theta, Temp);
-
+  
   // alternate full steps for position and momentum
   for (int i = 0; i<L;i++){
     theta = theta + epsilon * momentum;
@@ -134,7 +129,11 @@ void leapfrog_step_cpp(NumericVector &theta, NumericVector &momentum, const doub
   momentum = -1 * momentum;
 }
 
-NumericVector RecycledMomentumUpdate(NumericVector momentum, double alpha, double Temp=1){
+NumericVector RecycledMomentumUpdate(
+    NumericVector momentum, 
+    double alpha, 
+    double Temp=1
+){
   return alpha * momentum + pow((1 - pow(alpha, 2)), .5) * Rcpp::rnorm(momentum.size(), 0, Temp);
 }
 
@@ -173,7 +172,11 @@ double estimate_epsilon(NumericVector theta, dfunc log_pdf){
 }
 
 
-dfunc getPDF(const String &distr_name, const List &distr_params, const bool &log=false)
+dfunc getPDF(
+    const String &distr_name, 
+    const List &distr_params, 
+    const bool &log=false
+)
 {
   dfunc pdf;
   // CONTINUOUS
@@ -209,8 +212,8 @@ dfunc getPDF(const String &distr_name, const List &distr_params, const bool &log
     pdf = [distr_params, log](NumericVector x){return R::dlogis(x(0), distr_params(0), distr_params(1), log);};
   } else if (distr_name == "weibull"){
     pdf = [distr_params, log](NumericVector x){return R::dweibull(x(0), distr_params(0), distr_params(1), log);};
-
-  // RCPP-DIST Distributions
+    
+    // RCPP-DIST Distributions
   } else if (distr_name == "4beta"){
     pdf = [distr_params, log](NumericVector x){return d4beta(x, distr_params(0), distr_params(1), distr_params(2), distr_params(3), log)[0];};
   } else if (distr_name == "lst"){
@@ -264,9 +267,13 @@ double safe_log(const double &x){
 
 }
 
-dfunc getMixturePDF(std::vector<dfunc> &pdfs, const NumericVector &weights, const bool &logarithm = false){
+dfunc getMixturePDF(
+    std::vector<dfunc> &pdfs, 
+    const NumericVector &weights, 
+    const bool &logarithm = false
+){
   dfunc pdf;
-
+  
   pdf = [pdfs, weights, logarithm](NumericVector x){
     double total_density = 0;
     for (unsigned i = 0; i < weights.size(); i++){
@@ -298,7 +305,15 @@ dfunc customPDF (const Function &f, const bool log = false){
   return pdf;
 }
 
-dfunc managePDF(const StringVector &distr_name, const List &distr_params, const bool &isMix, const NumericVector &weights, const bool &log, const Function &custom_func, const bool &useCustom){
+dfunc managePDF(
+    const StringVector &distr_name, 
+    const List &distr_params, 
+    const bool &isMix, 
+    const NumericVector &weights, 
+    const bool &log, 
+    const Function &custom_func, 
+    const bool &useCustom
+){
   dfunc pdf;
   std::vector<dfunc> pdfs;
 
@@ -312,7 +327,7 @@ dfunc managePDF(const StringVector &distr_name, const List &distr_params, const 
     }
     pdf = getMixturePDF(pdfs, weights, log);
   }
-
+  
   return pdf;
 }
 
@@ -404,16 +419,16 @@ List sampler_mc3_cpp(
 
   NumericVector v(nChains);
   v = seq(0, nChains - 1);
-  // print(chain);
-    // run the sampler ------------------------------------------------
+  
+  // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
     for (int ch = 0; ch < nChains; ch++){
       NumericVector accept =  metropolis_step_cpp(chain, proposals, i + iterations * ch, ps(ch, i-1), sigma_prop, pdf, discreteValues, beta(ch));
       ps(ch, i) = accept(0);
       acceptances(ch) = acceptances(ch) + accept(1);
     }
-
-     // once a step in every chain has been done, proceed to swap chains
+    
+    // once a step in every chain has been done, proceed to swap chains
     if (nChains > 1){
       // arrange chains randomly
 
@@ -438,11 +453,14 @@ List sampler_mc3_cpp(
 
         if ((bottom != 0 && R::runif(0,1) <= top/bottom) || (bottom == 0 && top > 0)){
 
+          // Swap Positions
           NumericVector temp = chain.row(i + iterations * m);
           chain.row(i + iterations * m) = chain.row(i + iterations * n);
           chain.row(i + iterations * n) = temp;
+          // Record Swap
           swaps.row(swap_accepts) = NumericVector::create(i+1, m, n);
           swap_accepts++;
+          // Swap probabilities
           t1 = chain.row(i+iterations * m);
           t2 = chain.row(i+iterations * n);
           double TEMP = ps(m, i);
@@ -463,22 +481,22 @@ NumericVector drawMomentum(int dimensions){
     retV(i) = R::rnorm(0,1);
   }
   return retV;
-
+  
 }
 ///'@export
 // [[Rcpp::export]]
 List sampler_hmc_cpp(
-  NumericVector start,
-  StringVector distr_name,
-  List distr_params,
-  double epsilon,
-  int L,
-  int iterations,
-  bool isMix,
-  NumericVector weights,
-  Function custom_func,
-  bool useCustom
-  )
+    NumericVector start,
+    StringVector distr_name,
+    List distr_params,
+    double epsilon,
+    int L,
+    int iterations,
+    bool isMix,
+    NumericVector weights,
+    Function custom_func,
+    bool useCustom
+)
 {
   // init vars
   dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true, custom_func, useCustom);
@@ -487,36 +505,27 @@ List sampler_hmc_cpp(
   NumericMatrix momentums(iterations, dim);
   int acceptances = 0;
   chain.row(0) = start;
-  // arma::mat identityMatrix(dim, dim, arma::fill::eye);
-  // arma::colvec zeroes(dim, arma::fill::zeros);
-  // arma::mat momentum_;
   NumericVector momentum;
-
+  
   for (int i = 1; i < iterations; i++){
     // draw a sample of momentum
-
-    // momentum_ = rmvnorm(1,  zeroes, identityMatrix);
-    // momentum = NumericVector(momentum_.begin(), momentum_.end());
+    
     momentum = drawMomentum(dim);
+    
     // initialize vars
-
     NumericVector theta_prime  = chain.row(i-1);
     NumericVector momentum_prime = clone(momentum);
-
-
+    
     // leapfrog for each L step
     leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, L);
-
-  //
+    
     // Metropolis - Hastings Acceptance, using the joint density of position + momentum
-//
     double top =  exp(joint_d(theta_prime, momentum_prime, log_pdf));
     double bottom =  exp(joint_d(chain.row(i-1), momentum, log_pdf));
-
+    
     double alpha = top/bottom;
-  //
-
-  if (R::runif(0,1) <= alpha){
+    
+    if (R::runif(0,1) <= alpha){
       chain.row(i) = theta_prime;
       momentums.row(i) = momentum_prime;
       acceptances++;
@@ -525,9 +534,13 @@ List sampler_hmc_cpp(
       momentums.row(i) = momentums.row(i-1);
     }
   }
-
-  return List::create(chain, momentums, ((double)(acceptances)/(double)(iterations)));
-
+  
+  return List::create(
+    chain, 
+    momentums, 
+    ((double)(acceptances)/(double)(iterations))
+  );
+  
 }
 
 
@@ -569,34 +582,32 @@ List sampler_mc_rec_cpp(
   NumericMatrix momentumsHistory(iterations*nChains, n_dim);
   NumericMatrix momentumsUse(iterations*nChains, n_dim);
   NumericVector momentum;
-
+  
   dfunc log_pdf = managePDF(distr_name, distr_params, isMix, weights, true, custom_func, useCustom);
-  // double initial_probability = exp(log_pdf(start));
   // init the chain information
   for (int i = 0; i < nChains; i++){
     chain.row(0 + iterations * i) = start;
     beta(i) = (1 + delta_T * i);
-    // ps(i,0) = initial_probability;
   }
-
+  
   int nSwaps; // how many swaps per iteration?
   if (swap_all){
     nSwaps = floor(nChains/2);
   } else {
     nSwaps = 1;
   }
-
+  
   // v holds the chain ids so that they are swapped
   NumericVector v(nChains);
   v = seq(0, nChains - 1);
-
+  
   // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
-
+    
     if (i % 1000 == 0){
       Rcpp::checkUserInterrupt();
     }
-
+    
     for (int ch = 0; ch < nChains; ch++){
       if (i == 1){
         momentum = drawMomentum(n_dim) * beta(ch);
@@ -604,24 +615,19 @@ List sampler_mc_rec_cpp(
         momentum = momentumsUse.row((i + iterations * ch) - 1);
         momentum = RecycledMomentumUpdate(momentum, alpha, beta(ch));
       }
-
+      
       NumericVector theta_prime  = chain.row((i + iterations * ch) - 1);
       NumericVector momentum_prime = clone(momentum);
-
+      
       // leapfrog for each L step
       leapfrog_step_cpp(theta_prime, momentum_prime, epsilon, log_pdf, L, beta(ch));
-
-      //
+      
       // Metropolis - Hastings Acceptance, using the joint density of position + momentum
-      //
-
+      
       double top =  exp(joint_d(theta_prime, momentum_prime, log_pdf, beta(ch)));
       double bottom =  exp(joint_d(chain.row((i + iterations * ch) - 1), momentum, log_pdf, beta(ch)));
-
+      
       double alpha = top/bottom;
-      // Rcout << "top" << top << "\n";
-      // Rcout << "bottom" << bottom << "\n";
-      // Rcout << pow(alpha, beta(ch)) << "\n";
       if (R::runif(0,1) <= alpha){
         chain.row(i + iterations * ch) = theta_prime;
         momentumsUse.row(i + iterations * ch) = -1 * momentum_prime;
@@ -654,45 +660,33 @@ List sampler_mc_rec_cpp(
 
         double m_pdf_swapped = exp(joint_d(chain.row(i + iterations * m), momentumsUse.row(i + iterations * m), log_pdf, beta(n)));
         double n_pdf_swapped = exp(joint_d(chain.row(i + iterations * n), momentumsUse.row(i + iterations * n), log_pdf, beta(m)));        // double n_pdf_swapped = exp(joint_d(chain.row(i + iterations * n), momentums.row(i + iterations * n), log_pdf, beta(m)));
-        //
-        //
-
-
-        // double m_pdf = exp(joint_d(chain.row(i + iterations * m), 0, log_pdf, beta(m)));
-        // double n_pdf = exp(joint_d(chain.row(i + iterations * n), 0, log_pdf, beta(n)));
-        //
-        // double m_pdf_swapped = exp(joint_d(chain.row(i + iterations * m), 0, log_pdf, beta(n)));
-        // double n_pdf_swapped = exp(joint_d(chain.row(i + iterations * n), 0, log_pdf, beta(m)));        // double n_pdf_swapped = exp(joint_d(chain.row(i + iterations * n), momentums.row(i + iterations * n), log_pdf, beta(m)));
-
+        
         double top = m_pdf_swapped * n_pdf_swapped; // pow(m_pdf, beta(n)) * pow(n_pdf, beta(m));
         double bottom = m_pdf * n_pdf; //pow(m_pdf,beta(m)) * pow(n_pdf, beta(n));
-
-
+        
+        
         if ((bottom != 0 && R::runif(0,1) <= top/bottom) || (bottom == 0 && top > 0)){
-
+          
           NumericVector temp = chain.row(i + iterations * m);
           chain.row(i + iterations * m) = chain.row(i + iterations * n);
           chain.row(i + iterations * n) = temp;
-
-
-
+          
           NumericVector tempMomentum_m = momentumsUse.row(i + iterations * m);
           NumericVector tempMomentum_n = momentumsUse.row(i + iterations * n);
-
+          
           if (i != (iterations-1)){
             momentumsUse.row(i + iterations * m) = drawMomentum(n_dim) * beta(m);
             momentumsUse.row(i + iterations * n) = drawMomentum(n_dim) * beta(n);
           }
-
-
+          
           swaps.row(swap_accepts) = NumericVector::create(i+1, m, n);
           swap_accepts++;
         }
       }
     }
   }
-
-
+  
+  
   return List::create(
     _["chain"] = chain,
     _["proposals"] = proposals,
@@ -704,7 +698,6 @@ List sampler_mc_rec_cpp(
     _["momentumsHistory"] = momentumsHistory
   );
 }
-
 
 // // // NUTS // // //
 
