@@ -70,40 +70,69 @@ NumericVector alpha_trick(
 ){
   return alpha * last_jump + pow((1 - pow(alpha, 2)), .5) * random_jump;
 }
-NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
-  NumericVector current_x = chain.row(currentIndex - 1);
-  arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
 
-  NumericVector proposal = NumericVector(proposal_.begin(), proposal_.end());
+
+
+NumericVector autocorrelated_metropolis_step_cpp(
+    NumericMatrix &chain, 
+    NumericMatrix &proposals, 
+    NumericMatrix &jumps, 
+    NumericMatrix &true_jumps, 
+    const int &currentIndex, 
+    const double &last_prob, 
+    const NumericMatrix &sigma_prop, 
+    dfunc &pdf, 
+    const bool &discreteValues, 
+    const double &beta, 
+    const double &alpha
+){
+  NumericVector current_x = chain.row(currentIndex - 1);
+  NumericVector last_jump = jumps.row(currentIndex - 1);
+  NumericVector zeros (current_x.size());
+  arma::mat random_jump_ = rmvnorm(1, as<arma::vec>(zeros), as<arma::mat>(sigma_prop));
+  NumericVector random_jump = NumericVector(random_jump_.begin(), random_jump_.end());
+  
+  NumericVector next_jump = alpha_trick(random_jump, last_jump, alpha);
+  true_jumps.row(currentIndex) = next_jump;
+  NumericVector proposal = current_x + next_jump;
+  
   // if dist is discrete round the proposal to nearest int
   if (discreteValues){
     for (int i = 0; i < proposal.length(); i++){
       proposal(i) = round(proposal(i));
     }
   }
+  
   // update proposals matrix
   proposals.row(currentIndex) = proposal;
-  // calculate current and proposal probabilities
-
-  // double lastP = ps(currentChain, currentIndex - 1);
+  
+  // calculate proposal density
   double prob_prop = pdf(proposal);
+  
   // proposal is accepted with probability prob_prop / prob_curr
-  if (lastP != 0){
-    double ratio = prob_prop / lastP;
+  if (last_prob != 0){
+    double ratio = prob_prop / last_prob;
+    
     // The beta parameter (temperature), beta <= 1, 
     // increases the value of the ratio making hotter chains 
     // more likely to accept proposals
     if ((ratio >= 1) || (R::runif(0,1) < pow(ratio, beta))){
       chain.row(currentIndex) = proposal;
+      jumps.row(currentIndex) = next_jump;
       return NumericVector::create(prob_prop, 1);
       
     }
   } else if (prob_prop > 0) {
-      chain.row(currentIndex) = proposal;
-      return NumericVector::create(prob_prop, 1);
+    chain.row(currentIndex) = proposal;
+    jumps.row(currentIndex) = next_jump;
+    return NumericVector::create(prob_prop, 1);
   }
   chain.row(currentIndex) = current_x;
-  return NumericVector::create(lastP, 0);
+  jumps.row(currentIndex) = next_jump * -1;
+  return NumericVector::create(last_prob, 0);
+}
+
+
 NumericVector propose(
     NumericVector current_x,
     NumericMatrix sigma_prop, 
@@ -328,32 +357,64 @@ List sampler_mh_cpp(
     bool isMix,
     NumericVector weights,
     Function custom_func,
-    bool useCustom
+    bool useCustom,
+    double alpha=0
 )
 {
   // Initialize variables ---------------------------------
   LogicalVector acceptances(iterations);
   int n_dim = start.size();
   dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
-
+  
   NumericMatrix chain(iterations, n_dim);
   NumericMatrix proposals(iterations, n_dim);
+  NumericMatrix jumps(iterations, n_dim);
+  NumericMatrix true_jumps(iterations, n_dim);
   NumericMatrix ps(1, iterations);
-
+  
   // first row is start
   chain.row(0) = start;
   ps(0,0) = pdf(start);
-
-
+  
+  
   // Run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
-    // NumericVector current_x = chain.row(i-1);
-    NumericVector accept = metropolis_step_cpp(chain, proposals, i, ps(0,i-1), sigma_prop, pdf, discreteValues, 1);
+    NumericVector accept;
+    if (i == 1){
+      accept = autocorrelated_metropolis_step_cpp(
+        chain,      // NumericMatrix &chain, 
+        proposals, // NumericMatrix &proposals, 
+        jumps, // NumericMatrix &jumps, 
+        true_jumps, // NumericMatrix &true_jumps, 
+        i,        // const int &currentIndex, 
+        ps(0,i-1), // const double &lastP, 
+        sigma_prop, // const NumericMatrix &sigma_prop, 
+        pdf, // dfunc &pdf, 
+        discreteValues, // const bool &discreteValues, 
+        1, // const double &beta, 
+        0 // const double &alpha
+      );
+    } else{
+      accept = autocorrelated_metropolis_step_cpp(
+        chain,      // NumericMatrix &chain, 
+        proposals, // NumericMatrix &proposals, 
+        jumps, // NumericMatrix &jumps, 
+        true_jumps, // NumericMatrix &true_jumps, 
+        i,        // const int &currentIndex, 
+        ps(0,i-1), // const double &lastP, 
+        sigma_prop, // const NumericMatrix &sigma_prop, 
+        pdf, // dfunc &pdf, 
+        discreteValues, // const bool &discreteValues, 
+        1, // const double &beta, 
+        alpha // const double &alpha
+      );
+    }
+    
     ps(0,i) = accept(0);
     acceptances(i) = (bool)(accept(1));
   }
-
-  return List::create(chain, proposals, acceptances);
+  
+  return List::create(chain, proposals, acceptances, ps, jumps, true_jumps);
 }
 
 ///'@export
@@ -371,7 +432,8 @@ List sampler_mc3_cpp(
     bool isMix,
     NumericVector weights,
     Function custom_func,
-    bool useCustom
+    bool useCustom,
+    double alpha=0
 )
 {
   NumericVector acceptances(nChains);
@@ -384,9 +446,11 @@ List sampler_mc3_cpp(
   NumericMatrix proposals(iterations*nChains, n_dim);
   NumericVector beta(nChains);
   NumericMatrix ps(nChains, iterations);
-
+  NumericMatrix jumpsHistory(iterations*nChains, n_dim);
+  NumericMatrix jumpsUse(iterations*nChains, n_dim);
+  NumericVector momentum;
+  
   dfunc pdf = managePDF(distr_name, distr_params, isMix, weights, false, custom_func, useCustom);
-
   for (int i = 0; i < nChains; i++){
     chain.row(0 + iterations * i) = start.row(i);
 
@@ -400,14 +464,45 @@ List sampler_mc3_cpp(
   } else {
     nSwaps = 1;
   }
-
+  
   NumericVector v(nChains);
   v = seq(0, nChains - 1);
   
   // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
+    
     for (int ch = 0; ch < nChains; ch++){
-      NumericVector accept =  metropolis_step_cpp(chain, proposals, i + iterations * ch, ps(ch, i-1), sigma_prop, pdf, discreteValues, beta(ch));
+      NumericVector accept;
+      if (i ==1){
+        accept =  autocorrelated_metropolis_step_cpp(
+          chain, // NumericMatrix &chain, 
+          proposals, // NumericMatrix &proposals, 
+          jumpsUse, // NumericMatrix &jumps, 
+          jumpsHistory,// NumericMatrix &true_jumps, 
+          i + iterations * ch, // const int &currentIndex, 
+          ps(ch, i-1), // const double &lastP, 
+          sigma_prop, // const NumericMatrix &sigma_prop, 
+          pdf, // dfunc &pdf, 
+          discreteValues, // const bool &discreteValues, 
+          beta(ch), // const double &beta, 
+          0  // const double &alpha
+        );  
+      } else{
+        accept =  autocorrelated_metropolis_step_cpp(
+          chain, // NumericMatrix &chain, 
+          proposals, // NumericMatrix &proposals, 
+          jumpsUse, // NumericMatrix &jumps, 
+          jumpsHistory,// NumericMatrix &true_jumps, 
+          i + iterations * ch, // const int &currentIndex, 
+          ps(ch, i-1), // const double &lastP, 
+          sigma_prop, // const NumericMatrix &sigma_prop, 
+          pdf, // dfunc &pdf, 
+          discreteValues, // const bool &discreteValues, 
+          beta(ch), // const double &beta, 
+          alpha // const double &alpha
+        );  
+      }
+      
       ps(ch, i) = accept(0);
       acceptances(ch) = acceptances(ch) + accept(1);
     }
@@ -450,13 +545,40 @@ List sampler_mc3_cpp(
           double TEMP = ps(m, i);
           ps(m,i) = ps(n, i);
           ps(n,i) = TEMP;
+          // Swap last jump
+          if (i != (iterations-1)){
+            // Reset jump after swap
+            NumericVector zeros (n_dim);
+            arma::mat random_jump_ = rmvnorm(1, as<arma::vec>(zeros), as<arma::mat>(sigma_prop));
+            NumericVector random_jump = NumericVector(random_jump_.begin(), random_jump_.end());
+            
+            jumpsUse.row(i + iterations * m) = random_jump;
+            
+            
+            random_jump_ = rmvnorm(1, as<arma::vec>(zeros), as<arma::mat>(sigma_prop));
+            random_jump = NumericVector(random_jump_.begin(), random_jump_.end());
+            
+            jumpsUse.row(i + iterations * n) = random_jump;
+          }
         }
       }
     }
   }
-
-  return List::create(chain, proposals, beta, swaps, NumericVector::create(swap_accepts, swap_attempts), acceptances / iterations);
+  
+  
+  return List::create(
+    _["chain"] = chain,
+    _["proposals"] = proposals,
+    _["beta"] = beta,
+    _["swaps"] = swaps,
+    _["swap_accepts_attempts"] = NumericVector::create(swap_accepts, swap_attempts),
+    _["acceptances"] = acceptances,
+    _["jumps"] = jumpsUse,
+    _["jumpsHistory"] = jumpsHistory
+  );
 }
+
+
 
 
 NumericVector drawMomentum(int dimensions){
