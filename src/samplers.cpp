@@ -104,6 +104,17 @@ NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals
   }
   chain.row(currentIndex) = current_x;
   return NumericVector::create(lastP, 0);
+NumericVector propose(
+    NumericVector current_x,
+    NumericMatrix sigma_prop, 
+    double alpha
+){
+  NumericVector zeros (current_x.size());
+  arma::mat perturbance_ = rmvnorm(1, as<arma::vec>(zeros), as<arma::mat>(sigma_prop));
+  NumericVector perturbance = NumericVector(perturbance_.begin(), perturbance_.end());
+  
+  NumericVector proposal = alpha * current_x + pow((1 - pow(alpha, 2)), .5) * perturbance;
+  return(proposal);
 }
 
 
