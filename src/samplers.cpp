@@ -63,6 +63,13 @@ double joint_d(
   return (log_func(theta) - (.5 * dotProduct(momentum, momentum) / Temp)) / Temp;
 }
 
+NumericVector alpha_trick(
+    NumericVector random_jump,
+    NumericVector last_jump,
+    double alpha
+){
+  return alpha * last_jump + pow((1 - pow(alpha, 2)), .5) * random_jump;
+}
 NumericVector metropolis_step_cpp(NumericMatrix &chain, NumericMatrix &proposals, const int &currentIndex, const double &lastP, const NumericMatrix &sigma_prop, dfunc &pdf, const bool &discreteValues, const double &beta){
   NumericVector current_x = chain.row(currentIndex - 1);
   arma::mat proposal_ = rmvnorm(1, as<arma::vec>(current_x), as<arma::mat>(sigma_prop));
