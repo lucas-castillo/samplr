@@ -250,6 +250,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param iterations Number of iterations of the sampler.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
 #'
 #' @return A list containing
 #' \enumerate{
@@ -272,7 +273,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #'
 #'
 
-sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL){
+sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
@@ -286,7 +287,7 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
     distr_params = c(0,1)
     use_custom = TRUE
   }
-  res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
+  res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom, alpha = alpha)
   res[[2]][1, ] <- NA
 
   return (res)
@@ -307,13 +308,14 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
 #' @export
 #'
 #' @examples
 #'
 #' # Sample from a normal distribution
 #' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
-sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
+sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
 
 
   # Check nChains is integer
@@ -345,7 +347,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
     use_custom = TRUE
   }
 
-  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
+  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom, alpha = alpha)
 
   M <- array(0, dim = (c(iterations, start_dim, nChains)))
   P <- array(0, dim = (c(iterations, start_dim, nChains)))
