@@ -223,13 +223,14 @@ dfunc getPDF(
 }
 
 double safe_log(const double &x){
-  if (x <= 0){
-    return log(1e-8);
+  if (x < 0){
+    const unsigned int zero = 0;
+    return log(zero);
   } else {
     return log(x);
   }
-
-
+  
+  
 }
 
 dfunc getMixturePDF(
