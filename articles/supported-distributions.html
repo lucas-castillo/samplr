@@ -77,7 +77,7 @@
 
       
 
-      </header><script src="supported-distributions_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Supported Distributions</h1>
@@ -92,11 +92,14 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucas-castillo.github.io/samplr">samplr</a></span><span class="op">)</span></span></code></pre></div>
-<p>The current distributions in the samplr package are those supported by <a href="http://rcpp.org/" class="external-link">Rcpp</a> and <a href="https://github.com/duckmayr/RcppDist" class="external-link">RcppDist</a>.</p>
+<p>The current distributions in the samplr package are those supported
+by <a href="http://rcpp.org/" class="external-link">Rcpp</a> and <a href="https://github.com/duckmayr/RcppDist" class="external-link">RcppDist</a>.</p>
 <div class="section level2">
 <h2 id="univariate-distributions">Univariate Distributions<a class="anchor" aria-label="anchor" href="#univariate-distributions"></a>
 </h2>
-<p>The parameters these distributions take can be provided in a vector, e.g. a vector <code>c(0,1)</code> for the standard normal distribution.</p>
+<p>The parameters these distributions take can be provided in a vector,
+e.g. a vector <code>c(0,1)</code> for the standard normal
+distribution.</p>
 <div class="section level3">
 <h3 id="continuous-distributions">Continuous Distributions<a class="anchor" aria-label="anchor" href="#continuous-distributions"></a>
 </h3>
@@ -151,7 +154,8 @@
 <td align="left"><em>nbeta</em></td>
 <td align="left">Non-central Beta Distribution</td>
 <td align="left">
-<code>shape1</code>,<code>shape2</code>, <code>ncp</code>
+<code>shape1</code>,<code>shape2</code>,
+<code>ncp</code>
 </td>
 </tr>
 <tr class="odd">
@@ -189,7 +193,8 @@
 <td align="left"><em>nf</em></td>
 <td align="left">Non-central F Distribution</td>
 <td align="left">
-<code>df1</code>, <code>df2</code>, <code>ncp</code>
+<code>df1</code>, <code>df2</code>,
+<code>ncp</code>
 </td>
 </tr>
 <tr class="odd">
@@ -221,41 +226,47 @@
 <td align="left"><em>4beta</em></td>
 <td align="left">4-parameter Beta Distribution</td>
 <td align="left">
-<code>shape1</code>,<code>shape2</code>, <code>minumum</code>, <code>maximum</code>
+<code>shape1</code>,<code>shape2</code>,
+<code>minumum</code>, <code>maximum</code>
 </td>
 </tr>
 <tr class="even">
 <td align="left"><em>lst</em></td>
 <td align="left">Location-scale t Distribution</td>
 <td align="left">
-<code>df</code>, <code>location</code>, <code>scale</code>,</td>
+<code>df</code>, <code>location</code>,
+<code>scale</code>,</td>
 </tr>
 <tr class="odd">
 <td align="left"><em>truncnorm</em></td>
 <td align="left">Truncated Normal Distribution</td>
 <td align="left">
-<code>mean</code>, <code>sd</code>, <code>low_bound</code>, <code>high_bound</code>
+<code>mean</code>, <code>sd</code>,
+<code>low_bound</code>, <code>high_bound</code>
 </td>
 </tr>
 <tr class="even">
 <td align="left"><em>trunct</em></td>
 <td align="left">Truncated t Distribution</td>
 <td align="left">
-<code>df</code>, <code>low_bound</code>, <code>high_bound</code>
+<code>df</code>, <code>low_bound</code>,
+<code>high_bound</code>
 </td>
 </tr>
 <tr class="odd">
 <td align="left"><em>trunclst</em></td>
 <td align="left">Truncated Location-scale t Distribution</td>
 <td align="left">
-<code>df</code>, <code>location</code>, <code>scale</code>, <code>low_bound</code>, <code>high_bound</code>
+<code>df</code>, <code>location</code>,
+<code>scale</code>, <code>low_bound</code>, <code>high_bound</code>
 </td>
 </tr>
 <tr class="even">
 <td align="left"><em>triangular</em></td>
 <td align="left">Triangular Distribution</td>
 <td align="left">
-<code>lower_limit</code>, <code>upper_limit</code>, <code>mode</code>
+<code>lower_limit</code>, <code>upper_limit</code>,
+<code>mode</code>
 </td>
 </tr>
 </tbody>
@@ -285,14 +296,16 @@
 </tr>
 <tr class="even">
 <td align="left"><em>nbinom</em></td>
-<td align="left">Negative Binomial Distribution (with success probability as parameter)</td>
+<td align="left">Negative Binomial Distribution (with success
+probability as parameter)</td>
 <td align="left">
 <code>size</code>, <code>success_prob</code>
 </td>
 </tr>
 <tr class="odd">
 <td align="left"><em>nbinom_mu</em></td>
-<td align="left">Negative Binomial Distribution (with mean as parameter)</td>
+<td align="left">Negative Binomial Distribution (with mean as
+parameter)</td>
 <td align="left">
 <code>size</code>, <code>mean</code>
 </td>
@@ -311,19 +324,22 @@
 <td align="left"><em>hyper</em></td>
 <td align="left">Hypergeometric Distribution</td>
 <td align="left">
-<code>number_successes</code>, <code>number_failures</code>, <code>number_samples</code>
+<code>number_successes</code>,
+<code>number_failures</code>, <code>number_samples</code>
 </td>
 </tr>
 <tr class="odd">
 <td align="left"><em>wilcox</em></td>
 <td align="left">Distribution of Wilcoxon rank-sum test statistic</td>
 <td align="left">
-<code>number_samples1</code>, <code>number_samples2</code>
+<code>number_samples1</code>,
+<code>number_samples2</code>
 </td>
 </tr>
 <tr class="even">
 <td align="left"><em>signrank</em></td>
-<td align="left">Distribution of Wilcoxon signed-rank test statistic</td>
+<td align="left">Distribution of Wilcoxon signed-rank test
+statistic</td>
 <td align="left"><code>number_samples</code></td>
 </tr>
 </tbody>
@@ -333,11 +349,17 @@
 <div class="section level2">
 <h2 id="multivariate-distributions">Multivariate Distributions<a class="anchor" aria-label="anchor" href="#multivariate-distributions"></a>
 </h2>
-<p>For multivariate distributions, distribution parameters are provided in a list, not a vector.</p>
+<p>For multivariate distributions, distribution parameters are provided
+in a list, not a vector.</p>
 <div class="section level3">
 <h3 id="continuous-distributions-1">Continuous Distributions<a class="anchor" aria-label="anchor" href="#continuous-distributions-1"></a>
 </h3>
 <table class="table">
+<colgroup>
+<col width="13%">
+<col width="21%">
+<col width="64%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">Abbreviation</th>
 <th align="left">Distribution Name</th>
@@ -348,13 +370,15 @@
 <td align="left"><em>mvnorm</em></td>
 <td align="left">Multivariate Normal</td>
 <td align="left">
-<code>mean</code> (vector); <code>covariance_matrix</code> (matrix)</td>
+<code>mean</code> (vector);
+<code>covariance_matrix</code> (matrix)</td>
 </tr>
 <tr class="even">
 <td align="left"><em>mvt</em></td>
 <td align="left">Multivariate t</td>
 <td align="left">
-<code>location</code> (vector); <code>scale_matrix</code> (matrix), <code>df</code> (number)</td>
+<code>location</code> (vector);
+<code>scale_matrix</code> (matrix), <code>df</code> (number)</td>
 </tr>
 </tbody>
 </table>

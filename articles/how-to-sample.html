@@ -77,10 +77,11 @@
 
       
 
-      </header><script src="how-to-sample_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Getting Started: How to Sample From a Distribution</h1>
+      <h1 data-toc-skip>Getting Started: How to Sample From a
+Distribution</h1>
             
       
       
@@ -96,13 +97,19 @@
 <div class="section level3">
 <h3 id="choosing-a-distibution">Choosing a distibution<a class="anchor" aria-label="anchor" href="#choosing-a-distibution"></a>
 </h3>
-<p>To sample from a distribution, check the abbreviation, as well as the distribution parameters, in <a href="supported-distributions.html">the Supported Distributions Vignette</a>. Henceforth we sample from a Normal distribution with mean 0 and standard deviation 1. So, we need:</p>
+<p>To sample from a distribution, check the abbreviation, as well as the
+distribution parameters, in <a href="supported-distributions.html">the
+Supported Distributions Vignette</a>. Henceforth we sample from a Normal
+distribution with mean 0 and standard deviation 1. So, we need:</p>
 <ol style="list-style-type: decimal">
-<li>A <strong>starting point</strong>: Any point in the sampling space. We’ll choose the mean of our distribution, <code>0</code>.,</li>
+<li>A <strong>starting point</strong>: Any point in the sampling space.
+We’ll choose the mean of our distribution, <code>0</code>.,</li>
 <li>
 <strong>Distribution Name</strong>: <code>"norm"</code>,</li>
 <li>
-<strong>Distribution Parameters</strong>: A vector with the distribution parameters. In our case, <code>mean</code> and <code>std</code>, that is: <code>c(0,1)</code>,</li>
+<strong>Distribution Parameters</strong>: A vector with the
+distribution parameters. In our case, <code>mean</code> and
+<code>std</code>, that is: <code>c(0,1)</code>,</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">start</span> <span class="op">=</span> <span class="fl">0</span></span>
@@ -112,7 +119,11 @@
 <div class="section level3">
 <h3 id="different-sampling-algorithms">Different Sampling Algorithms<a class="anchor" aria-label="anchor" href="#different-sampling-algorithms"></a>
 </h3>
-<p>Different algorithms are available in the <code>samplr</code> package. For our example, we will use Metropolis Hastings. To use a sampler, we will always need the three previously mentioned items. For Metropolis Hastings and MC3, it is convenient to provide the variance of the proposal distribution, so we do that before sampling.</p>
+<p>Different algorithms are available in the <code>samplr</code>
+package. For our example, we will use Metropolis Hastings. To use a
+sampler, we will always need the three previously mentioned items. For
+Metropolis Hastings and MC3, it is convenient to provide the variance of
+the proposal distribution, so we do that before sampling.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">proposal_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span></span>
 <span><span class="va">MH_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span></span></code></pre></div>
@@ -132,22 +143,27 @@
 <div class="section level3">
 <h3 id="mixture-distributions">Mixture Distributions<a class="anchor" aria-label="anchor" href="#mixture-distributions"></a>
 </h3>
-<p>If we want to sample from a mixture distribution, the following change:</p>
+<p>If we want to sample from a mixture distribution, the following
+change:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Distribution Name</strong>: A vector of distribution names, e.g. <code>c("norm", "norm")</code>
+<strong>Distribution Name</strong>: A vector of distribution names,
+e.g. <code>c("norm", "norm")</code>
 </li>
 <li>
-<strong>Distribution Parameters</strong>: A list of vectors, each containing the distribution parameters.</li>
+<strong>Distribution Parameters</strong>: A list of vectors, each
+containing the distribution parameters.</li>
 <li>
-<strong>Distribution Weights (optional)</strong>: A vector with the weights given to each distribution. The sum of weights equals 1.</li>
+<strong>Distribution Weights (optional)</strong>: A vector with the
+weights given to each distribution. The sum of weights equals 1.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"norm"</span>, <span class="st">"norm"</span><span class="op">)</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.6</span><span class="op">)</span></span></code></pre></div>
-<p>We’ll make a custom density function to plot the curve with our results (this is not necessary for the samplers to work)</p>
+<p>We’ll make a custom density function to plot the curve with our
+results (this is not necessary for the samplers to work)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">customDensity</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.4</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.6</span></span>
@@ -161,7 +177,10 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html" class="external-link">curve</a></span><span class="op">(</span><span class="fu">customDensity</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="how-to-sample_files/figure-html/unnamed-chunk-8-1.png" width="700" style="display: block; margin: auto;"></p>
-<p>See <a href="multivariate-mixtures.html">the Multivariate Mixtures Vignette</a> for examples on how to mix multivariate distributions, as well as a comparison between the performance of different samplers in a ‘patchy’ environment.</p>
+<p>See <a href="multivariate-mixtures.html">the Multivariate Mixtures
+Vignette</a> for examples on how to mix multivariate distributions, as
+well as a comparison between the performance of different samplers in a
+‘patchy’ environment.</p>
 </div>
   </div>
 
