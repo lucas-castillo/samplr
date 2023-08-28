@@ -7,7 +7,7 @@
 plot_levy(chain, plot = TRUE)
 }
 \arguments{
-\item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions}
+\item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions.}
 
 \item{plot}{Boolean. plot Boolean. Whether to return a plot or the elements used to make it.}
 }
