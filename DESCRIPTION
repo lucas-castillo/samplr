@@ -2,13 +2,16 @@ Package: samplr
 Type: Package
 Title: Tools To Compare Human Performance To Sampling Algorithms
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R: c(
     person(given = "Lucas",
            family = "Castillo",
            role = c("aut", "cre"),
            email = "lucas.castillo-marti@warwick.ac.uk",
-           comment = c(ORCID = "0000-0003-0274-0777"))
-Date: 2022-12-19
+           comment = c(ORCID = "0000-0003-0274-0777")),
+   person(given = "Yunxiao",
+           family = "Li",
+           role = c("ctb"),
+           email = "yunxiao.li@warwick.ac.uk"))
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
 Description: The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
 License: MIT + file LICENSE
@@ -25,7 +28,7 @@ LinkingTo:
   RcppArmadillo, 
   RcppDist,
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Encoding: UTF-8
 VignetteBuilder: knitr
 Config/testthat/edition: 3

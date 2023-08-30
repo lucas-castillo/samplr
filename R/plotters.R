@@ -90,7 +90,7 @@ change_1d <- function(X){
 #'
 #' Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging [(Viswanathan et al., 1999)](https://www.nature.com/articles/44831). See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
-#' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions
+#' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions.
 #' @param plot Boolean. plot Boolean. Whether to return a plot or the elements used to make it.
 #'
 #' @return
