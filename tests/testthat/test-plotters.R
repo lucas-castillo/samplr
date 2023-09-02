@@ -50,3 +50,27 @@ test_that("Sigma Scaling", {
   expect_equal(res, c(16.40681, 20.13771, 19.16075, 17.64051, 15.55798, 17.40862), tolerance = .00001)
 })
 
+test_that("QQ Plotter", {
+  ## Error if bad input
+  expect_error(plot_qqplot(matrix(sequence, ncol=3)), "Please input a one-dimensional vector")
+  
+})
+
+test_that("Autocorr Plotter", {
+  ## Error if bad input
+  expect_error(plot_autocorr(matrix(sequence, ncol=3)), "Please input a one-dimensional vector")
+  
+})
+
+test_that("Series Plotter", {
+  ## Error if bad input
+  expect_error(plot_series(matrix(sequence, ncol=3)), "Please input a one-dimensional vector")
+  
+})
+
+test_that("Change Plotter", {
+  ## Error if bad input
+  expect_error(plot_change(matrix(sequence, ncol=3)), "Please input a one-dimensional vector")
+  
+})
+
