@@ -16,3 +16,16 @@ test_that("Levy Flights", {
   # Check results
   expect_equal(res[["coef"]], c(-0.4249660, 0.6237538))
 })
+
+test_that("PSD", {
+  res <- plot_PSD(sequence,F)
+  
+  # It's a list of length 3 with named outputs
+  expect_type(res, "list")
+  expect_equal(length(res), 3)
+  expect_equal(names(res), c("log_freq", "log_psd", "polyfit"))
+  
+  # Check results
+  expect_equal(res[["polyfit"]], c(0.5096142, 2.4102135))
+})
+
