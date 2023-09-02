@@ -3,7 +3,7 @@
 // we only include RcppArmadillo.h which pulls Rcpp.h in for us
 #include "RcppArmadillo.h"
 #include <RcppDist.h>
-
+#include <testthat.h>
 // we need R.h to manage RNG when repeated calls to R functions (see customPDF)
 #include <R.h>
 
@@ -1067,4 +1067,19 @@ NumericVector gridDensity_cpp(
     density(i) = pdf(NumericVector::create(xxRange[i],yyRange[i]));
   }
   return density;
+}
+
+
+// TESTS ---------------------------------------------
+context("dotProduct()") {
+  NumericVector a = {1,2,3};
+  NumericVector b = {5,2,1};
+  NumericVector c = {5,2,1,3};
+  
+  test_that("Correct Result") {
+    expect_true(dotProduct(a,b) == 12);
+  }
+  test_that("Error if different length") {
+    expect_error(dotProduct(a,c));
+  }
 }
