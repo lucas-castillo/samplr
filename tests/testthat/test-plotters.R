@@ -29,3 +29,17 @@ test_that("PSD", {
   expect_equal(res[["polyfit"]], c(0.5096142, 2.4102135))
 })
 
+test_that("Sigma Scaling", {
+  ## Error if bad input
+  expect_error(plot_sigma_scaling(matrix(sequence, ncol=3), F), "Please input a one-dimensional vector")
+  
+  res <- plot_sigma_scaling(sequence, F)
+
+  # It's a vector
+  expect_type(res, "double")
+  expect_equal(length(res), round(length(sequence) / 10))
+
+  # Check results
+  expect_equal(res, c(16.40681, 20.13771, 19.16075, 17.64051, 15.55798, 17.40862), tolerance = .00001)
+})
+
