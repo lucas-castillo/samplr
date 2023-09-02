@@ -22,6 +22,9 @@ test_that("Levy Flights", {
 })
 
 test_that("PSD", {
+  ## Error if bad input
+  expect_error(plot_PSD(matrix(sequence, ncol=3), F), "Please input a one-dimensional vector")
+  
   res <- plot_PSD(sequence,F)
   
   # It's a list of length 3 with named outputs
