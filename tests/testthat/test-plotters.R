@@ -15,6 +15,10 @@ test_that("Levy Flights", {
   
   # Check results
   expect_equal(res[["coef"]], c(-0.4249660, 0.6237538))
+  
+  ## Test that it works the same with matrices
+  res2 <- plot_levy(matrix(sequence), F)
+  expect_equal(res, res2)
 })
 
 test_that("PSD", {
