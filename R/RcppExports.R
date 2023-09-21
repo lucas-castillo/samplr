@@ -25,3 +25,35 @@ gridDensity_cpp <- function(distr_name, distr_params, isMix, weights, xxRange, y
     .Call(`_samplr_gridDensity_cpp`, distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow, densityFunc, useCustomDensity)
 }
 
+subset_range <- function(x, start, end) {
+    .Call(`_samplr_subset_range`, x, start, end)
+}
+
+support <- function(chain, dec_bdry, start_bias) {
+    .Call(`_samplr_support`, chain, dec_bdry, start_bias)
+}
+
+cumsum_sug <- function(x) {
+    .Call(`_samplr_cumsum_sug`, x)
+}
+
+concatenate_vectors <- function(a, b) {
+    .Call(`_samplr_concatenate_vectors`, a, b)
+}
+
+checkThreshold <- function(cumSupp, delta, caution) {
+    .Call(`_samplr_checkThreshold`, cumSupp, delta, caution)
+}
+
+new_start_point <- function(chain, nChains, position, iterations) {
+    .Call(`_samplr_new_start_point`, chain, nChains, position, iterations)
+}
+
+give_me_sign <- function(x) {
+    .Call(`_samplr_give_me_sign`, x)
+}
+
+ABS_sampler_cpp <- function(start_point, trial_fdbk, distr_name, nChains, dec_bdry, d_sepn, delta, nd_time, s_nd_time, er_lambda, mc3_iterations, proposal_width) {
+    .Call(`_samplr_ABS_sampler_cpp`, start_point, trial_fdbk, distr_name, nChains, dec_bdry, d_sepn, delta, nd_time, s_nd_time, er_lambda, mc3_iterations, proposal_width)
+}
+
