@@ -16,8 +16,15 @@ Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
 Description: The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
 License: MIT + file LICENSE
 Imports: 
-  Rcpp (>= 1.0.6),
-  ggplot2, gridExtra, latex2exp, pracma, stats
+    Rcpp (>= 1.0.6),
+    ggplot2,
+    gridExtra,
+    latex2exp,
+    pracma,
+    stats,
+    magrittr,
+    tibble,
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,
