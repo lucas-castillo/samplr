@@ -1,6 +1,6 @@
 #' ABS simulation
 #'
-#' This function is for simulating the Auto-correlated Bayesian Sampler.
+#' This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{zhuAutocorrelatedBayesian2023}{samplr}.
 #'
 #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
 #' @param discrim The stimuli discriminability.
@@ -12,6 +12,7 @@
 #' @param nChains The number of chains of the sampler.
 #' @param width The proposal width of the sampler.
 #' @param distr_name The type of the posterior hypothesis distribution.
+#' @param mc3_iterations The number of iterations for each chunk. See details for more information.
 #' 
 #' @return A data frame with ten columns:
 #' \enumerate{
@@ -26,18 +27,29 @@
 #'  \item{rt: the response time, including both the non-decision and the decision time;}
 #'  \item{rept: whether the next trial repeats the same response as the current trial;}
 #' }
+#' 
+#' @details
+#' `rABS` function runs by chunks. If the sampling sequence reach the stopping rule inside a chunk, then the sampler of will cut the sequence at that point and start a new trial simulation. Otherwise, it will begin a new chunk at the end of the previous one and reiterate the whole process.
+#' 
+#' 
+#' 
 #' @importFrom magrittr %>%
+#' @importFrom Rdpack reprompt
+#' 
+#' @references
+#'    \insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+#' 
 #' @export
 #'
 #' @examples
 #' simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), nChains=3, width=1)
 #' 
 
-rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, nChains, width, distr_name='norm') {
+rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, nChains, width, distr_name='norm', mc3_iterations=100) {
   # Check input
   start_point <- runif(nChains, min=-3, max=3) %>%
     as.matrix()
-  mc3_iterations=100
+  
   
   abs_sim <- ABS_sampler_cpp(
     start_point = start_point,
@@ -61,6 +73,6 @@ rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdb
     tibble::tibble() %>% 
     tidyr::unnest(-c(samples, support))
   
-  x$rept <- c(x$response[2:(length(x$response))] == x$response[1:(length(x$response) - 1)], NA)
+  x$rept <- c(NA, x$response[2:(length(x$response))] == x$response[1:(length(x$response) - 1)])
   return(x)
 }
