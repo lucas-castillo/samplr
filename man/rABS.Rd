@@ -14,7 +14,8 @@ rABS(
   trial_fdbk,
   nChains,
   width,
-  distr_name = "norm"
+  distr_name = "norm",
+  mc3_iterations = 100
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ rABS(
 \item{width}{The proposal width of the sampler.}
 
 \item{distr_name}{The type of the posterior hypothesis distribution.}
+
+\item{mc3_iterations}{The number of iterations for each chunk. See details for more information.}
 }
 \value{
 A data frame with ten columns:
@@ -54,9 +57,15 @@ A data frame with ten columns:
 }
 }
 \description{
-This function is for simulating the Auto-correlated Bayesian Sampler.
+This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{zhuAutocorrelatedBayesian2023}{samplr}.
+}
+\details{
+\code{rABS} function runs by chunks. If the sampling sequence reach the stopping rule inside a chunk, then the sampler of will cut the sequence at that point and start a new trial simulation. Otherwise, it will begin a new chunk at the end of the previous one and reiterate the whole process.
 }
 \examples{
 simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), nChains=3, width=1)
 
+}
+\references{
+\insertRef{zhuAutocorrelatedBayesian2023}{samplr}
 }
