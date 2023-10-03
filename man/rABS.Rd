@@ -23,7 +23,7 @@ rABS(
 
 \item{discrim}{The stimuli discriminability.}
 
-\item{delta}{The stopping rule.}
+\item{delta}{The threshold of the relative difference. It should be an integer.}
 
 \item{nd_time}{The non-decision time.}
 
@@ -31,9 +31,9 @@ rABS(
 
 \item{lambda}{The rate parameter of the gamma distribution for decision time.}
 
-\item{trial_fdbk}{The feedback of each trial. It should be either 0 (below the decision boundary) or 1 (above the decision boundary).}
+\item{trial_fdbk}{The feedback of each trial. It should be a character only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
 
-\item{nChains}{The number of chains of the sampler.}
+\item{nChains}{The number of chains of the sampler. It should be an integer.}
 
 \item{width}{The proposal width of the sampler.}
 
