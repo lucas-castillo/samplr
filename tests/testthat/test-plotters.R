@@ -27,6 +27,10 @@ test_that("Euclidean Distance", {
 })
 test_that("Levy Flights", {
   res <- plot_levy(sequence,F)
+test_that("Change 1D", {
+  expect_warning(change_1d(1), "X must be longer than 1")
+  expect_equal(change_1d(1:3), rep(1,2))
+})
   
   # It's a list of length 4 with named outputs
   expect_type(res, "list")
