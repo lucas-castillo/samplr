@@ -34,18 +34,17 @@ euc_d <- function(x,y){
   }
 
   if (!(is.matrix(x) & is.matrix(y)) & !(is.vector(x) & is.vector(y))){
-    warning("The two items must be both vectors or matrices")
-    return()
+    stop("The two items must be both vectors or matrices")
   }
   if (is.vector(x)){
     if (length(x) != length(y)){
-      warning("The two points must have the same dimensions")
+      stop("The two points must have the same dimensions")
     } else {
       return(euclidean_distance(x,y))
     }
   } else {
     if (ncol(x) != ncol(y)){
-      warning("The two matrices must have the same number of columns, representing each of the dimensions of the points they contain")
+      stop("The two matrices must have the same number of columns, representing each of the dimensions of the points they contain")
     } else{
       distances <- vector()
       for (i in 1:min(nrow(x),nrow(y))){
