@@ -12,24 +12,11 @@
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins("cpp11")]]
 
-
+#include "hmc_utils.h"
+#include "pdf_manage.h"
 using namespace Rcpp;
 
 
-// UTILS
-
-NumericVector propose(
-    NumericVector current_x,
-    NumericMatrix sigma_prop, 
-    double alpha
-){
-  NumericVector zeros (current_x.size());
-  arma::mat perturbance_ = rmvnorm(1, as<arma::vec>(zeros), as<arma::mat>(sigma_prop));
-  NumericVector perturbance = NumericVector(perturbance_.begin(), perturbance_.end());
-  
-  NumericVector proposal = alpha * current_x + pow((1 - pow(alpha, 2)), .5) * perturbance;
-  return(proposal);
-}
 // // // NUTS // // //
 
 double sampleDirection(){
@@ -274,7 +261,4 @@ List sampler_nuts_cpp(
    }
     return List::create(chain);
 }
-
-
-// Plot Aid //
 
