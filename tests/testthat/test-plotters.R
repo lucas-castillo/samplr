@@ -5,6 +5,26 @@ sequence <- c(
   -18, 16, 7, 10, -15, -15, -27, 8, 11, 10, 19, -28, -22
 )
 
+test_that("Euclidean Distance", {
+  expect_error(euc_d(matrix(1:3), 1:3), "The two items must be both vectors or matrices")
+  expect_error(euc_d(1:4, 1:3), "The two points must have the same dimensions")
+  
+  expect_error(
+    euc_d(matrix(1:10, ncol = 2), matrix(1:10, ncol = 5)), 
+    "The two matrices must have the same number of columns, representing each of the dimensions of the points they contain"
+  )
+
+  expect_warning(
+    euc_d(matrix(1:10, ncol = 2), matrix(1:20, ncol = 2)), 
+    "Because the matrices have uneven number of rows, only the distances for the first 5 rows were done"
+  )
+  
+  expect_equal(
+    euc_d(matrix(rep(4, 10), ncol = 2), matrix(rep(5, 10), ncol = 2)), 
+    expected = rep(sqrt(2), 5)
+  )
+  
+})
 test_that("Levy Flights", {
   res <- plot_levy(sequence,F)
   
