@@ -17,8 +17,6 @@ using namespace Rcpp;
 
 
 // ABS sampler//
-
-
 //[[Rcpp::export]]
 NumericVector subset_range(NumericVector x, int start, int end) {
   // Use the Range function to create a positional index sequence
