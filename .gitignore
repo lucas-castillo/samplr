@@ -12,3 +12,5 @@ Meta
 debugSpace.R
 *.Rproj
 docs
+cache
+figure
