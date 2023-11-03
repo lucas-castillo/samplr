@@ -30,10 +30,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    bench, 
-    mvtnorm, 
-    abc, 
-    fdrtool
+    bench, mvtnorm
 LinkingTo: 
   Rcpp, 
   RcppArmadillo, 
