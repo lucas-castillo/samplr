@@ -93,5 +93,23 @@ context("MH Utils"){
     
     // And this returns the last_prob we provided
     expect_true(isClose(result(0), last_prob));
+    
+    last_prob = -10;
+    result = autocorrelated_metropolis_step_cpp(
+      chain,
+      proposals,
+      jumps,
+      true_jumps,
+      currentIndex,
+      last_prob,
+      sigma_prop,
+      pdf,
+      discreteValues,
+      beta,
+      alpha
+    );
+    
+    // A negative "last prob" will return the proposal, always
+    expect_true(isClose(result(1), 1));
   
 }
