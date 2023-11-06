@@ -57,9 +57,8 @@ NumericVector autocorrelated_metropolis_step_cpp(
   double prob_prop = pdf(proposal);
   
   // proposal is accepted with probability prob_prop / prob_curr
-  if (last_prob != 0){
+  if (last_prob > 0){
     double ratio = prob_prop / last_prob;
-    
     // The beta parameter (temperature), beta <= 1,
     // increases the value of the ratio making hotter chains
     // more likely to accept proposals
