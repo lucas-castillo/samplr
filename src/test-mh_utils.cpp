@@ -36,33 +36,39 @@ context("MH Utils"){
     expect_true(isClose(res(0), 0));
     
   }
-  // test_that("autocorrelated metropolis step"){
-  //   NumericMatrix chain(2, 1);
-  //   NumericMatrix proposals(2, 1);
-  //   NumericMatrix jumps(2, 1);
-  //   NumericMatrix true_jumps(2, 1);
-  //   int currentIndex = 1;
-  //   double last_prob = .5;
-  //   NumericMatrix sigma_prop(1);
-  //   dfunc pdf = getPDF("norm", List::create(0, 1), false);
-  //   bool discreteValues = false;
-  //   double beta = 0;
-  //   double alpha = 0;
-  //   
-  //   autocorrelated_metropolis_step_cpp(
-  //       chain,
-  //       proposals,
-  //       jumps,
-  //       true_jumps,
-  //       currentIndex,
-  //       last_prob,
-  //       sigma_prop,
-  //       pdf,
-  //       discreteValues,
-  //       beta,
-  //       alpha
-  //   )
-  //   
-  // }
+  test_that("autocorrelated metropolis step"){
+    NumericVector v = {1, 0};
+    NumericVector v2 = {1};
+    NumericMatrix chain(2, 1, v.begin());
+    NumericMatrix proposals(2, 1, v.begin());
+    NumericMatrix jumps(2, 1, v.begin());
+    NumericMatrix true_jumps(2, 1, v.begin());
+    int currentIndex = 1;
+    NumericMatrix sigma_prop(1, 1, v2.begin());
+    dfunc pdf = getPDF("norm", List::create(0, 1), false);
+    double last_prob = .5;
+    bool discreteValues = false;
+    double beta = 0;
+    double alpha = 1;
+    
+    NumericVector result = autocorrelated_metropolis_step_cpp(
+      chain,
+      proposals,
+      jumps,
+      true_jumps,
+      currentIndex,
+      last_prob,
+      sigma_prop,
+      pdf,
+      discreteValues,
+      beta,
+      alpha
+    );
+    // With Alpha = 1, the jump will be identical to last (1) -- so returned pdf is dnorm(2)
+    expect_true(isClose(result(0),R::dnorm(2, 0, 1, false)));
+    
+    // With beta = 0, the jump will be always accepted
+    expect_true(isClose(result(1), 1));
+    
   
 }
