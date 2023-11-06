@@ -111,5 +111,27 @@ context("MH Utils"){
     
     // A negative "last prob" will return the proposal, always
     expect_true(isClose(result(1), 1));
+    
+    NumericVector v3 = {1.2, 0};
+    NumericMatrix jumps2(2, 1, v3.begin()); // jump = 1.2
+    discreteValues = true; // this will round the proposal
+    
+    result = autocorrelated_metropolis_step_cpp(
+      chain,
+      proposals,
+      jumps,
+      true_jumps,
+      currentIndex,
+      last_prob,
+      sigma_prop,
+      pdf,
+      discreteValues,
+      beta,
+      alpha
+    );
+    // The pdf will be after jump of +1, not +1.2    
+    expect_true(isClose(result(0),R::dnorm(2, 0, 1, false)));
+    
+  }
   
 }
