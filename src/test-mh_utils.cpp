@@ -33,10 +33,7 @@ context("MH Utils"){
     NumericVector l = {2};
     NumericVector r = -l / pow(3, .5);
     NumericVector res = alpha_trick(r,l,a);
-    NumericVector zero = {0};
-    LogicalVector same = res==zero;
-    print(res);
-    expect_true(same(0));
+    expect_true(isClose(res(0), 0));
     
   }
   // test_that("autocorrelated metropolis step"){
