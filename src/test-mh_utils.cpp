@@ -15,37 +15,6 @@ bool isClose(double a, double b, double tol=0.0001){
   double diff = a - b;
   return abs(diff) < tol;
 }
-//[[Rcpp::export]]
-NumericVector test_mh_step(){
-    NumericMatrix chain(2, 1);
-    NumericMatrix proposals(2, 1);
-    NumericMatrix jumps(2, 1);
-    NumericMatrix true_jumps(2, 1);
-    int currentIndex = 1;
-    double last_prob = .5;
-    NumericMatrix sigma_prop(1);
-    dfunc pdf = getPDF("norm", List::create(0, 1), false);
-    bool discreteValues = false;
-    double beta = 0;
-    double alpha = 0;
-
-    return autocorrelated_metropolis_step_cpp(
-      chain,
-      proposals,
-      jumps,
-      true_jumps,
-      currentIndex,
-      last_prob,
-      sigma_prop,
-      pdf,
-      discreteValues,
-      beta,
-      alpha
-    );
-
-}
-
-
 
 context("MH Utils"){
   // The format for specifying tests is similar to that of
