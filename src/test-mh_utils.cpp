@@ -21,13 +21,6 @@ context("MH Utils"){
   // testthat's R functions. Use 'test_that()' to define a
   // unit test, and use 'expect_true()' and 'expect_false()'
   // to test the desired conditions.
-  test_that("isCloseWorks"){
-    double x = 0;
-    double y = .4;
-    expect_f
-  }
-  
-  
   test_that("alpha update") {
     double a = .5;
     NumericVector l = {2};
