@@ -70,5 +70,28 @@ context("MH Utils"){
     // With beta = 0, the jump will be always accepted
     expect_true(isClose(result(1), 1));
     
+    beta = 10;
+    last_prob = 1000;
+    
+    result = autocorrelated_metropolis_step_cpp(
+      chain,
+      proposals,
+      jumps,
+      true_jumps,
+      currentIndex,
+      last_prob,
+      sigma_prop,
+      pdf,
+      discreteValues,
+      beta,
+      alpha
+    );
+    
+    // With beta = 1 and last_prob = 10 the result is always rejected.
+    expect_true(isClose(result(1), 0));
+    
+    
+    // And this returns the last_prob we provided
+    expect_true(isClose(result(0), last_prob));
   
 }
