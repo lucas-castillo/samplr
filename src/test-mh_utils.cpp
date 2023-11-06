@@ -11,6 +11,10 @@
 
 using namespace Rcpp;
 
+bool isClose(double a, double b, double tol=0.0001){
+  double diff = a - b;
+  return abs(diff) < tol;
+}
 //[[Rcpp::export]]
 NumericVector test_mh_step(){
     NumericMatrix chain(2, 1);
