@@ -1,0 +1,218 @@
+---
+title: "ABS Parameter Recovery"
+---
+This vignette provides the `R` scripts for parameter recovery of the Autocorrelated Bayesian sampler (ABS, Zhu et al., 2023). As ABS does not have analytical likelihood function, we employed the Approximate Bayesian Computation to conduct the parameter estimation, and the package [`abc`](https://cran.r-project.org/web/packages/abc/index.html) is required.
+
+
+
+# ABS simulation
+
+As a first step, we randomly generate a set of parameters and run a simulation of ABS.
+
+
+```r
+require(samplr) # for the ABS
+require(tidyverse)
+require(abc) # for the ABC estimation
+require(fdrtool) # for rhalfnorm distribution
+require(ggplot2) # for ploting figures
+require(parallel) # for parallel calculation
+set.seed(2023)
+
+params <- c(
+  dec_bdry = 0, # the decision boundary that separates the posterior distribution into two parts
+  discrim = 2, # the separation of the two distribution under the framework of Signal Detection Theory
+  delta = 4, # the threshold for the difference of the numbers of samples supporting each response
+  lambda = 14, # the rate of the sampling process
+  nd_time = 0.3, # the lower bound of non-decision time
+  s_nd_time = 0.1, # the range of non-decision time
+  nChains = 10, # the number of MC3 chains
+  width = 1 # the width of the proposal distribution
+)
+
+feedback <- sample(c(0,1), 200, replace = T) # the feedbacks, or say the stimuli, of each trial
+
+ABS.sim <- rABS(params['dec_bdry'], params['discrim'], params['delta'], params['nd_time'], params['s_nd_time'],
+                params['lambda'], feedback, params['nChains'], params['width'])
+```
+
+We can have an overview of the response time (RT) distributions.
+
+
+```r
+ggplot(data=ABS.sim, aes(x=rt))+
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Distribution of Response Time (RT)", x = "RT", y = "Frequency") +
+  theme_minimal()
+```
+
+![plot of chunk rt-dist](figure/rt-dist-1.png)
+
+# ABC Estimation
+
+We now consider the simulated results as empirical data and run the ABC estimation to check if we can recover the parameters. The ABC method requires summary statistics, which will be the RT quantiles, the accuracy of each stimulus, and the probability of repeats after correct and error responses in our analysis.
+
+
+```r
+summaryStats <- function(data, probs){
+  
+  #filter the data based on the response times
+  data_clean <- filter(data, rt > 0.1 & rt < 1.5)
+  
+  #calculate the quantiles
+  #seperate the data results based on the accuracy
+  data_err <- filter(data_clean, accuracy==0)
+  data_cor <- filter(data_clean, accuracy==1)
+  
+  #calculate the quantiles for each response
+  qt_err <- quantile(data_err$rt, probs)
+  qt_cor <- quantile(data_cor$rt, probs)
+  
+  #calculate the accuracies for each feedback
+  acc_0 <- mean(data_clean$accuracy[which(data_clean$feedback == 0)])
+  acc_1 <- mean(data_clean$accuracy[which(data_clean$feedback == 1)])
+  
+  #calculate the probability of repeats after correct and error
+  prob_rept_err <- mean(data_err$rept, na.rm=T)
+  prob_rept_cor <- mean(data_cor$rept, na.rm=T)
+  
+  return(c(qt_err, qt_cor, acc_0, acc_1, prob_rept_err, prob_rept_cor))
+}
+
+empStats <- summaryStats(ABS.sim, c(0.1, 0.3, 0.5, 0.7, 0.9))
+```
+
+## Reference table
+
+The next step for the ABC estimation is build up the reference table, which requires generating a large number of parameter combinations, running the simulations and calculating the same summary statistics we used above for the simulation results. In this vignette we only generate 5000 parameter combinations to save time. But practically, to get a more reliable result, this number should be much higher.
+
+
+```r
+# generate parameter combinitions and run the simulations
+get_parameters <- function(i){
+  c(
+    dec_bdry = runif(1, min=-2, max=2), 
+    discrim = runif(1, min=0, max=4),
+    delta = sample(2:40, 1),
+    lambda = rhalfnorm(1, theta=sqrt(pi/2)/100), 
+    nd_time = runif(1, min=0.1, max=0.5),
+    s_nd_time = runif(1, min=0, max=0.5),
+    nChains = sample(2:10, 1),
+    width = rgamma(1, 1, 1)
+  )
+}
+params_list <- lapply(1:5000, get_parameters) # params_list is a list with the length of 10000, each of which is a set of parameters
+
+sim_results <- mclapply(params_list, function(params, feedback){
+  rABS(params['dec_bdry'], params['discrim'], params['delta'], params['nd_time'], params['s_nd_time'],
+                params['lambda'], feedback, params['nChains'], params['width'])}, feedback=feedback, mc.cores=6)
+```
+
+
+```r
+# calculate the summary statistics for the simulations
+ simStats <- sapply(sim_results, summaryStats, probs = c(0.1, 0.3, 0.5, 0.7, 0.9)) %>%
+  t() %>%
+  data.frame() %>%
+  `colnames<-`(c('q1_err', 'q3_err', 'q5_err', 'q7_err', 'q9_err',
+                 'q1_cor', 'q3_cor', 'q5_cor', 'q7_cor', 'q9_cor',
+                 'acc_0', 'acc_1', 'prob_rept_err', 'prob_rept_cor'))
+head(simStats)
+#>      q1_err    q3_err    q5_err    q7_err    q9_err    q1_cor    q3_cor    q5_cor    q7_cor    q9_cor     acc_0 acc_1 prob_rept_err
+#> 1 1.3358834 1.3903164 1.4503918 1.4795629 1.4936535 1.2912470 1.3858120 1.4512854 1.4640140 1.4780605 0.0000000     1     1.0000000
+#> 2        NA        NA        NA        NA        NA 1.1283164 1.2678129 1.3794889 1.4344280 1.4667531 1.0000000   NaN           NaN
+#> 3 0.5025545 0.6047114 0.6969432 0.8269836 0.9914428 0.3963986 0.5024907 0.6384337 0.7060527 0.8133188 0.0000000     1     1.0000000
+#> 4 0.2428513 0.2801564 0.3303625 0.3789591 0.4601567 0.2283697 0.2764864 0.3203831 0.3614592 0.4153847 0.1304348     1     0.9375000
+#> 5 0.9630262 1.1713932 1.2191026 1.2817665 1.4371436 0.9482054 1.1036763 1.1950678 1.3079925 1.4097890 0.9750000     0     0.9767442
+#> 6 1.1885729 1.2330293 1.2496018 1.3145367 1.4119562 0.9520777 1.0351623 1.1422311 1.2239732 1.3659772 1.0000000     0     1.0000000
+#>   prob_rept_cor
+#> 1     1.0000000
+#> 2     1.0000000
+#> 3     1.0000000
+#> 4     0.8907563
+#> 5     1.0000000
+#> 6     1.0000000
+```
+
+If we examine the `simStats`, we will find many rows with `NA` values. It is because some certain parameter combinations produced all of the response time out of the range between 0.1 seconds and 1.5 seconds. Thus there was no valid results left after the exclusion, producing the `NA` values in the statistics. In the next step, we will remove those rows with `NA` values and the related parameter combinations.
+
+
+```r
+paramsComb <- bind_rows(params_list)
+paramsComb <- paramsComb[complete.cases(simStats), ]
+simStats <- simStats[complete.cases(simStats),]
+```
+
+## Cross validation
+
+Before the parameter estimation, we should assess whether ABC is a stable method for estimating ABS by cross validation. The prediction error is defined as $$E_{pred} = \frac{\sum(\theta^{*}-\theta)^2}{n*Var(\theta)},$$ where $\theta$ is the true parameter value, $\theta^{*}$ is the predicted parameter value, and $n$ is the number of points where true and predicted values are compared. In this session, we compare two ABC method, "rejection" and "loclinear". In the "loclinear" method, we choose to apply a "log" transformation on the parameter `lambda` because the range of this parameter is much larger than the others.
+
+
+```r
+cvRej <- cv4abc(paramsComb, simStats, nval=10, tols=c(.1, .05, .025), method='rejection')
+summary(cvRej)
+#> Prediction error based on a cross-validation sample of 10
+#>        dec_bdry   discrim     delta    lambda   nd_time s_nd_time   nChains     width
+#> 0.025 0.2022272 1.0121336 1.0465882 0.6881540 0.6199379 0.9770415 1.0313822 0.7762204
+#> 0.05  0.1831640 0.9416907 1.0920539 0.7163494 0.6927223 0.9779989 0.9901269 0.8032644
+#> 0.1   0.1776380 1.0991895 1.0164975 0.7560115 0.7054372 0.9001977 0.9647391 0.8264733
+```
+
+
+```r
+cvReg <- cv4abc(paramsComb, simStats, nval=10, tols=c(.1, .05, .025), method="loclinear", transf=c("none", "none", "none", "log", "none", "none", "none", "none"))
+summary(cvReg)
+#> Prediction error based on a cross-validation sample of 10
+#>         dec_bdry    discrim      delta     lambda    nd_time  s_nd_time    nChains      width
+#> 0.025 0.04566238 0.20676060 1.17892233 0.89498156 0.63236951 0.50690633 0.75436280 1.69777991
+#> 0.05  0.05451255 0.27417431 0.83674016 0.72316016 0.54763571 0.48046027 0.60036817 1.31506756
+#> 0.1   0.06443069 0.30285232 0.68701367 0.64444427 0.54176560 0.52941370 0.69390655 1.09564576
+```
+
+We found that the prediction error of the parameters `nChains` and `width` are close to 1, indicating a bad cross-validation performance. In terms of the parameters `lambda` and `s_nd_time`, due to the transformation, the method of "loclinear" is better than "rejection".
+
+## Parameter estimation
+
+Now we estimate the posterior distribution of the parameters with the method of "loclinear".
+
+
+```r
+res <- abc(target = empStats, param = paramsComb, sumstat = simStats, tol = 0.05, method="loclinear", transf=c("none", "none", "none", "log", "none", "none", "none", "none"))
+summary(res)
+#> Call: 
+#> abc(target = empStats, param = paramsComb, sumstat = simStats, 
+#>     tol = 0.05, method = "loclinear", transf = c("none", "none", 
+#>         "none", "log", "none", "none", "none", "none"))
+#> Data:
+#>  abc.out$adj.values (184 posterior samples)
+#> Weights:
+#>  abc.out$weights
+#> 
+#>                         dec_bdry   discrim     delta    lambda   nd_time s_nd_time   nChains     width
+#> Min.:                    -0.9933   -0.3612   -2.1007    0.3230    0.1715   -0.1222    0.6732   -2.4887
+#> Weighted 2.5 % Perc.:    -0.4986    0.6352    0.2086    3.8001    0.2256    0.0842    1.2614   -0.6010
+#> Weighted Median:         -0.1734    1.8550   10.1117   49.2220    0.2793    0.2433    5.4335    0.2543
+#> Weighted Mean:           -0.1719    1.9028   11.4784  116.1181    0.2757    0.2342    5.5625    0.6436
+#> Weighted Mode:           -0.1867    1.6208    9.1783   24.0592    0.2898    0.2620    3.5968    0.0557
+#> Weighted 97.5 % Perc.:    0.1815    3.1869   32.3903  658.4333    0.3262    0.3718   10.4016    4.0562
+#> Max.:                     0.4572    3.6992   76.0359 1721.6410    0.3473    0.4274   16.7649   27.5651
+```
+
+The initial values for the parameters are
+
+| Parameters        | Values |
+|-------------------|--------|
+| decision boundary | 0      |
+| discriminability  | 2      |
+| delta             | 4      |
+| lambda            | 14     |
+| nd_time           | 0.3    |
+| s_nd_time         | 0.1    |
+| nChains           | 10     |
+| width             | 1      |
+
+Comparing the initial settings with the weighted mode of the prediction, we notice that parameter `discriminability`, `delta` and `nd_time` are recovered, but the prediction of other parameters is quite different from the initial values.
+
+# References
+
+-   Zhu, J.-Q., Sundh, J., Spicer, J., Chater, N., & Sanborn, A. N. (2023). The Autocorrelated Bayesian Sampler: A rational process for probability judgments, estimates, confidence intervals, choices, confidence judgments, and response times. Psychological Review. <https://doi.org/10.1037/rev0000427>

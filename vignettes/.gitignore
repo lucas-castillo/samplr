@@ -1,2 +1,4 @@
 *.html
 *.R
+!precompile.R
+articles/ABS-Parameter-Recovery_cache
