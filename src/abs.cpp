@@ -17,12 +17,12 @@ using namespace Rcpp;
 
 
 // ABS sampler//
-//[[Rcpp::export]]
+
 NumericVector subset_range(NumericVector x, int start, int end) {
   // Use the Range function to create a positional index sequence
   return x[Range(start, end)]; // end inclusive
 }
-//[[Rcpp::export]]
+
 NumericVector support(NumericVector chain, double dec_bdry, int start_bias){
   NumericVector supportVector(chain.size()+1);
   supportVector(0) = start_bias;
@@ -36,13 +36,13 @@ NumericVector support(NumericVector chain, double dec_bdry, int start_bias){
   
   return(supportVector);
 }
-//[[Rcpp::export]]
+
 NumericVector cumsum_sug(NumericVector x){
   NumericVector cumSupp = cumsum(x); // compute the cumulated number of evidence
   int n = cumSupp.size();
   return cumSupp[Range(1, n)];    // remove the first one as it is a start_bias
 }
-//[[Rcpp::export]]
+
 NumericVector concatenate_vectors(NumericVector a, NumericVector b){
   if (a.size() == 0){
     return b;
@@ -60,7 +60,7 @@ NumericVector concatenate_vectors(NumericVector a, NumericVector b){
   }
   return(c);
 }
-//[[Rcpp::export]]
+
 int checkThreshold(NumericVector cumSupp, double delta, int caution){
   int supportPosition = -1;
   NumericVector cumSuppAbs = abs(cumSupp);
@@ -73,7 +73,7 @@ int checkThreshold(NumericVector cumSupp, double delta, int caution){
   return supportPosition;
 }
 
-//[[Rcpp::export]]
+
 NumericMatrix new_start_point(
     NumericVector chain, 
     int nChains, 
@@ -89,7 +89,7 @@ NumericMatrix new_start_point(
   return(start_point);
 }
 
-// [[Rcpp::export]]
+
 int give_me_sign(double x){
   if (x > 0){ 
     return 1;

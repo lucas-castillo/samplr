@@ -11,93 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// subset_range
-NumericVector subset_range(NumericVector x, int start, int end);
-RcppExport SEXP _samplr_subset_range(SEXP xSEXP, SEXP startSEXP, SEXP endSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type start(startSEXP);
-    Rcpp::traits::input_parameter< int >::type end(endSEXP);
-    rcpp_result_gen = Rcpp::wrap(subset_range(x, start, end));
-    return rcpp_result_gen;
-END_RCPP
-}
-// support
-NumericVector support(NumericVector chain, double dec_bdry, int start_bias);
-RcppExport SEXP _samplr_support(SEXP chainSEXP, SEXP dec_bdrySEXP, SEXP start_biasSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type chain(chainSEXP);
-    Rcpp::traits::input_parameter< double >::type dec_bdry(dec_bdrySEXP);
-    Rcpp::traits::input_parameter< int >::type start_bias(start_biasSEXP);
-    rcpp_result_gen = Rcpp::wrap(support(chain, dec_bdry, start_bias));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cumsum_sug
-NumericVector cumsum_sug(NumericVector x);
-RcppExport SEXP _samplr_cumsum_sug(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cumsum_sug(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// concatenate_vectors
-NumericVector concatenate_vectors(NumericVector a, NumericVector b);
-RcppExport SEXP _samplr_concatenate_vectors(SEXP aSEXP, SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type a(aSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(concatenate_vectors(a, b));
-    return rcpp_result_gen;
-END_RCPP
-}
-// checkThreshold
-int checkThreshold(NumericVector cumSupp, double delta, int caution);
-RcppExport SEXP _samplr_checkThreshold(SEXP cumSuppSEXP, SEXP deltaSEXP, SEXP cautionSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type cumSupp(cumSuppSEXP);
-    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< int >::type caution(cautionSEXP);
-    rcpp_result_gen = Rcpp::wrap(checkThreshold(cumSupp, delta, caution));
-    return rcpp_result_gen;
-END_RCPP
-}
-// new_start_point
-NumericMatrix new_start_point(NumericVector chain, int nChains, int position, int iterations);
-RcppExport SEXP _samplr_new_start_point(SEXP chainSEXP, SEXP nChainsSEXP, SEXP positionSEXP, SEXP iterationsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type chain(chainSEXP);
-    Rcpp::traits::input_parameter< int >::type nChains(nChainsSEXP);
-    Rcpp::traits::input_parameter< int >::type position(positionSEXP);
-    Rcpp::traits::input_parameter< int >::type iterations(iterationsSEXP);
-    rcpp_result_gen = Rcpp::wrap(new_start_point(chain, nChains, position, iterations));
-    return rcpp_result_gen;
-END_RCPP
-}
-// give_me_sign
-int give_me_sign(double x);
-RcppExport SEXP _samplr_give_me_sign(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(give_me_sign(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ABS_sampler_cpp
 List ABS_sampler_cpp(NumericMatrix start_point, NumericVector trial_fdbk, StringVector distr_name, int nChains, double dec_bdry, double d_sepn, double delta, double nd_time, double s_nd_time, double er_lambda, int mc3_iterations, double proposal_width);
 RcppExport SEXP _samplr_ABS_sampler_cpp(SEXP start_pointSEXP, SEXP trial_fdbkSEXP, SEXP distr_nameSEXP, SEXP nChainsSEXP, SEXP dec_bdrySEXP, SEXP d_sepnSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP mc3_iterationsSEXP, SEXP proposal_widthSEXP) {
@@ -251,13 +164,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_samplr_subset_range", (DL_FUNC) &_samplr_subset_range, 3},
-    {"_samplr_support", (DL_FUNC) &_samplr_support, 3},
-    {"_samplr_cumsum_sug", (DL_FUNC) &_samplr_cumsum_sug, 1},
-    {"_samplr_concatenate_vectors", (DL_FUNC) &_samplr_concatenate_vectors, 2},
-    {"_samplr_checkThreshold", (DL_FUNC) &_samplr_checkThreshold, 3},
-    {"_samplr_new_start_point", (DL_FUNC) &_samplr_new_start_point, 4},
-    {"_samplr_give_me_sign", (DL_FUNC) &_samplr_give_me_sign, 1},
     {"_samplr_ABS_sampler_cpp", (DL_FUNC) &_samplr_ABS_sampler_cpp, 12},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 14},
