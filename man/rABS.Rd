@@ -31,7 +31,7 @@ rABS(
 
 \item{lambda}{The rate parameter of the gamma distribution for decision time.}
 
-\item{trial_fdbk}{The feedback of each trial. It should be a character only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
+\item{trial_fdbk}{The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
 
 \item{nChains}{The number of chains of the sampler. It should be an integer.}
 
@@ -57,10 +57,10 @@ A data frame with ten columns:
 }
 }
 \description{
-This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{zhuAutocorrelatedBayesian2023}{samplr}.
+This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 }
 \details{
-\code{rABS} function runs by chunks. If the sampling sequence reach the stopping rule inside a chunk, then the sampler of will cut the sequence at that point and start a new trial simulation. Otherwise, it will begin a new chunk at the end of the previous one and reiterate the whole process.
+The \code{rABS} function in R runs simulations in chunks of fixed length determined by the \code{mc3_iterations} argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
 }
 \examples{
 simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), nChains=3, width=1)

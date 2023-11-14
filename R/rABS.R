@@ -1,6 +1,11 @@
 #' ABS simulation
-#'
-#' This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{zhuAutocorrelatedBayesian2023}{samplr}.
+#' 
+#' @description
+#' This function is for simulating the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
+#' 
+#' @details
+#' The `rABS` function in R runs simulations in chunks of fixed length determined by the `mc3_iterations` argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
+#' 
 #'
 #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
 #' @param discrim The stimuli discriminability.
@@ -8,7 +13,7 @@
 #' @param nd_time The non-decision time.
 #' @param s_nd_time The range of the non-decision time.
 #' @param lambda The rate parameter of the gamma distribution for decision time.
-#' @param trial_fdbk The feedback of each trial. It should be a character only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).
+#' @param trial_fdbk The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).
 #' @param nChains The number of chains of the sampler. It should be an integer.
 #' @param width The proposal width of the sampler.
 #' @param distr_name The type of the posterior hypothesis distribution.
@@ -28,8 +33,6 @@
 #'  \item{rept: whether the next trial repeats the same response as the current trial;}
 #' }
 #' 
-#' @details
-#' `rABS` function runs by chunks. If the sampling sequence reach the stopping rule inside a chunk, then the sampler of will cut the sequence at that point and start a new trial simulation. Otherwise, it will begin a new chunk at the end of the previous one and reiterate the whole process.
 #' 
 #' @importFrom magrittr %>%
 #' @importFrom Rdpack reprompt
@@ -45,9 +48,6 @@
 
 rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, nChains, width, distr_name='norm', mc3_iterations=100) {
   
-  # Check missing input
-  if(any(missing(dec_bdry), missing(discrim), missing(delta), missing(nd_time), missing(s_nd_time),
-         missing(lambda), missing(trial_fdbk), missing(nChains), missing(width))) stop("dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, nChains and/or width must be supplied")
   # Check variable types
   stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
   stopifnot("discrim should be a single numeric value."=(is.numeric(discrim) && length(discrim) == 1))
