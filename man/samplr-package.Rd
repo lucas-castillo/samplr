@@ -20,7 +20,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Yunxiao Li \email{yunxiao.li@warwick.ac.uk} [contributor]
+  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID}) [contributor]
 }
 
 }

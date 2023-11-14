@@ -11,7 +11,8 @@ sampler_mh(
   sigma_prop = NULL,
   iterations = 1024L,
   weights = NULL,
-  custom_density = NULL
+  custom_density = NULL,
+  alpha = 0
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ sampler_mh(
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
+
+\item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
 }
 \value{
 A list containing
