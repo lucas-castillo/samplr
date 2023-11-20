@@ -117,3 +117,11 @@ test_that(".checkGivenInfo", {
   ))
 })
 
+test_that("mh", {
+  expect_no_error(
+    sampler_mh(0, "norm", c(0,1), diag(1))
+  )
+  expect_no_error(
+    sampler_mh(0, sigma_prop =  diag(1), custom_density = \(x){dnorm(x)})
+  )
+})
