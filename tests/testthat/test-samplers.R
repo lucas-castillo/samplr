@@ -28,6 +28,8 @@ test_that(".checkNamesMatchParams", {
   
   expect_error(.checkNamesMatchParams("asld", 2))
   expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
+  expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
+  expect_error(.checkNamesMatchParams("norm", list(rep(0, 2))))
 })
 
 test_that(".checkStart", {
