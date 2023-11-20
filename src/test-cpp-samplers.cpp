@@ -84,4 +84,20 @@ context("CPP Samplers"){
     );
     
   }
+  
+  test_that("HMC") {
+    Function f("rnorm");
+    List res = sampler_hmc_cpp(
+      NumericVector::create(0),
+      StringVector::create("norm"),
+      List::create(0,1),
+      .1,
+      10,
+      1000,
+      false,
+      NumericVector::create(1),
+      f,
+      false
+    );
+  }
 }
