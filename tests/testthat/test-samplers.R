@@ -30,7 +30,6 @@ test_that(".checkNamesMatchParams", {
   expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
 })
 
-
 test_that(".checkStart", {
   info <- c(1,2)
   expect_error(.checkStart(info = c(1,1), 1))
@@ -44,10 +43,77 @@ test_that(".checkWeights", {
   expect_error(.checkWeights(c(1,1), 2))
   expect_message(.checkWeights(NULL, 3))
 })
+
 test_that(".checkSigmaProp", {
   expect_warning(.checkSigmaProp(NULL, 1))
   expect_warning(.checkSigmaProp(NULL, 2))
   expect_true(is.matrix(.checkSigmaProp(c(1), 1)))
   expect_no_error(.checkSigmaProp(diag(2), 2))
+})
+
+test_that(".checkGivenInfo", {
+  expect_warning(.checkGivenInfo(
+    distr_name="norm", 
+    distr_params=c(0,1), 
+    start=1, 
+    weights=NULL, 
+    caller="mh", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
+  expect_no_warning(.checkGivenInfo(
+    distr_name="norm", 
+    distr_params=c(0,1), 
+    start=1, 
+    weights=NULL, 
+    caller="hmc", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
+  expect_warning(.checkGivenInfo(
+    distr_name="norm", 
+    distr_params=c(0,1), 
+    start=1, 
+    weights=NULL, 
+    caller="hmc", 
+    custom_density=\(x){F}, 
+    sigma_prop = NULL
+  ))
+  expect_error(.checkGivenInfo(
+    distr_name=NULL,
+    distr_params=NULL, 
+    start=1, 
+    weights=1, 
+    caller="hmc", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
+  expect_error(.checkGivenInfo(
+    distr_name=c("norm", "norm"),
+    distr_params=list(c(1,2)), 
+    start=1, 
+    weights=1, 
+    caller="hmc", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
+  expect_error(.checkGivenInfo(
+    distr_name=c("norm", "binom"),
+    distr_params=list(c(1,2),c(1,2)), 
+    start=1, 
+    weights=1, 
+    caller="hmc", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
+  expect_no_error(.checkGivenInfo(
+    distr_name=c("norm", "norm"),
+    distr_params=list(c(1,2),c(0,2)), 
+    start=1, 
+    weights=c(.5, .5), 
+    caller="hmc", 
+    custom_density=NULL, 
+    sigma_prop = NULL
+  ))
 })
 
