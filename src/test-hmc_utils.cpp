@@ -38,4 +38,14 @@ context("HMC Utils"){
     expect_true(dotProduct(x,y) == 11);
     expect_error(dotProduct(x,z));
   }
+  
+  test_that("joint_d"){
+    dfunc log_pdf = getPDF("norm", List::create(0, 1), true);
+    NumericVector x = {0};
+    NumericVector p = {3};
+    
+    expect_true(isClose(joint_d(x, p, log_pdf), -5.418939));
+    expect_true(isClose(joint_d(x, p, log_pdf, 3), -0.8063128));
+    
+  }
  }
