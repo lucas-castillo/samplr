@@ -31,3 +31,9 @@ test_that(".checkNamesMatchParams", {
 })
 
 
+test_that(".checkStart", {
+  info <- c(1,2)
+  expect_error(.checkStart(info = c(1,1), 1))
+  expect_error(.checkStart(info = c(1,0), 2))
+  expect_no_error(.checkStart(info = c(1,1), 2))
+})
