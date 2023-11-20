@@ -13,6 +13,10 @@
 using namespace Rcpp;
 typedef std::function<double(NumericVector)> dfunc;
 
+bool isClose(double a, double b, double tol=0.0001){
+  double diff = a - b;
+  return abs(diff) < tol;
+}
 
 dfunc getPDF(
     const String &distr_name, 

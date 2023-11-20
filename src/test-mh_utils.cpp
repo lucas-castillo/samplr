@@ -11,25 +11,12 @@
 
 using namespace Rcpp;
 
-bool isClose(double a, double b, double tol=0.0001){
-  double diff = a - b;
-  return abs(diff) < tol;
-}
 
 context("MH Utils"){
   // The format for specifying tests is similar to that of
   // testthat's R functions. Use 'test_that()' to define a
   // unit test, and use 'expect_true()' and 'expect_false()'
   // to test the desired conditions.
-  test_that("isCloseWorks"){
-    double x = 0;
-    double y = .4;
-    // Not close enough ...
-    expect_false(isClose(x,y));
-    // Except if we're really tolerant
-    expect_true(isClose(x, y, 20));
-  }
-    
   test_that("alpha update") {
     double a = .5;
     NumericVector l = {2};
