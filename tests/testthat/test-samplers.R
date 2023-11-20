@@ -140,3 +140,16 @@ test_that("mc3", {
     sampler_mc3(start = matrix(c(0,0,0),ncol=1), distr_name = "norm", distr_params = c(0,1), sigma_prop = diag(1), nChains = 2)
   )
 })
+
+test_that("hmc", {
+  expect_no_error(
+    sampler_hmc(0, "norm", c(0,1))
+  )
+  expect_no_error(
+    sampler_hmc(0, custom_density = \(x){dnorm(x)})
+  )
+  
+  expect_error(
+    sampler_hmc(0, "binom", c(0,1))
+  )
+})
