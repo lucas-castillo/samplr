@@ -167,5 +167,24 @@ context("PDF + Utils"){
     
   }
   
+  test_that("gridDensity"){
+    NumericVector zeroes = {0,0};
+    NumericVector cov_v = {1, 0, 0, 1};
+    NumericMatrix cov( 2 , 2 , cov_v.begin() );
+    NumericVector xRange = {0,1,0,1};
+    NumericVector yRange = {0,0,1,1};
+    
+    Function f("dnorm");
   
+    NumericVector densities = gridDensity_cpp(
+      StringVector::create("mvnorm"), List::create(zeroes, cov), 
+      false, NumericVector::create(1), 
+      xRange, yRange, 2,
+      f, false
+    );
+    
+    NumericVector expected_densities = {0.15915494, 0.09653235, 0.09653235, 0.05854983};
+    
+    expect_true(isClose(sum(expected_densities - densities), 0));
+  }
 }
