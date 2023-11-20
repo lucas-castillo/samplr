@@ -18,16 +18,14 @@ context("HMC Utils"){
   // to test the desired conditions.
   test_that("Gradient") {
     // Expected gradient = 0
-    dfunc pdf = getPDF("norm", List::create(0, 1), false);
-    expect_true(isClose(gradient(pdf, NumericVector::create(0))(0), 0));
+    dfunc log_pdf = getPDF("norm", List::create(0, 1), true);
+    expect_true(isClose(gradient(log_pdf, NumericVector::create(0))(0), 0));
     
-    // Expected gradient approx -0.24
-    double pi = atan(1)*4;
-    double g = - 1 / (sqrt(2 * exp(1) * pi));
-    expect_true(isClose(gradient(pdf, NumericVector::create(1))(0), g));
+    // Expected gradient is -x
+    expect_true(isClose(gradient(log_pdf, NumericVector::create(1))(0), -1));
     
     // Gradient decreases if temperature increases
-    expect_true(isClose(gradient(pdf, NumericVector::create(1), 2)(0), g/2));
+    expect_true(isClose(gradient(log_pdf, NumericVector::create(1), 2)(0), -.5));
   }
   
   test_that("dotProduct"){
