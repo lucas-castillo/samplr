@@ -29,4 +29,13 @@ context("HMC Utils"){
     // Gradient decreases if temperature increases
     expect_true(isClose(gradient(pdf, NumericVector::create(1), 2)(0), g/2));
   }
+  
+  test_that("dotProduct"){
+    NumericVector x = {1,2};
+    NumericVector y = {3,4};
+    NumericVector z = {5};
+    
+    expect_true(dotProduct(x,y) == 11);
+    expect_error(dotProduct(x,z));
+  }
  }
