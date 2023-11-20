@@ -141,6 +141,17 @@ context("PDF + Utils"){
     );
     expect_true(isClose(pdf(zero), 0.3989423));
     
+    // standard density function - log
+    pdf = managePDF(
+      StringVector::create("norm"), // distr_name
+      List::create(0,1), // distr_params
+      false, // isMix
+      NumericVector::create(1), // weights
+      true, // log
+      f, // custom_func
+      false // useCustom
+    );
+    expect_true(isClose(pdf(zero), -0.9189385));
     // Mixture
     pdf = managePDF(
       StringVector::create("norm", "norm"), // distr_name
