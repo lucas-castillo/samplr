@@ -135,6 +135,9 @@ test_that("mc3", {
   expect_no_error(
     sampler_mc3(start = matrix(c(0,0),ncol=1), custom_density = \(x){dnorm(x)}, sigma_prop = diag(1), nChains = 2)
   )
+  expect_no_error(
+    sampler_mc3(start = 0, custom_density = \(x){dnorm(x)}, sigma_prop = diag(1), nChains = 2)
+  )
   expect_error(
     sampler_mc3(start = 0, distr_name = "norm", distr_params = c(0,1), sigma_prop = diag(1), nChains = 2.5)
   )
