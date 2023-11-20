@@ -120,4 +120,9 @@ context("PDF + Utils"){
     expect_true(isClose(pdf_log(NumericVector::create(0)), -1.491784));
     
   }
+  test_that("customPDF"){
+    Function f("dnorm");
+    dfunc pdf = customPDF(f, true);
+    expect_true(isClose(pdf(NumericVector::create(0)), -0.9189385));
+  }
 }
