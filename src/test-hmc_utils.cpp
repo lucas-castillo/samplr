@@ -66,4 +66,19 @@ context("HMC Utils"){
     expect_true(isClose(theta(0), 0.9194587));
     expect_true(isClose(momentum(0), -0.7601488));
   }
+  
+  test_that("RecycledMomentumUpdate"){
+    NumericVector momentum = {1};
+    double alpha = 1;
+    
+    expect_true(RecycledMomentumUpdate(momentum, alpha)(0) == momentum(0));
+    expect_true(
+      abs(RecycledMomentumUpdate(momentum, 0, 10000)(0)) > 
+      abs(RecycledMomentumUpdate(momentum, 0, .01)(0))
+    );
+    
+  }
+  test_that("drawMomentum"){
+    expect_true(drawMomentum(2).size() == 2);
+  }
  }
