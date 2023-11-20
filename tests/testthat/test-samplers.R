@@ -153,3 +153,15 @@ test_that("hmc", {
     sampler_hmc(0, "binom", c(0,1))
   )
 })
+
+test_that("rec", {
+  expect_no_error(
+    sampler_rec(0, "norm", c(0,1))
+  )
+  expect_no_error(
+    sampler_rec(0, custom_density = \(x){dnorm(x)})
+  )
+  expect_error(
+    sampler_rec(0, "binom", c(0,1))
+  )
+})
