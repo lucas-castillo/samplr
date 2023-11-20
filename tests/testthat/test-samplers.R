@@ -117,6 +117,15 @@ test_that(".checkGivenInfo", {
     custom_density=NULL, 
     sigma_prop = NULL
   ))
+  expect_warning(.checkGivenInfo(
+    distr_name=NULL,
+    distr_params=NULL,
+    start=1, 
+    weights=c(.5, .5), 
+    caller="hmc", 
+    custom_density=\(x){dnorm(x)}, 
+    sigma_prop = NULL
+  ))
 })
 
 test_that("mh", {
