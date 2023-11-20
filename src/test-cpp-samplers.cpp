@@ -100,4 +100,25 @@ context("CPP Samplers"){
       false
     );
   }
+  
+  test_that("MCREC"){
+    Function f("rnorm");
+    List res = sampler_mc_rec_cpp(
+      NumericVector::create(0),// Rcpp::NumericVector start,
+      2, // int nChains,
+      1, // double delta_T,
+      false, // bool swap_all,
+      1000, // double iterations,
+      StringVector::create("norm"), //Rcpp::StringVector distr_name,
+      List::create(0,1), //Rcpp::List distr_params,
+      false, //bool discreteValues,
+      false, //bool isMix,
+      NumericVector::create(1), //Rcpp::NumericVector weights,
+      f, //Rcpp::Function custom_func,
+      false, //bool useCustom,
+      .1, // double epsilon,
+      10, // int L,
+      .6// double alpha
+    );
+  }
 }
