@@ -101,4 +101,10 @@ context("PDF + Utils"){
     pdf = getPDF("signrank", List::create(2), false);
     expect_true(isClose(pdf(NumericVector::create(0)), .25));
   }
+  
+  test_that("safe_log"){
+    double neg_inf = safe_log(-2);
+    expect_true(neg_inf == R_NegInf);
+    expect_true(safe_log(2) == log(2));
+  }
 }
