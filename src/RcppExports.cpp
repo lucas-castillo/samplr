@@ -12,15 +12,15 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // ABS_sampler_cpp
-List ABS_sampler_cpp(NumericMatrix start_point, NumericVector trial_fdbk, StringVector distr_name, int nChains, double dec_bdry, double d_sepn, double delta, double nd_time, double s_nd_time, double er_lambda, int mc3_iterations, double proposal_width);
-RcppExport SEXP _samplr_ABS_sampler_cpp(SEXP start_pointSEXP, SEXP trial_fdbkSEXP, SEXP distr_nameSEXP, SEXP nChainsSEXP, SEXP dec_bdrySEXP, SEXP d_sepnSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP mc3_iterationsSEXP, SEXP proposal_widthSEXP) {
+List ABS_sampler_cpp(NumericMatrix start_point, NumericVector trial_fdbk, StringVector distr_name, int n_chains, double dec_bdry, double d_sepn, double delta, double nd_time, double s_nd_time, double er_lambda, int mc3_iterations, double proposal_width);
+RcppExport SEXP _samplr_ABS_sampler_cpp(SEXP start_pointSEXP, SEXP trial_fdbkSEXP, SEXP distr_nameSEXP, SEXP n_chainsSEXP, SEXP dec_bdrySEXP, SEXP d_sepnSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP mc3_iterationsSEXP, SEXP proposal_widthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type start_point(start_pointSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type trial_fdbk(trial_fdbkSEXP);
     Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
-    Rcpp::traits::input_parameter< int >::type nChains(nChainsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
     Rcpp::traits::input_parameter< double >::type dec_bdry(dec_bdrySEXP);
     Rcpp::traits::input_parameter< double >::type d_sepn(d_sepnSEXP);
     Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
@@ -29,7 +29,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type er_lambda(er_lambdaSEXP);
     Rcpp::traits::input_parameter< int >::type mc3_iterations(mc3_iterationsSEXP);
     Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
-    rcpp_result_gen = Rcpp::wrap(ABS_sampler_cpp(start_point, trial_fdbk, distr_name, nChains, dec_bdry, d_sepn, delta, nd_time, s_nd_time, er_lambda, mc3_iterations, proposal_width));
+    rcpp_result_gen = Rcpp::wrap(ABS_sampler_cpp(start_point, trial_fdbk, distr_name, n_chains, dec_bdry, d_sepn, delta, nd_time, s_nd_time, er_lambda, mc3_iterations, proposal_width));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -76,13 +76,13 @@ int checkThreshold(NumericVector cumSupp, double delta, int caution){
 
 NumericMatrix new_start_point(
     NumericVector chain, 
-    int nChains, 
+    int n_chains, 
     int position, 
     int iterations
 ){
-  NumericMatrix start_point(nChains, 1);
+  NumericMatrix start_point(n_chains, 1);
   
-  for (int c = 0; c < nChains; c++){
+  for (int c = 0; c < n_chains; c++){
     start_point(c, 0) = chain(position + c * iterations);
   }
   
@@ -113,7 +113,7 @@ List ABS_sampler_cpp(
     NumericMatrix start_point,
     NumericVector trial_fdbk,
     StringVector distr_name, 
-    int nChains,
+    int n_chains,
     double dec_bdry,
     double d_sepn,
     double delta,
@@ -170,7 +170,7 @@ List ABS_sampler_cpp(
     while (!surpassedThreshold){
       mc3_traces = sampler_mc3_cpp(
         start_point, // start
-        nChains, // nChains
+        n_chains, // n_chains
         sigma_prop, // sigma_prop
         4, // delta_T
         true, // swap_all
@@ -193,7 +193,7 @@ List ABS_sampler_cpp(
       if (supportPosition == -1){
         start_point = new_start_point(
           mc3_traces[0],
-                    nChains,
+                    n_chains,
                     mc3_iterations - 1, // position = last Position
                     mc3_iterations
         );
@@ -205,7 +205,7 @@ List ABS_sampler_cpp(
       } else{
         start_point = new_start_point(
           mc3_traces[0],
-                    nChains,
+                    n_chains,
                     supportPosition, // position = possition where boundary was crossed
                     mc3_iterations
         );
