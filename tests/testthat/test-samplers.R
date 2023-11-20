@@ -165,3 +165,18 @@ test_that("rec", {
     sampler_rec(0, "binom", c(0,1))
   )
 })
+
+test_that("mchmc", {
+  expect_no_error(
+    sampler_mchmc(0, "norm", c(0,1))
+  )
+  expect_no_error(
+    sampler_mchmc(0, custom_density = \(x){dnorm(x)})
+  )
+  expect_error(
+    sampler_mchmc(0, "norm", c(0,1), nChains = 2.5)
+  )
+  expect_error(
+    sampler_mchmc(0, "binom", c(0,1))
+  )
+})
