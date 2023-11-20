@@ -125,4 +125,47 @@ context("PDF + Utils"){
     dfunc pdf = customPDF(f, true);
     expect_true(isClose(pdf(NumericVector::create(0)), -0.9189385));
   }
+  test_that("managePDF"){
+    Function f("dnorm");
+    NumericVector zero(1);
+    
+    // standard density function
+    dfunc pdf = managePDF(
+      StringVector::create("norm"), // distr_name
+      List::create(0,1), // distr_params
+      false, // isMix
+      NumericVector::create(1), // weights
+      false, // log
+      f, // custom_func
+      false // useCustom
+    );
+    expect_true(isClose(pdf(zero), 0.3989423));
+    
+    // Mixture
+    pdf = managePDF(
+      StringVector::create("norm", "norm"), // distr_name
+      List::create(NumericVector::create(0,1), NumericVector::create(0,2)), // distr_params
+      true, // isMix
+      NumericVector::create(.1, .9), // weights
+      false, // log
+      f, // custom_func
+      false // useCustom
+    );
+    expect_true(isClose(pdf(zero), 0.2194183));
+
+    // Custom
+    pdf = managePDF(
+      StringVector::create("norm"), // distr_name
+      List::create(0,1), // distr_params
+      false, // isMix
+      NumericVector::create(1), // weights
+      false, // log
+      f, // custom_func
+      true // useCustom
+    );    
+    expect_true(isClose(pdf(zero), 0.3989423));
+    
+  }
+  
+  
 }
