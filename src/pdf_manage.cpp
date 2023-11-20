@@ -105,8 +105,7 @@ dfunc getPDF(
 
 double safe_log(const double &x){
   if (x < 0){
-    const unsigned int zero = 0;
-    return log(zero);
+    return R_NegInf;
   } else {
     return log(x);
   }
