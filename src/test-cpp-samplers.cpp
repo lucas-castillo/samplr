@@ -40,4 +40,48 @@ context("CPP Samplers"){
     );
   }
   
+  test_that("MC3"){
+    Function f("rnorm");
+    NumericVector one = {1};
+    NumericMatrix one_matrix(1, 1, one.begin());
+    NumericVector start_v = {1,1};
+    NumericMatrix start(2, 1, start_v.begin());
+    
+    // swap one
+    List res = sampler_mc3_cpp(
+      start, // Rcpp::NumericMatrix start,
+      2, // int nChains,
+      one_matrix, // Rcpp::NumericMatrix sigma_prop,
+      1, // double delta_T,
+      false,// bool swap_all,
+      1000, // double iterations,
+      StringVector::create("norm"), //Rcpp::StringVector distr_name,
+      List::create(0,1), //Rcpp::List distr_params,
+      false, //bool discreteValues,
+      false, //bool isMix,
+      NumericVector::create(1), //Rcpp::NumericVector weights,
+      f, //Rcpp::Function custom_func,
+      false, //bool useCustom,
+      .5 //double alpha=0
+    );
+    
+    // swap all
+    res = sampler_mc3_cpp(
+      start,// Rcpp::NumericMatrix start,
+      2, // int nChains,
+      one_matrix, // Rcpp::NumericMatrix sigma_prop,
+      1, // double delta_T,
+      true,// bool swap_all,
+      1000, // double iterations,
+      StringVector::create("norm"), //Rcpp::StringVector distr_name,
+      List::create(0,1), //Rcpp::List distr_params,
+      false, //bool discreteValues,
+      false, //bool isMix,
+      NumericVector::create(1), //Rcpp::NumericVector weights,
+      f, //Rcpp::Function custom_func,
+      false, //bool useCustom,
+      .5 //double alpha=0
+    );
+    
+  }
 }
