@@ -37,3 +37,10 @@ test_that(".checkStart", {
   expect_error(.checkStart(info = c(1,0), 2))
   expect_no_error(.checkStart(info = c(1,1), 2))
 })
+
+test_that(".checkWeights", {
+  expect_warning(.checkWeights(1,1))
+  expect_error(.checkWeights(1,2))
+  expect_error(.checkWeights(c(1,1), 2))
+  expect_message(.checkWeights(NULL, 3))
+})
