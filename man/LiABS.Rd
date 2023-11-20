@@ -7,6 +7,8 @@
 This Auto-correlated Bayesian Sampler (ABS) model is developed by Yun-Xiao Li following the ABS of Zhu. LiABS has an extra component of non-decision time when calculating the response time.
 }
 \examples{
+abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
+
 
 ## ------------------------------------------------
 ## Method `LiABS$two_alt_force_choice`
@@ -84,14 +86,13 @@ Create a new 'LiABS' object.
 }
 \subsection{Returns}{
 A new 'LiABS' object.
-
-ABS simulating two-alternative-force choice task
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LiABS-two_alt_force_choice"></a>}}
 \if{latex}{\out{\hypertarget{method-LiABS-two_alt_force_choice}{}}}
 \subsection{Method \code{two_alt_force_choice()}}{
+This function is for simulating two-alternative-force choice tasks by LiABS.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LiABS$two_alt_force_choice(dec_bdry, discrim, trial_fdbk)}\if{html}{\out{</div>}}
 }

@@ -74,6 +74,9 @@ CoreABS <- R6::R6Class("CoreABS",
 #' @description
 #' This Auto-correlated Bayesian Sampler (ABS) model is developed by Yun-Xiao Li following the ABS of Zhu. LiABS has an extra component of non-decision time when calculating the response time.
 #' 
+#' @examples
+#' abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
+#' 
 #' @export
 #'
 LiABS <- R6::R6Class(
@@ -110,7 +113,8 @@ LiABS <- R6::R6Class(
       self$s_nd_time <- s_nd_time
     },
     
-    #' ABS simulating two-alternative-force choice task
+    #' @description
+    #' This function is for simulating two-alternative-force choice tasks by LiABS.
     #' 
     #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
     #' @param discrim The stimuli discriminability.
