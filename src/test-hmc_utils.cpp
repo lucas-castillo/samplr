@@ -46,4 +46,24 @@ context("HMC Utils"){
     expect_true(isClose(joint_d(x, p, log_pdf, 3), -0.8063128));
     
   }
+  
+  test_that("leapfrog_step_cpp"){
+    NumericVector theta = {0};
+    NumericVector momentum = {1};
+    double epsilon = .1;
+    dfunc log_pdf = getPDF("norm", List::create(0, 1), true);
+    int L = 10;
+    leapfrog_step_cpp(theta, momentum, epsilon, log_pdf, L);
+    expect_true(isClose(theta(0), 0.8427504));
+    expect_true(isClose(momentum(0), -0.5399513));
+    // this is reversible
+    leapfrog_step_cpp(theta, momentum, epsilon, log_pdf, L);
+    expect_true(isClose(theta(0), 0));
+    expect_true(isClose(momentum(0), 1));
+
+    // Temperature
+    leapfrog_step_cpp(theta, momentum, epsilon, log_pdf, L, 2);
+    expect_true(isClose(theta(0), 0.9194587));
+    expect_true(isClose(momentum(0), -0.7601488));
+  }
  }
