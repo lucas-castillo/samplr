@@ -14,7 +14,7 @@
 #' @param s_nd_time The range of the non-decision time.
 #' @param lambda The rate parameter of the gamma distribution for decision time.
 #' @param trial_fdbk The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).
-#' @param nChains The number of chains of the sampler. It should be an integer.
+#' @param n_chains The number of chains of the sampler. It should be an integer.
 #' @param width The proposal width of the sampler.
 #' @param distr_name The type of the posterior hypothesis distribution.
 #' @param mc3_iterations The number of iterations for each chunk. See details for more information.
@@ -43,10 +43,10 @@
 #' @export
 #'
 #' @examples
-#' simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), nChains=3, width=1)
+#' simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), n_chains=3, width=1)
 #' 
 
-rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, nChains, width, distr_name='norm', mc3_iterations=100) {
+rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdbk, n_chains, width, distr_name='norm', mc3_iterations=100) {
   
   # Check variable types
   stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
@@ -56,11 +56,11 @@ rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdb
   stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
   stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
   stopifnot("trial_fdbk should be a vector with either 0 and/or 1."=all(trial_fdbk %in% c(0, 1)))
-  stopifnot("nChains should be an integer."=(nChains%%1 == 0))
+  stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
   stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
 
   
-  start_point <- runif(nChains, min=-3, max=3) %>%
+  start_point <- runif(n_chains, min=-3, max=3) %>%
     as.matrix()
   
   abs_sim <- ABS_sampler_cpp(
@@ -68,7 +68,7 @@ rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdb
     trial_fdbk = trial_fdbk, 
     distr_name = distr_name, 
     mc3_iterations = mc3_iterations, 
-    nChains = nChains, 
+    n_chains = n_chains, 
     dec_bdry = dec_bdry, 
     d_sepn = discrim, 
     delta = delta, 

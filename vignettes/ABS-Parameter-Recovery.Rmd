@@ -26,14 +26,14 @@ params <- c(
   lambda = 14, # the rate of the sampling process
   nd_time = 0.3, # the lower bound of non-decision time
   s_nd_time = 0.1, # the range of non-decision time
-  nChains = 10, # the number of MC3 chains
+  n_chains = 10, # the number of MC3 chains
   width = 1 # the width of the proposal distribution
 )
 
 feedback <- sample(c(0,1), 200, replace = T) # the feedbacks, or say the stimuli, of each trial
 
 ABS.sim <- rABS(params['dec_bdry'], params['discrim'], params['delta'], params['nd_time'], params['s_nd_time'],
-                params['lambda'], feedback, params['nChains'], params['width'])
+                params['lambda'], feedback, params['n_chains'], params['width'])
 ```
 
 We can have an overview of the response time (RT) distributions.
@@ -97,7 +97,7 @@ get_parameters <- function(i){
     lambda = rhalfnorm(1, theta=sqrt(pi/2)/100), 
     nd_time = runif(1, min=0.1, max=0.5),
     s_nd_time = runif(1, min=0, max=0.5),
-    nChains = sample(2:10, 1),
+    n_chains = sample(2:10, 1),
     width = rgamma(1, 1, 1)
   )
 }
@@ -105,7 +105,7 @@ params_list <- lapply(1:5000, get_parameters) # params_list is a list with the l
 
 sim_results <- mclapply(params_list, function(params, feedback){
   rABS(params['dec_bdry'], params['discrim'], params['delta'], params['nd_time'], params['s_nd_time'],
-                params['lambda'], feedback, params['nChains'], params['width'])}, feedback=feedback, mc.cores=6)
+                params['lambda'], feedback, params['n_chains'], params['width'])}, feedback=feedback, mc.cores=6)
 ```
 
 
@@ -118,20 +118,20 @@ sim_results <- mclapply(params_list, function(params, feedback){
                  'q1_cor', 'q3_cor', 'q5_cor', 'q7_cor', 'q9_cor',
                  'acc_0', 'acc_1', 'prob_rept_err', 'prob_rept_cor'))
 head(simStats)
-#>      q1_err    q3_err    q5_err    q7_err    q9_err    q1_cor    q3_cor    q5_cor    q7_cor    q9_cor     acc_0 acc_1 prob_rept_err
-#> 1 1.3358834 1.3903164 1.4503918 1.4795629 1.4936535 1.2912470 1.3858120 1.4512854 1.4640140 1.4780605 0.0000000     1     1.0000000
-#> 2        NA        NA        NA        NA        NA 1.1283164 1.2678129 1.3794889 1.4344280 1.4667531 1.0000000   NaN           NaN
-#> 3 0.5025545 0.6047114 0.6969432 0.8269836 0.9914428 0.3963986 0.5024907 0.6384337 0.7060527 0.8133188 0.0000000     1     1.0000000
-#> 4 0.2428513 0.2801564 0.3303625 0.3789591 0.4601567 0.2283697 0.2764864 0.3203831 0.3614592 0.4153847 0.1304348     1     0.9375000
-#> 5 0.9630262 1.1713932 1.2191026 1.2817665 1.4371436 0.9482054 1.1036763 1.1950678 1.3079925 1.4097890 0.9750000     0     0.9767442
-#> 6 1.1885729 1.2330293 1.2496018 1.3145367 1.4119562 0.9520777 1.0351623 1.1422311 1.2239732 1.3659772 1.0000000     0     1.0000000
+#>      q1_err    q3_err    q5_err    q7_err    q9_err    q1_cor    q3_cor    q5_cor    q7_cor    q9_cor     acc_0     acc_1 prob_rept_err
+#> 1 1.4119542 1.4492659 1.4605226 1.4777036 1.4841305 1.3644551 1.3928021 1.4145860 1.4531009 1.4872595 0.0000000 1.0000000     1.0000000
+#> 2 1.4476787 1.4476787 1.4476787 1.4476787 1.4476787 1.2019686 1.2774410 1.3402670 1.4009814 1.4439232 1.0000000 0.0000000     1.0000000
+#> 3 0.5128956 0.6194048 0.7219690 0.8618205 1.0025987 0.4095664 0.4769004 0.5838450 0.6890864 0.8200132 0.0000000 1.0000000     1.0000000
+#> 4 0.2315224 0.2765989 0.3137491 0.3654628 0.4247775 0.2368420 0.2898494 0.3416644 0.3739659 0.4346630 0.1630435 0.9907407     0.9610390
+#> 5 0.8960586 1.1032009 1.1911714 1.2832693 1.4456178 1.0402187 1.1193724 1.2399322 1.3404396 1.4195163 1.0000000 0.0000000     0.9791667
+#> 6 1.0280139 1.1710430 1.2365276 1.3076695 1.4583467 0.9414279 1.0737662 1.1408881 1.2128155 1.3620783 1.0000000 0.0000000     1.0000000
 #>   prob_rept_cor
 #> 1     1.0000000
 #> 2     1.0000000
 #> 3     1.0000000
-#> 4     0.8907563
+#> 4     0.8770492
 #> 5     1.0000000
-#> 6     1.0000000
+#> 6     0.9670330
 ```
 
 If we examine the `simStats`, we will find many rows with `NA` values. It is because some certain parameter combinations produced all of the response time out of the range between 0.1 seconds and 1.5 seconds. Thus there was no valid results left after the exclusion, producing the `NA` values in the statistics. In the next step, we will remove those rows with `NA` values and the related parameter combinations.
@@ -152,10 +152,10 @@ Before the parameter estimation, we should assess whether ABC is a stable method
 cvRej <- cv4abc(paramsComb, simStats, nval=10, tols=c(.1, .05, .025), method='rejection')
 summary(cvRej)
 #> Prediction error based on a cross-validation sample of 10
-#>        dec_bdry   discrim     delta    lambda   nd_time s_nd_time   nChains     width
-#> 0.025 0.2022272 1.0121336 1.0465882 0.6881540 0.6199379 0.9770415 1.0313822 0.7762204
-#> 0.05  0.1831640 0.9416907 1.0920539 0.7163494 0.6927223 0.9779989 0.9901269 0.8032644
-#> 0.1   0.1776380 1.0991895 1.0164975 0.7560115 0.7054372 0.9001977 0.9647391 0.8264733
+#>        dec_bdry   discrim     delta    lambda   nd_time s_nd_time  n_chains     width
+#> 0.025 0.6373784 0.5050095 0.1622567 0.7174353 0.6051583 0.8610641 0.6726804 0.7662925
+#> 0.05  0.5770796 0.5399773 0.1832451 0.8646161 0.6469318 0.9506675 0.8721649 0.8188719
+#> 0.1   0.5666092 0.6597055 0.2599336 0.9555399 0.6531840 0.9686915 0.7237113 0.8924950
 ```
 
 
@@ -163,13 +163,13 @@ summary(cvRej)
 cvReg <- cv4abc(paramsComb, simStats, nval=10, tols=c(.1, .05, .025), method="loclinear", transf=c("none", "none", "none", "log", "none", "none", "none", "none"))
 summary(cvReg)
 #> Prediction error based on a cross-validation sample of 10
-#>         dec_bdry    discrim      delta     lambda    nd_time  s_nd_time    nChains      width
-#> 0.025 0.04566238 0.20676060 1.17892233 0.89498156 0.63236951 0.50690633 0.75436280 1.69777991
-#> 0.05  0.05451255 0.27417431 0.83674016 0.72316016 0.54763571 0.48046027 0.60036817 1.31506756
-#> 0.1   0.06443069 0.30285232 0.68701367 0.64444427 0.54176560 0.52941370 0.69390655 1.09564576
+#>        dec_bdry   discrim     delta    lambda   nd_time s_nd_time  n_chains     width
+#> 0.025 0.1065038 0.3344120 0.6172418 0.4922592 0.7481490 0.7726920 1.1921761 1.6943288
+#> 0.05  0.0821130 0.2799627 0.4532555 0.4810572 0.8106380 0.6404289 0.9435930 1.2107418
+#> 0.1   0.1204029 0.2683415 0.4048530 0.5810355 0.6761849 0.5529723 0.8862001 0.9806057
 ```
 
-We found that the prediction error of the parameters `nChains` and `width` are close to 1, indicating a bad cross-validation performance. In terms of the parameters `lambda` and `s_nd_time`, due to the transformation, the method of "loclinear" is better than "rejection".
+We found that the prediction error of the parameters `n_chains` and `width` are close to 1, indicating a bad cross-validation performance. In terms of the parameters `lambda` and `s_nd_time`, due to the transformation, the method of "loclinear" is better than "rejection".
 
 ## Parameter estimation
 
@@ -184,18 +184,18 @@ summary(res)
 #>     tol = 0.05, method = "loclinear", transf = c("none", "none", 
 #>         "none", "log", "none", "none", "none", "none"))
 #> Data:
-#>  abc.out$adj.values (184 posterior samples)
+#>  abc.out$adj.values (183 posterior samples)
 #> Weights:
 #>  abc.out$weights
 #> 
-#>                         dec_bdry   discrim     delta    lambda   nd_time s_nd_time   nChains     width
-#> Min.:                    -0.9933   -0.3612   -2.1007    0.3230    0.1715   -0.1222    0.6732   -2.4887
-#> Weighted 2.5 % Perc.:    -0.4986    0.6352    0.2086    3.8001    0.2256    0.0842    1.2614   -0.6010
-#> Weighted Median:         -0.1734    1.8550   10.1117   49.2220    0.2793    0.2433    5.4335    0.2543
-#> Weighted Mean:           -0.1719    1.9028   11.4784  116.1181    0.2757    0.2342    5.5625    0.6436
-#> Weighted Mode:           -0.1867    1.6208    9.1783   24.0592    0.2898    0.2620    3.5968    0.0557
-#> Weighted 97.5 % Perc.:    0.1815    3.1869   32.3903  658.4333    0.3262    0.3718   10.4016    4.0562
-#> Max.:                     0.4572    3.6992   76.0359 1721.6410    0.3473    0.4274   16.7649   27.5651
+#>                        dec_bdry  discrim    delta   lambda  nd_time s_nd_time n_chains    width
+#> Min.:                   -0.8453  -2.2049 -40.3908   1.5830   0.1486   -0.6315  -2.6678  -2.3921
+#> Weighted 2.5 % Perc.:   -0.6401  -0.4636 -14.0350   8.4986   0.2166   -0.0770   2.1500  -0.5501
+#> Weighted Median:        -0.0167   1.6391   7.8115  49.9551   0.2758    0.2471   5.8633   0.4648
+#> Weighted Mean:          -0.0096   1.6121  12.0411  68.8133   0.2742    0.2212   6.0832   0.8347
+#> Weighted Mode:          -0.0132   1.2489   3.9364  36.8663   0.2708    0.2901   5.2441   0.3289
+#> Weighted 97.5 % Perc.:   0.7797   3.1571  57.7084 266.5242   0.3219    0.4556  10.8286   3.6806
+#> Max.:                    1.2174   3.8648 154.6926 800.0434   0.4288    0.5713  24.2661  31.9644
 ```
 
 The initial values for the parameters are
@@ -208,7 +208,7 @@ The initial values for the parameters are
 | lambda            | 14     |
 | nd_time           | 0.3    |
 | s_nd_time         | 0.1    |
-| nChains           | 10     |
+| n_chains          | 10     |
 | width             | 1      |
 
 Comparing the initial settings with the weighted mode of the prediction, we notice that parameter `discriminability`, `delta` and `nd_time` are recovered, but the prediction of other parameters is quite different from the initial values.
