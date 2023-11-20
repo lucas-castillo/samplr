@@ -107,4 +107,17 @@ context("PDF + Utils"){
     expect_true(neg_inf == R_NegInf);
     expect_true(safe_log(2) == log(2));
   }
+  
+  test_that("getMixturePDF"){
+    dfunc pdf1 = getPDF("norm", List::create(-1,1), false);
+    dfunc pdf2 = getPDF("norm", List::create(0,2), false);
+    std::vector<dfunc> v{pdf1, pdf2};
+    
+    dfunc pdf = getMixturePDF(v, NumericVector::create(.6, .4), false);
+    expect_true(isClose(pdf(NumericVector::create(0)), 0.2249709));
+    
+    dfunc pdf_log = getMixturePDF(v, NumericVector::create(.6, .4), true);
+    expect_true(isClose(pdf_log(NumericVector::create(0)), -1.491784));
+    
+  }
 }
