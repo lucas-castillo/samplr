@@ -63,7 +63,7 @@ rABS <- function(dec_bdry, discrim, delta, nd_time, s_nd_time, lambda, trial_fdb
   start_point <- runif(n_chains, min=-3, max=3) %>%
     as.matrix()
   
-  abs_sim <- ABS_sampler_cpp(
+  abs_sim <- ABS_sampler_tafc_cpp(
     start_point = start_point,
     trial_fdbk = trial_fdbk, 
     distr_name = distr_name, 

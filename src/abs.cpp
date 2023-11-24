@@ -109,7 +109,7 @@ int bool_to_int(bool x){
 }
 
 // [[Rcpp::export]]
-List ABS_sampler_cpp(
+List ABS_sampler_tafc_cpp(
     NumericMatrix start_point,
     NumericVector trial_fdbk,
     StringVector distr_name, 

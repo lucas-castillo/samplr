@@ -149,7 +149,7 @@ LiABS <- R6::R6Class(
       start_point <- stats::runif(self$n_chains, min=-3, max=3) %>%
         as.matrix()
       
-      abs_sim <- ABS_sampler_cpp(
+      abs_sim <- ABS_sampler_tafc_cpp(
         start_point = start_point,
         trial_fdbk = trial_fdbk, 
         distr_name = self$distr_name, 
