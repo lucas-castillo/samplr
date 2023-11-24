@@ -12,7 +12,7 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{delta}}{The threshold of the relative difference. It should be an integer.}
+\item{\code{delta}}{The stop rule. It should be an integer.}
 
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
@@ -30,8 +30,10 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-CoreABS-new}{\code{CoreABS$new()}}
-\item \href{#method-CoreABS-confidence}{\code{CoreABS$confidence()}}
 \item \href{#method-CoreABS-two_alt_force_choice}{\code{CoreABS$two_alt_force_choice()}}
+\item \href{#method-CoreABS-estimate}{\code{CoreABS$estimate()}}
+\item \href{#method-CoreABS-conf_interval}{\code{CoreABS$conf_interval()}}
+\item \href{#method-CoreABS-prob_judgment}{\code{CoreABS$prob_judgment()}}
 \item \href{#method-CoreABS-clone}{\code{CoreABS$clone()}}
 }
 }
@@ -73,20 +75,38 @@ A new 'CoreABS' object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CoreABS-confidence"></a>}}
-\if{latex}{\out{\hypertarget{method-CoreABS-confidence}{}}}
-\subsection{Method \code{confidence()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$confidence()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CoreABS-two_alt_force_choice"></a>}}
 \if{latex}{\out{\hypertarget{method-CoreABS-two_alt_force_choice}{}}}
 \subsection{Method \code{two_alt_force_choice()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CoreABS$two_alt_force_choice()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CoreABS-estimate"></a>}}
+\if{latex}{\out{\hypertarget{method-CoreABS-estimate}{}}}
+\subsection{Method \code{estimate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$estimate()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CoreABS-conf_interval"></a>}}
+\if{latex}{\out{\hypertarget{method-CoreABS-conf_interval}{}}}
+\subsection{Method \code{conf_interval()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$conf_interval()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CoreABS-prob_judgment"></a>}}
+\if{latex}{\out{\hypertarget{method-CoreABS-prob_judgment}{}}}
+\subsection{Method \code{prob_judgment()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$prob_judgment()}\if{html}{\out{</div>}}
 }
 
 }
