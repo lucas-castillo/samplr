@@ -11,25 +11,25 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// ABS_sampler_tafc_cpp
-List ABS_sampler_tafc_cpp(NumericMatrix start_point, NumericVector trial_fdbk, StringVector distr_name, int n_chains, double dec_bdry, double d_sepn, double delta, double nd_time, double s_nd_time, double er_lambda, int mc3_iterations, double proposal_width);
-RcppExport SEXP _samplr_ABS_sampler_tafc_cpp(SEXP start_pointSEXP, SEXP trial_fdbkSEXP, SEXP distr_nameSEXP, SEXP n_chainsSEXP, SEXP dec_bdrySEXP, SEXP d_sepnSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP mc3_iterationsSEXP, SEXP proposal_widthSEXP) {
+// LiABS_tafc_cpp
+List LiABS_tafc_cpp(StringVector distr_name, double proposal_width, int n_chains, NumericMatrix start_point, double dec_bdry, double discrim, double delta, double nd_time, double s_nd_time, double er_lambda, NumericVector trial_fdbk, int mc3_iterations);
+RcppExport SEXP _samplr_LiABS_tafc_cpp(SEXP distr_nameSEXP, SEXP proposal_widthSEXP, SEXP n_chainsSEXP, SEXP start_pointSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP trial_fdbkSEXP, SEXP mc3_iterationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type start_point(start_pointSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type trial_fdbk(trial_fdbkSEXP);
     Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
+    Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
     Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type start_point(start_pointSEXP);
     Rcpp::traits::input_parameter< double >::type dec_bdry(dec_bdrySEXP);
-    Rcpp::traits::input_parameter< double >::type d_sepn(d_sepnSEXP);
+    Rcpp::traits::input_parameter< double >::type discrim(discrimSEXP);
     Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< double >::type nd_time(nd_timeSEXP);
     Rcpp::traits::input_parameter< double >::type s_nd_time(s_nd_timeSEXP);
     Rcpp::traits::input_parameter< double >::type er_lambda(er_lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type trial_fdbk(trial_fdbkSEXP);
     Rcpp::traits::input_parameter< int >::type mc3_iterations(mc3_iterationsSEXP);
-    Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
-    rcpp_result_gen = Rcpp::wrap(ABS_sampler_tafc_cpp(start_point, trial_fdbk, distr_name, n_chains, dec_bdry, d_sepn, delta, nd_time, s_nd_time, er_lambda, mc3_iterations, proposal_width));
+    rcpp_result_gen = Rcpp::wrap(LiABS_tafc_cpp(distr_name, proposal_width, n_chains, start_point, dec_bdry, discrim, delta, nd_time, s_nd_time, er_lambda, trial_fdbk, mc3_iterations));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -164,7 +164,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_samplr_ABS_sampler_tafc_cpp", (DL_FUNC) &_samplr_ABS_sampler_tafc_cpp, 12},
+    {"_samplr_LiABS_tafc_cpp", (DL_FUNC) &_samplr_LiABS_tafc_cpp, 12},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 14},
     {"_samplr_sampler_mc_rec_cpp", (DL_FUNC) &_samplr_sampler_mc_rec_cpp, 15},

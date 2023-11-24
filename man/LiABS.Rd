@@ -41,7 +41,9 @@ tafc_sim <- abs_model$two_alt_force_choice(dec_bdry=0, discrim=1, trial_fdbk=c(0
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="samplr" data-topic="CoreABS" data-id="confidence"><a href='../../samplr/html/CoreABS.html#method-CoreABS-confidence'><code>samplr::CoreABS$confidence()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="samplr" data-topic="CoreABS" data-id="conf_interval"><a href='../../samplr/html/CoreABS.html#method-CoreABS-conf_interval'><code>samplr::CoreABS$conf_interval()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="samplr" data-topic="CoreABS" data-id="estimate"><a href='../../samplr/html/CoreABS.html#method-CoreABS-estimate'><code>samplr::CoreABS$estimate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="samplr" data-topic="CoreABS" data-id="prob_judgment"><a href='../../samplr/html/CoreABS.html#method-CoreABS-prob_judgment'><code>samplr::CoreABS$prob_judgment()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -53,7 +55,7 @@ Create a new 'LiABS' object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LiABS$new(
   nd_time,
-  s_nd_time,
+  s_nd_time = 0,
   delta,
   lambda,
   n_chains,
@@ -68,7 +70,7 @@ Create a new 'LiABS' object.
 \describe{
 \item{\code{nd_time}}{The non-decision time.}
 
-\item{\code{s_nd_time}}{The range of the non-decision time.}
+\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
 
 \item{\code{delta}}{The threshold of the relative difference. It should be an integer.}
 

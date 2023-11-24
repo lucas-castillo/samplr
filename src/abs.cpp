@@ -109,19 +109,19 @@ int bool_to_int(bool x){
 }
 
 // [[Rcpp::export]]
-List ABS_sampler_tafc_cpp(
-    NumericMatrix start_point,
-    NumericVector trial_fdbk,
-    StringVector distr_name, 
+List LiABS_tafc_cpp(
+    StringVector distr_name,
+    double proposal_width,
     int n_chains,
+    NumericMatrix start_point,
     double dec_bdry,
-    double d_sepn,
+    double discrim,
     double delta,
     double nd_time,
     double s_nd_time,
     double er_lambda,
-    int mc3_iterations,
-    double proposal_width
+    NumericVector trial_fdbk,
+    int mc3_iterations
 )
 { 
   int emp_ntrials = trial_fdbk.size();
@@ -161,9 +161,9 @@ List ABS_sampler_tafc_cpp(
     }
     
     if (trial_fdbk(i) == 1) {
-      distr_params = List::create(d_sepn/2, 1);
+      distr_params = List::create(discrim/2, 1);
     } else {
-      distr_params = List::create(-1 * d_sepn/2, 1);
+      distr_params = List::create(-1 * discrim/2, 1);
     }
     
     bool surpassedThreshold = false;
@@ -206,7 +206,7 @@ List ABS_sampler_tafc_cpp(
         start_point = new_start_point(
           mc3_traces[0],
                     n_chains,
-                    supportPosition, // position = possition where boundary was crossed
+                    supportPosition, // position = position where boundary was crossed
                     mc3_iterations
         );
         
@@ -237,4 +237,3 @@ List ABS_sampler_tafc_cpp(
   }
   return(sim_all_trials);
 }
-

@@ -57,12 +57,20 @@ CoreABS <- R6::R6Class("CoreABS",
       self$mc3_iterations <- mc3_iterations
     },
     
-    confidence = function() {
+    two_alt_force_choice = function(){
       stop("Method 'confidence' not implemented.", call. = FALSE)
     },
     
-    two_alt_force_choice = function() {
-      stop("Method 'twofc' not implemented.", call. = FALSE)
+    estimate = function(){
+      stop("Method 'confidence' not implemented.", call. = FALSE)
+    },
+    
+    conf_interval = function(){
+      stop("Method 'confidence' not implemented.", call. = FALSE)
+    },
+    
+    prob_judgment = function(){
+      stop("Method 'confidence' not implemented.", call. = FALSE)
     }
 )
 )
@@ -77,6 +85,7 @@ CoreABS <- R6::R6Class("CoreABS",
 #' @examples
 #' abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
 #' 
+#' @export
 #'
 LiABS <- R6::R6Class(
   "LiABS",
@@ -148,14 +157,14 @@ LiABS <- R6::R6Class(
       start_point <- stats::runif(self$n_chains, min=-3, max=3) %>%
         as.matrix()
       
-      abs_sim <- ABS_sampler_tafc_cpp(
+      abs_sim <- LiABS_tafc_cpp(
         start_point = start_point,
         trial_fdbk = trial_fdbk, 
         distr_name = self$distr_name, 
         mc3_iterations = self$mc3_iterations, 
         n_chains = self$n_chains, 
         dec_bdry = dec_bdry, 
-        d_sepn = discrim, 
+        discrim = discrim, 
         delta = self$delta, 
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
@@ -185,6 +194,7 @@ Zhu23ABS <- R6::R6Class(
   "Zhu23ABS",
   inherit = CoreABS,
   public = list(
+    
     two_alt_force_choice = function(){
       invisible(TRUE)
     },
