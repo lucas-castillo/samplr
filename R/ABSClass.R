@@ -179,4 +179,27 @@ LiABS <- R6::R6Class(
       invisible(x)
     }
   )
+))
+
+
+Zhu23ABS <- R6::R6Class(
+  "Zhu23ABS",
+  inherit = CoreABS,
+  public = list(
+    two_alt_force_choice = function(){
+      invisible(TRUE)
+    },
+    
+    estimate = function(){
+      invisible(TRUE)
+    },
+    
+    conf_interval = function(){
+      invisible(TRUE)
+    },
+    
+    prob_judgment = function(){
+      invisible(TRUE)
+    }
+  )
 )
