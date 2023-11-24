@@ -31,11 +31,14 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    bench, mvtnorm
+    bench, 
+    mvtnorm,
+    xml2,
 LinkingTo: 
   Rcpp, 
   RcppArmadillo, 
   RcppDist,
+  testthat,
 RdMacros: Rdpack
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

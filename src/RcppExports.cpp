@@ -163,6 +163,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP run_testthat_tests(void *);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_samplr_ABS_sampler_cpp", (DL_FUNC) &_samplr_ABS_sampler_cpp, 12},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
@@ -171,6 +173,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_samplr_sampler_mh_cpp", (DL_FUNC) &_samplr_sampler_mh_cpp, 11},
     {"_samplr_sampler_nuts_cpp", (DL_FUNC) &_samplr_sampler_nuts_cpp, 10},
     {"_samplr_gridDensity_cpp", (DL_FUNC) &_samplr_gridDensity_cpp, 9},
+    {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 1},
     {NULL, NULL, 0}
 };
 
