@@ -10,7 +10,7 @@
 #' 
 CoreABS <- R6::R6Class("CoreABS",
   public = list(
-    #' @field delta The threshold of the relative difference. It should be an integer.
+    #' @field delta The stop rule. It should be an integer.
     delta = NULL,
     
     #' @field lambda The rate parameter of the gamma distribution for decision time.
@@ -77,7 +77,6 @@ CoreABS <- R6::R6Class("CoreABS",
 #' @examples
 #' abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
 #' 
-#' @export
 #'
 LiABS <- R6::R6Class(
   "LiABS",
@@ -94,7 +93,7 @@ LiABS <- R6::R6Class(
     #' Create a new 'LiABS' object.
     #' 
     #' @param nd_time The non-decision time.
-    #' @param s_nd_time The range of the non-decision time.
+    #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
     #' @param delta The threshold of the relative difference. It should be an integer.
     #' @param lambda The rate parameter of the gamma distribution for decision time.
     #' @param n_chains The number of chains of the sampler. It should be an integer.
@@ -104,7 +103,7 @@ LiABS <- R6::R6Class(
     #'
     #' @return A new 'LiABS' object.
     #'
-    initialize = function(nd_time, s_nd_time, delta, lambda, n_chains, width, distr_name='norm', mc3_iterations=100) {
+    initialize = function(nd_time, s_nd_time=0, delta, lambda, n_chains, width, distr_name='norm', mc3_iterations=100) {
       super$initialize(delta, lambda, n_chains, width, distr_name, mc3_iterations)
       
       stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
@@ -179,7 +178,7 @@ LiABS <- R6::R6Class(
       invisible(x)
     }
   )
-))
+)
 
 
 Zhu23ABS <- R6::R6Class(
