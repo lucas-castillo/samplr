@@ -9,4 +9,5 @@
 ^LICENSE\.md$
 README.Rmd
 debugSpace.R
+^codecov\.yml$
 ^vignettes/articles$

@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg)](https://github.com/lucas-castillo/samplr/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/lucas-castillo/samplr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/lucas-castillo/samplr?branch=main)
 <!-- badges: end -->
 
 The goal of samplr is to provide tools to understand human performance
@@ -33,8 +35,8 @@ installation:
 
 1.  Apple’s ‘Command Line Tools’: these can be (re-)installed by running
     `xcode-select --install` in a terminal. You may also check if those
-    are already installed by running `pkgbuild::check_build_tools()`
-    in R.
+    are already installed by running `pkgbuild::check_build_tools()` in
+    R.
 2.  A Fortran compiler. Installers for gfortran are available
     [here](https://github.com/fxcoudert/gfortran-for-macOS/releases/).
     This installs into `/usr/local/gfortran`.

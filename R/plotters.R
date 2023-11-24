@@ -294,7 +294,7 @@ plot_sigma_scaling <- function(chain, plot=TRUE){
   s_devs <- vector()
   maxLag = round(length(chain) / 10)
   for (i in 1:maxLag){
-    distances <- (chain[1:(length(chain)-i)] - matrix(chain[-1:-i,]))
+    distances <- (chain[1:(length(chain)-i)] - matrix(chain[-1:-i]))
     s_devs[i] <- stats::sd(stats::na.omit(distances))
   }
 
