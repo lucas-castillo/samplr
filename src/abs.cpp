@@ -23,9 +23,9 @@ NumericVector subset_range(NumericVector x, int start, int end) {
   return x[Range(start, end)]; // end inclusive
 }
 
-NumericVector support(NumericVector chain, double dec_bdry, int start_bias){
+NumericVector support(NumericVector chain, double dec_bdry, int prior_bias){
   NumericVector supportVector(chain.size()+1);
-  supportVector(0) = start_bias;
+  supportVector(0) = prior_bias;
   for (int i = 0; i < chain.size(); i++){
     if (chain(i) <= dec_bdry){
       supportVector(i+1) = -1;
@@ -40,7 +40,7 @@ NumericVector support(NumericVector chain, double dec_bdry, int start_bias){
 NumericVector cumsum_sug(NumericVector x){
   NumericVector cumSupp = cumsum(x); // compute the cumulated number of evidence
   int n = cumSupp.size();
-  return cumSupp[Range(1, n)];    // remove the first one as it is a start_bias
+  return cumSupp[Range(1, n)];    // remove the first one as it is a prior_bias
 }
 
 NumericVector concatenate_vectors(NumericVector a, NumericVector b){
@@ -61,11 +61,11 @@ NumericVector concatenate_vectors(NumericVector a, NumericVector b){
   return(c);
 }
 
-int checkThreshold(NumericVector cumSupp, double delta, int caution){
+int checkThreshold(NumericVector cumSupp, double delta){
   int supportPosition = -1;
   NumericVector cumSuppAbs = abs(cumSupp);
   for (int i = 0; i < cumSupp.size(); i++){
-    if (cumSuppAbs(i) >= (delta + caution)){
+    if (cumSuppAbs(i) >= (delta)){
       supportPosition = i;
       break;
     }
@@ -108,26 +108,27 @@ int bool_to_int(bool x){
   }
 }
 
-// [[Rcpp::export]]
-List LiABS_tafc_cpp(
-    StringVector distr_name,
-    double proposal_width,
-    int n_chains,
+
+//[[Rcpp::export]]
+List Zhu23ABS_tafc_cpp(
     NumericMatrix start_point,
-    double dec_bdry,
+    NumericVector trial_fdbk, 
+    StringVector distr_name, 
+    int mc3_iterations, 
+    int n_chains, 
+    double dec_bdry, 
     double discrim,
-    double delta,
-    double nd_time,
+    NumericVector prior_on_resp,
+    int delta, 
+    double nd_time, 
     double s_nd_time,
     double er_lambda,
-    NumericVector trial_fdbk,
-    int mc3_iterations
+    double proposal_width
 )
-{ 
+{
   int emp_ntrials = trial_fdbk.size();
   List sim_all_trials(emp_ntrials);
-  int start_bias = 0;
-  int caution = 0;
+  int prior_bias = prior_on_resp[1] - prior_on_resp[0];
   Function f("rnorm"); // placeholder function
   
   int first_smpl_idx;
@@ -186,9 +187,9 @@ List LiABS_tafc_cpp(
       
       chain = subset_range(mc3_traces[0], first_smpl_idx, mc3_iterations - 1); // cold chain
       
-      supportVector = support(chain, dec_bdry, start_bias);
+      supportVector = support(chain, dec_bdry, prior_bias);
       cumulative_support = cumsum_sug(supportVector);
-      int supportPosition = checkThreshold(cumulative_support, delta, caution);
+      int supportPosition = checkThreshold(cumulative_support, delta);
       
       if (supportPosition == -1){
         start_point = new_start_point(
@@ -232,8 +233,6 @@ List LiABS_tafc_cpp(
       _["nd_time"] = trialNDTime,
       _["rt"] = trialDecisionTime + trialNDTime
     );
-    start_bias = 0; // never start bias
-    caution = 0; //1 - bool_to_int(trial_fdbk(i) == trialResponse);
   }
   return(sim_all_trials);
 }

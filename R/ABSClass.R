@@ -23,10 +23,10 @@ CoreABS <- R6::R6Class("CoreABS",
     width = NULL,
     
     #' @field distr_name The type of the posterior hypothesis distribution.
-    distr_name='norm',
+    distr_name = NULL,
     
     #' @field mc3_iterations The number of iterations for each chunk. See details for more information.
-    mc3_iterations=100,
+    mc3_iterations = NULL,
     
     
     #' @description
@@ -76,19 +76,16 @@ CoreABS <- R6::R6Class("CoreABS",
 )
 
 
-
-#' @title Auto-correlated Bayesian Sampler by Li
+#' @title Auto-correlated Bayesian Sampler by Zhu (2023)
 #' 
 #' @description
-#' This Auto-correlated Bayesian Sampler (ABS) model is developed by Yun-Xiao Li following the ABS of Zhu. LiABS has an extra component of non-decision time when calculating the response time.
+#' This Auto-correlated Bayesian Sampler (ABS) model is developed by Zhu.
 #' 
 #' @examples
-#' abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
-#' 
-#' @export
+#' abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(0, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm', mc3_iterations=100)
 #'
-LiABS <- R6::R6Class(
-  "LiABS",
+Zhu23ABS <- R6::R6Class(
+  "Zhu23ABS",
   inherit = CoreABS,
   public = list(
     
@@ -98,11 +95,15 @@ LiABS <- R6::R6Class(
     #' @field s_nd_time The range of the non-decision time.
     s_nd_time = NULL,
     
+    #' @field prior_on_resp The beta prior on responses
+    prior_on_resp = NULL,
+    
     #' @description
-    #' Create a new 'LiABS' object.
+    #' Create a new 'Zhu23ABS' object.
     #' 
     #' @param nd_time The non-decision time.
     #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
+    #' @param prior_on_resp The beta prior on responses
     #' @param delta The threshold of the relative difference. It should be an integer.
     #' @param lambda The rate parameter of the gamma distribution for decision time.
     #' @param n_chains The number of chains of the sampler. It should be an integer.
@@ -110,19 +111,22 @@ LiABS <- R6::R6Class(
     #' @param distr_name The type of the posterior hypothesis distribution.
     #' @param mc3_iterations The number of iterations for each chunk. See details for more information.
     #'
-    #' @return A new 'LiABS' object.
+    #' @return A new 'Zhu23ABS' object.
     #'
-    initialize = function(nd_time, s_nd_time=0, delta, lambda, n_chains, width, distr_name='norm', mc3_iterations=100) {
+    initialize = function(nd_time, s_nd_time=0, prior_on_resp=c(0, 0), delta, lambda, n_chains, width, distr_name='norm', mc3_iterations=100) {
       super$initialize(delta, lambda, n_chains, width, distr_name, mc3_iterations)
       
       stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
       stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
+      stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
       self$nd_time <- nd_time
       self$s_nd_time <- s_nd_time
+      self$prior_on_resp <- prior_on_resp
     },
     
+    
     #' @description
-    #' This function is for simulating two-alternative-force choice tasks by LiABS.
+    #' This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
     #' 
     #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
     #' @param discrim The stimuli discriminability.
@@ -133,19 +137,18 @@ LiABS <- R6::R6Class(
     #'  \item{trial: the index of trials;}
     #'  \item{samples: the samples of ABS sampler for the trial;}
     #'  \item{support: the relative difference between the numbers of supporting samples for each response;}
-    #'  \item{length: the length of the sequence;}
+    #'  \item{length: the length of the sampling sequence;}
     #'  \item{response: the response predicted by ABS. 0 represents the response coded as below the decision boundary and 1 represent the opposite;}
     #'  \item{feedback: the feedback or the true stimuli of the experiment. 0 represents the response coded as below the decision boundary and 1 represent the opposite;}
     #'  \item{accuracy: whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
     #'  \item{nd_time: the non-decision time for this trial;}
     #'  \item{rt: the response time, including both the non-decision and the decision time;}
-    #'  \item{rept: whether the next trial repeats the same response as the current trial;}
     #' }
     #' 
     #' @importFrom magrittr %>%
     #' 
     #' @examples
-    #' abs_model <- LiABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
+    #' abs_model <- Zhu23ABS$new(delta=5, lambda=20, n_chains=3, width=1, nd_time = 0.1, s_nd_time = 0.3)
     #' tafc_sim <- abs_model$two_alt_force_choice(dec_bdry=0, discrim=1, trial_fdbk=c(0, 0, 1, 0, 1))
     #' 
     two_alt_force_choice = function(dec_bdry, discrim, trial_fdbk){
@@ -157,46 +160,23 @@ LiABS <- R6::R6Class(
       start_point <- stats::runif(self$n_chains, min=-3, max=3) %>%
         as.matrix()
       
-      abs_sim <- LiABS_tafc_cpp(
+      tafc_sim <- Zhu23ABS_tafc_cpp(
         start_point = start_point,
         trial_fdbk = trial_fdbk, 
         distr_name = self$distr_name, 
         mc3_iterations = self$mc3_iterations, 
         n_chains = self$n_chains, 
         dec_bdry = dec_bdry, 
-        discrim = discrim, 
+        discrim = discrim,
+        prior_on_resp = self$prior_on_resp,
         delta = self$delta, 
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
         er_lambda = self$lambda,
         proposal_width = self$width
       )
-      
-      x <- abs_sim %>% 
-        do.call(cbind, .) %>% 
-        t %>% 
-        data.frame() %>% 
-        tibble::tibble() %>% 
-        tidyr::unnest(-c(samples, support))
-      
-      if (length(trial_fdbk)>1){
-        x$rept <- c(NA, x$response[2:(length(x$response))] == x$response[1:(length(x$response) - 1)])
-      } else {
-        x$rept <- NA
-      }
-      invisible(x)
-    }
-  )
-)
-
-
-Zhu23ABS <- R6::R6Class(
-  "Zhu23ABS",
-  inherit = CoreABS,
-  public = list(
-    
-    two_alt_force_choice = function(){
-      invisible(TRUE)
+      tafc_df <- data.frame(do.call(rbind, tafc_sim))
+      return(tafc_df)
     },
     
     estimate = function(){
@@ -212,3 +192,35 @@ Zhu23ABS <- R6::R6Class(
     }
   )
 )
+
+
+
+#' @title Auto-correlated Bayesian Sampler by Li
+#' 
+#' @description
+#' This Auto-correlated Bayesian Sampler (ABS) model is developed by Yun-Xiao Li following the ABS of Zhu.
+#' 
+#' @examples
+#' 
+#'
+LiABS <- R6::R6Class(
+  "LiABS",
+  inherit = CoreABS,
+  public = list(
+    
+    #' @field nd_time The non-decision time.
+    nd_time = NULL,
+    
+    #' @field s_nd_time The range of the non-decision time.
+    s_nd_time = NULL,
+    
+    
+    
+    two_alt_force_choice = function(){
+      invisible(TRUE)
+    }
+  )
+)
+
+
+
