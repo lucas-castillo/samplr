@@ -109,10 +109,11 @@ int bool_to_int(bool x){
 }
 
 
+
 //[[Rcpp::export]]
 List Zhu23ABS_tafc_cpp(
     NumericMatrix start_point,
-    NumericVector trial_fdbk, 
+    NumericVector trial_stim, 
     StringVector distr_name, 
     int mc3_iterations, 
     int n_chains, 
@@ -126,7 +127,7 @@ List Zhu23ABS_tafc_cpp(
     double proposal_width
 )
 {
-  int emp_ntrials = trial_fdbk.size();
+  int emp_ntrials = trial_stim.size();
   List sim_all_trials(emp_ntrials);
   int prior_bias = prior_on_resp[1] - prior_on_resp[0];
   Function f("rnorm"); // placeholder function
@@ -161,7 +162,7 @@ List Zhu23ABS_tafc_cpp(
       first_smpl_idx = 1;
     }
     
-    if (trial_fdbk(i) == 1) {
+    if (trial_stim(i) == 1) {
       distr_params = List::create(discrim/2, 1);
     } else {
       distr_params = List::create(-1 * discrim/2, 1);
@@ -218,18 +219,96 @@ List Zhu23ABS_tafc_cpp(
         
       }
     }
-    trialResponse = (give_me_sign(trialSupport(trialSupport.size() - 1)) + 1 )/ 2; // 0 for negative, 1 for positive
+    double trialLength = trialSamples.size();
+    trialResponse = (give_me_sign(trialSupport(trialLength - 1)) + 1 )/ 2; // 0 for negative, 1 for positive
     trialNDTime = R::runif(nd_time, nd_time+s_nd_time);
-    trialDecisionTime = R::rgamma(trialSamples.size(), 1/er_lambda);
+    trialDecisionTime = R::rgamma(trialLength, 1/er_lambda);
+    
+    double evidDifference = trialSupport(trialLength - 1);
+    double conf_posi = ((trialLength + evidDifference - prior_bias) / 2)/(trialLength + prior_on_resp[0] + prior_on_resp[1]);// The confidence of "positive" response
     
     sim_all_trials(i) = List::create(
       _["trial"] = i + 1,
       _["samples"] = trialSamples,
       _["support"] = trialSupport,
-      _["length"] = trialSamples.size(),
+      _["length"] = trialLength,
       _["response"] = trialResponse,
-      _["feedback"] = trial_fdbk(i),
-      _["accuracy"] = bool_to_int(trialResponse == trial_fdbk(i)),
+      _["stimulus"] = trial_stim(i),
+      _["accuracy"] = bool_to_int(trialResponse == trial_stim(i)),
+      _["nd_time"] = trialNDTime,
+      _["rt"] = trialDecisionTime + trialNDTime,
+      _["confidence"] = std::max(conf_posi, 1-conf_posi)
+    );
+  }
+  return(sim_all_trials);
+}
+
+//[[Rcpp::export]]
+List Zhu23ABS_pj_cpp(
+  NumericMatrix start_point,
+  NumericVector trial_stim, 
+  StringVector distr_name,
+  int n_chains, 
+  NumericVector trial_bdry,
+  NumericVector prior_on_resp,
+  int delta, 
+  double nd_time, 
+  double s_nd_time,
+  double er_lambda,
+  double proposal_width
+){
+  int emp_ntrials = trial_stim.size();
+  List sim_all_trials(emp_ntrials);
+  Function f("rnorm"); // placeholder function
+  
+  int first_smpl_idx;
+  List distr_params;
+  List mc3_traces;
+  NumericVector chain;
+  NumericVector temp = {proposal_width};
+  NumericMatrix sigma_prop(1, 1, temp.begin()); // 1x1 matrix with a proposal_width inside
+  
+  
+  
+  // Begin sampling
+  for (int i = 0; i < emp_ntrials; i++){
+    // Checking interruption every 1000 iterations
+    if (i % 1000 == 0){
+      Rcpp::checkUserInterrupt();
+    }
+    
+    double trialNDTime = R::runif(nd_time, nd_time+s_nd_time);
+    double trialDecisionTime = R::rgamma(delta, 1/er_lambda);
+    
+    if (i == 0){
+      first_smpl_idx = 0;
+    } else {
+      first_smpl_idx = 1;
+    }
+    
+    distr_params = List::create(trial_stim(i), 1);
+    mc3_traces = sampler_mc3_cpp(
+      start_point, // start
+      n_chains, // n_chains
+      sigma_prop, // sigma_prop
+      4, // delta_T
+      true, // swap_all
+      delta + first_smpl_idx, // iterations
+      distr_name, // distr_name
+      distr_params, // distr_params
+      false, // discreteValues
+      false, // isMix
+      1, // weights
+      f, // custom_func
+      false // useCustom
+    );
+    
+    chain = subset_range(mc3_traces[0], first_smpl_idx, delta + first_smpl_idx - 1); // cold chain
+    
+    sim_all_trials(i) = List::create(
+      _["trial"] = i + 1,
+      _["samples"] = chain,
+      _["stimulus"] = trial_stim(i),
       _["nd_time"] = trialNDTime,
       _["rt"] = trialDecisionTime + trialNDTime
     );

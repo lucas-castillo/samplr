@@ -12,13 +12,13 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // Zhu23ABS_tafc_cpp
-List Zhu23ABS_tafc_cpp(NumericMatrix start_point, NumericVector trial_fdbk, StringVector distr_name, int mc3_iterations, int n_chains, double dec_bdry, double discrim, NumericVector prior_on_resp, int delta, double nd_time, double s_nd_time, double er_lambda, double proposal_width);
-RcppExport SEXP _samplr_Zhu23ABS_tafc_cpp(SEXP start_pointSEXP, SEXP trial_fdbkSEXP, SEXP distr_nameSEXP, SEXP mc3_iterationsSEXP, SEXP n_chainsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP, SEXP prior_on_respSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP proposal_widthSEXP) {
+List Zhu23ABS_tafc_cpp(NumericMatrix start_point, NumericVector trial_stim, StringVector distr_name, int mc3_iterations, int n_chains, double dec_bdry, double discrim, NumericVector prior_on_resp, int delta, double nd_time, double s_nd_time, double er_lambda, double proposal_width);
+RcppExport SEXP _samplr_Zhu23ABS_tafc_cpp(SEXP start_pointSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP mc3_iterationsSEXP, SEXP n_chainsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP, SEXP prior_on_respSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP proposal_widthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type start_point(start_pointSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type trial_fdbk(trial_fdbkSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type trial_stim(trial_stimSEXP);
     Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
     Rcpp::traits::input_parameter< int >::type mc3_iterations(mc3_iterationsSEXP);
     Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
@@ -30,7 +30,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type s_nd_time(s_nd_timeSEXP);
     Rcpp::traits::input_parameter< double >::type er_lambda(er_lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
-    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_tafc_cpp(start_point, trial_fdbk, distr_name, mc3_iterations, n_chains, dec_bdry, discrim, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width));
+    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_tafc_cpp(start_point, trial_stim, distr_name, mc3_iterations, n_chains, dec_bdry, discrim, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Zhu23ABS_pj_cpp
+List Zhu23ABS_pj_cpp(NumericMatrix start_point, NumericVector trial_stim, StringVector distr_name, int n_chains, NumericVector trial_bdry, NumericVector prior_on_resp, int delta, double nd_time, double s_nd_time, double er_lambda, double proposal_width);
+RcppExport SEXP _samplr_Zhu23ABS_pj_cpp(SEXP start_pointSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP n_chainsSEXP, SEXP trial_bdrySEXP, SEXP prior_on_respSEXP, SEXP deltaSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP er_lambdaSEXP, SEXP proposal_widthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type start_point(start_pointSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type trial_stim(trial_stimSEXP);
+    Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
+    Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type trial_bdry(trial_bdrySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type prior_on_resp(prior_on_respSEXP);
+    Rcpp::traits::input_parameter< int >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type nd_time(nd_timeSEXP);
+    Rcpp::traits::input_parameter< double >::type s_nd_time(s_nd_timeSEXP);
+    Rcpp::traits::input_parameter< double >::type er_lambda(er_lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
+    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_pj_cpp(start_point, trial_stim, distr_name, n_chains, trial_bdry, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -166,6 +187,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_samplr_Zhu23ABS_tafc_cpp", (DL_FUNC) &_samplr_Zhu23ABS_tafc_cpp, 13},
+    {"_samplr_Zhu23ABS_pj_cpp", (DL_FUNC) &_samplr_Zhu23ABS_pj_cpp, 11},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 14},
     {"_samplr_sampler_mc_rec_cpp", (DL_FUNC) &_samplr_sampler_mc_rec_cpp, 15},
