@@ -103,7 +103,7 @@ Z_identities <- function(
   }
   
   safe_eval <- function(exp){
-    if (length(eval(exp)) == 0) return(NA) else return(eval(exp))
+    if (length(eval(exp)) == 0) return(NA) else return(round(eval(exp),10))
   }
   
   data.frame(
