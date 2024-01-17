@@ -11,6 +11,13 @@ Z_equalities <- function(
     not_b=NULL
     ){
   
+  # add complements if not given
+  if (is.null(not_a)){
+    not_a = 1-a
+  }
+  if (is.null(not_b)){
+    not_b = 1-b
+  }
   
   safe_eval <- function(exp){
     if (length(eval(exp)) == 0) return(NA) else return(eval(exp))
