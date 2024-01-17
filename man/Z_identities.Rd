@@ -28,7 +28,10 @@ Z_identities(
 Dataframe with identities Z1 to Z18
 }
 \description{
-Calculates identities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability, zhu2020BayesianSamplerGeneric:bibtex}{samplr}. If some of the probability estimates are not given, it will return NA for the identities than need them.
+Calculates identities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability,zhu2020BayesianSamplerGeneric}{samplr}. Probability theory predicts that these will all equal 0.
+}
+\details{
+If some of the probability estimates are not given, calculation will proceed and equalities that cannot be calculated will be coded as NA.
 }
 \examples{
 Z_identities(
@@ -42,8 +45,6 @@ Z_identities(
  b_given_not_a=.1,
  a_and_not_b=.45,
  b_and_not_a=.05,
- not_a=NULL,
- not_b=NULL
  )
 \dontrun{
 #Get identities for a set of participants
