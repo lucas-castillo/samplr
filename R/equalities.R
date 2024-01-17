@@ -10,6 +10,23 @@ Z_equalities <- function(
     not_a=NULL,
     not_b=NULL
     ){
+  # Check inputs
+  is_prob <- function(x){
+    if (x<0) stop("Probabilites cannot be negative")
+    if (x>1) stop("Probabilites cannot be larger than 1")
+  }
+  for (p in c(a,
+             b,
+             not_a,
+             not_b,
+             a_and_b,
+             a_or_b,
+             a_given_b,
+             b_given_a,
+             a_and_not_b,
+             b_and_not_a)){
+    if (!is.null(p)){is_prob(p)}
+  }
   
   # add complements if not given
   if (is.null(not_a)){
