@@ -14,8 +14,9 @@ Z_equalities <- function(
     ){
   # Check inputs
   is_prob <- function(x){
-    if (x<0) stop("Probabilites cannot be negative")
-    if (x>1) stop("Probabilites cannot be larger than 1")
+    x <- x[!is.na(x)]
+    if (any(x<0)) stop("Probabilites cannot be negative")
+    if (any(x>1)) stop("Probabilites cannot be larger than 1")
   }
   for (p in c(a,
              b,
