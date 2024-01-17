@@ -3,8 +3,10 @@ Z_equalities <- function(
     b=NULL, 
     a_and_b=NULL, 
     a_or_b=NULL, 
-    a_given_b=NULL, 
-    b_given_a=NULL, 
+    a_given_b=NULL,
+    b_given_a=NULL,
+    a_given_not_b=NULL,
+    b_given_not_a=NULL,
     a_and_not_b=NULL,
     b_and_not_a=NULL,
     not_a=NULL,
@@ -23,6 +25,8 @@ Z_equalities <- function(
              a_or_b,
              a_given_b,
              b_given_a,
+             a_given_not_b,
+             b_given_not_a,
              a_and_not_b,
              b_and_not_a)){
     if (!is.null(p)){is_prob(p)}
