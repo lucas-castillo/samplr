@@ -1,16 +1,16 @@
-#' Z Equalities
+#' Z Identities
 #' 
-#' Calculates equalities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability, zhu2020BayesianSamplerGeneric:bibtex}{samplr}. If some of the probability estimates are not given, it will return NA for the equalities than need them. 
+#' Calculates identities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability, zhu2020BayesianSamplerGeneric:bibtex}{samplr}. If some of the probability estimates are not given, it will return NA for the identities than need them. 
 #' 
 #'
 #' @param a,b,a_and_b,a_or_b,a_given_b,b_given_a,a_given_not_b,b_given_not_a,a_and_not_b,b_and_not_a Probability estimates given by participants
 #' @param not_a,not_b Probability estimates given by participants. If not given, they'll default to 1-a and 1-b respectively
 #'
-#' @return Dataframe with equalities Z1 to Z18 
+#' @return Dataframe with identities Z1 to Z18 
 #' @export
 #'
 #' @examples
-#'Z_equalities(
+#'Z_identities(
 #'  a=.5, 
 #'  b=.1, 
 #'  a_and_b=.05, 
@@ -25,7 +25,7 @@
 #'  not_b=NULL
 #'  )
 #'\dontrun{
-#'#Get equalities for a set of participants
+#'#Get identities for a set of participants
 #'library(tidyverse)
 #'data.frame(
 #'  ID = LETTERS[1:20],
@@ -44,7 +44,7 @@
 #') %>% 
 #'  group_by(ID) %>% 
 #'  do(
-#'    Z_equalities(
+#'    Z_identities(
 #'      .$a,
 #'      .$b,
 #'      .$a_and_b,
@@ -59,7 +59,7 @@
 #'      .$not_b
 #'    )
 #'  )}
-Z_equalities <- function(
+Z_identities <- function(
     a=NULL, 
     b=NULL, 
     a_and_b=NULL, 
