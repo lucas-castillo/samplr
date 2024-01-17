@@ -1,6 +1,8 @@
 #' Z Identities
 #' 
-#' Calculates identities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability, zhu2020BayesianSamplerGeneric}{samplr}. If some of the probability estimates are not given, it will return NA for the identities than need them. 
+#' Calculates identities Z1 to Z18 as defined in \insertCite{costello2016PeopleConditionalProbability,zhu2020BayesianSamplerGeneric}{samplr}. Probability theory predicts that these will all equal 0. 
+#' 
+#' If some of the probability estimates are not given, calculation will proceed and equalities that cannot be calculated will be coded as NA. 
 #' 
 #'
 #' @param a,b,a_and_b,a_or_b,a_given_b,b_given_a,a_given_not_b,b_given_not_a,a_and_not_b,b_and_not_a Probability estimates given by participants
@@ -21,8 +23,6 @@
 #'  b_given_not_a=.1,
 #'  a_and_not_b=.45,
 #'  b_and_not_a=.05,
-#'  not_a=NULL,
-#'  not_b=NULL
 #'  )
 #'\dontrun{
 #'#Get identities for a set of participants
