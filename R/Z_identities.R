@@ -58,7 +58,8 @@
 #'      .$not_a,
 #'      .$not_b
 #'    )
-#'  )}
+#'  )
+#'  }
 Z_identities <- function(
     a=NULL, 
     b=NULL, 
