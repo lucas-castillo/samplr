@@ -13,10 +13,13 @@ reference:
   desc: "Functions for plotting various aspects of the sampling process. Most only work with univariate distributions"
 - contents:
   - starts_with("plot")
+- title: "Other Utilities"
+  desc: "Other Functions"
+- contents:
+  - Z_identities
+
 - title: "ABS"
   desc: "Functions related to the Autocorrelated Bayesian Sampler"
 - contents:
   - rABS
-  
-  
-  
+
