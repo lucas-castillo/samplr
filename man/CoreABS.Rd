@@ -21,8 +21,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item{\code{width}}{The proposal width of the sampler.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{mc3_iterations}}{The number of iterations for each chunk. See details for more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -32,7 +30,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item \href{#method-CoreABS-new}{\code{CoreABS$new()}}
 \item \href{#method-CoreABS-two_alt_force_choice}{\code{CoreABS$two_alt_force_choice()}}
 \item \href{#method-CoreABS-estimate}{\code{CoreABS$estimate()}}
-\item \href{#method-CoreABS-conf_interval}{\code{CoreABS$conf_interval()}}
 \item \href{#method-CoreABS-prob_judgment}{\code{CoreABS$prob_judgment()}}
 \item \href{#method-CoreABS-clone}{\code{CoreABS$clone()}}
 }
@@ -43,14 +40,7 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
-  delta,
-  lambda,
-  n_chains,
-  width,
-  distr_name = "norm",
-  mc3_iterations = 100
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(delta, lambda, n_chains, width, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -65,8 +55,6 @@ Create a new 'CoreABS' object.
 \item{\code{width}}{The proposal width of the sampler.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{mc3_iterations}}{The number of iterations for each chunk. See details for more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -89,15 +77,6 @@ A new 'CoreABS' object.
 \subsection{Method \code{estimate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CoreABS$estimate()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CoreABS-conf_interval"></a>}}
-\if{latex}{\out{\hypertarget{method-CoreABS-conf_interval}{}}}
-\subsection{Method \code{conf_interval()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$conf_interval()}\if{html}{\out{</div>}}
 }
 
 }

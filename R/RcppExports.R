@@ -5,8 +5,8 @@ Zhu23ABS_tafc_cpp <- function(start_point, trial_stim, distr_name, mc3_iteration
     .Call(`_samplr_Zhu23ABS_tafc_cpp`, start_point, trial_stim, distr_name, mc3_iterations, n_chains, dec_bdry, discrim, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width)
 }
 
-Zhu23ABS_pj_cpp <- function(start_point, trial_stim, distr_name, n_chains, trial_bdry, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width) {
-    .Call(`_samplr_Zhu23ABS_pj_cpp`, start_point, trial_stim, distr_name, n_chains, trial_bdry, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width)
+Zhu23ABS_sss_cpp <- function(start_point, trial_stim, distr_name, n_chains, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width) {
+    .Call(`_samplr_Zhu23ABS_sss_cpp`, start_point, trial_stim, distr_name, n_chains, prior_on_resp, delta, nd_time, s_nd_time, er_lambda, proposal_width)
 }
 
 sampler_hmc_cpp <- function(start, distr_name, distr_params, epsilon, L, iterations, isMix, weights, custom_func, useCustom) {
