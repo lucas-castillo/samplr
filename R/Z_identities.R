@@ -128,4 +128,94 @@ Z_identities <- function(
     z18= safe_eval(expression(a_and_b - b + b_given_not_a*not_a))
   )
 }
+get_true_probabilities <- function(
+    a_and_b,
+    b_and_not_a,
+    a_and_not_b,
+    not_a_and_not_b
+  ){
+  # +-------+-------------+-----------------+
+  # |   .   |      a      |      not_a      |
+  # +-------+-------------+-----------------+
+  # | b     | a_and_b     | b_and_not_a     |
+  # | not_b | a_and_not_b | not_a_and_not_b |
+  # +-------+-------------+-----------------+
+  # Normalize probabilities
+  base = a_and_b + b_and_not_a + a_and_not_b + not_a_and_not_b
+  a_and_b = a_and_b / base
+  b_and_not_a = b_and_not_a / base
+  a_and_not_b = a_and_not_b / base
+  not_a_and_not_b = not_a_and_not_b / base
+  # Get the other probabilities
+  a = a_and_b + a_and_not_b
+  b = a_and_b + b_and_not_a 
+  not_a = 1 - a
+  not_b = 1 - b
+  a_or_b = 1 - not_a_and_not_b
+  a_or_not_b = 1 - a_and_not_b
+  b_or_not_a = 1- b_and_not_a
+  not_a_or_not_b = 1 - a_and_b
+  # Conditional Probabilities
+  a_given_b = a_and_b / (a_and_b + b_and_not_a)
+  not_a_given_b = b_and_not_a / (a_and_b + b_and_not_a)
+  a_given_not_b = a_and_not_b / (a_and_not_b + not_a_and_not_b)
+  not_a_given_not_b = not_a_and_not_b / (a_and_not_b + not_a_and_not_b)
+  b_given_a = a_and_b / (a_and_b + a_and_not_b)
+  not_b_given_a = a_and_not_b / (a_and_b + a_and_not_b)
+  b_given_not_a = b_and_not_a / (b_and_not_a + not_a_and_not_b)
+  not_b_given_not_a = not_a_and_not_b / (b_and_not_a + not_a_and_not_b)
+  
+  return(
+    list(
+      a_and_b = a_and_b,
+      b_and_not_a = b_and_not_a,
+      a_and_not_b = a_and_not_b,
+      not_a_and_not_b = not_a_and_not_b,
+      a = a,
+      b = b,
+      not_a = not_a,
+      not_b = not_b,
+      a_or_b = a_or_b,
+      a_or_not_b = a_or_not_b,
+      b_or_not_a = b_or_not_a,
+      not_a_or_not_b = not_a_or_not_b,
+      a_given_b = a_given_b,
+      not_a_given_b = not_a_given_b,
+      a_given_not_b = a_given_not_b,
+      not_a_given_not_b = not_a_given_not_b,
+      b_given_a = b_given_a,
+      not_b_given_a = not_b_given_a,
+      b_given_not_a = b_given_not_a,
+      not_b_given_not_a = not_b_given_not_a
+    )
+  )
+}
+
+BS <- function(
+    a_and_b,
+    b_and_not_a,
+    a_and_not_b,
+    not_a_and_not_b,
+    beta, N, N2=NULL){
+  if (is.null(N2)){N2 <- N}
+  if (N2 > N){warning("N2 is larger than N. I expected N2 <= N")}
+  
+  true_probabilities <- get_true_probabilities(
+    a_and_b, 
+    b_and_not_a, 
+    a_and_not_b, 
+    not_a_and_not_b
+  )
+  predicted_means <- list()
+  for (name in names(true_probabilities)){
+      if (name %in% c( # treat conjunctions differently
+        "b_or_not_a", "not_a_or_not_b", "a_or_b", "a_or_not_b", 
+        "a_and_b", "b_and_not_a", "a_and_not_b", "not_a_and_not_b")){
+        predicted_means[name] <- true_probabilities[[name]]*N2/(N2+2*beta)+beta/(N2+2*beta)
+      } else{
+        predicted_means[name] <- true_probabilities[[name]]*N/(N+2*beta)+beta/(N+2*beta)
+      }
+  }
+  return(predicted_means)
+}
 
