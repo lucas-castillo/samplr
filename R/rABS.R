@@ -65,7 +65,8 @@ rABS <- function(dec_bdry, discrim, delta, prior_on_resp, nd_time, s_nd_time, la
   start_point <- stats::runif(n_chains, min=-3, max=3) %>%
     as.matrix()
   
-  tafc_sim <- Zhu23ABS_tafc_cpp(
+  tafc_sim <- Zhu23ABS_cpp(
+    task_id = 2,
     start_point = start_point,
     trial_stim = trial_stim, 
     distr_name = distr_name, 
@@ -74,7 +75,7 @@ rABS <- function(dec_bdry, discrim, delta, prior_on_resp, nd_time, s_nd_time, la
     dec_bdry = dec_bdry, 
     discrim = discrim,
     prior_on_resp = prior_on_resp,
-    delta = delta, 
+    stop_rule = delta, 
     nd_time = nd_time, 
     s_nd_time = s_nd_time,
     er_lambda = lambda,

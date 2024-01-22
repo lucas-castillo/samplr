@@ -7,23 +7,25 @@
 This Auto-correlated Bayesian Sampler (ABS) model is developed by Zhu.
 }
 \examples{
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm')
+abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp = c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
 
 
 ## ------------------------------------------------
 ## Method `Zhu23ABS$two_alt_force_choice`
 ## ------------------------------------------------
 
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm')
-tafc_sim <- abs_model$two_alt_force_choice(dec_bdry=0, discrim=1, trial_stim=c(0, 0, 1, 0, 1))
+abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, lambda=10, n_chains=5, width=1, distr_name='norm')
+start_point <- as.matrix(stats::runif(5, min=-3, max=3))
+tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=c(0, 0, 1, 0, 1), start_point=start_point)
 
 
 ## ------------------------------------------------
 ## Method `Zhu23ABS$estimate`
 ## ------------------------------------------------
 
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm')
-est_sim <- abs_model$estimate(trial_stim = c(25, 26, 25, 24), confidence=0.5)
+abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), lambda=10, n_chains=5, width=1, distr_name='norm')
+start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
+est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), start_point, confidence=0.5)
 
 }
 \section{Super class}{
@@ -36,7 +38,7 @@ est_sim <- abs_model$estimate(trial_stim = c(25, 26, 25, 24), confidence=0.5)
 
 \item{\code{s_nd_time}}{The range of the non-decision time.}
 
-\item{\code{prior_on_resp}}{The beta prior on responses}
+\item{\code{prior_on_resp}}{The beta prior on responses.}
 }
 \if{html}{\out{</div>}}
 }
@@ -46,10 +48,16 @@ est_sim <- abs_model$estimate(trial_stim = c(25, 26, 25, 24), confidence=0.5)
 \item \href{#method-Zhu23ABS-new}{\code{Zhu23ABS$new()}}
 \item \href{#method-Zhu23ABS-two_alt_force_choice}{\code{Zhu23ABS$two_alt_force_choice()}}
 \item \href{#method-Zhu23ABS-estimate}{\code{Zhu23ABS$estimate()}}
-\item \href{#method-Zhu23ABS-prob_judgment}{\code{Zhu23ABS$prob_judgment()}}
 \item \href{#method-Zhu23ABS-clone}{\code{Zhu23ABS$clone()}}
 }
 }
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="samplr" data-topic="CoreABS" data-id="prob_judgment"><a href='../../samplr/html/CoreABS.html#method-CoreABS-prob_judgment'><code>samplr::CoreABS$prob_judgment()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Zhu23ABS-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Zhu23ABS-new}{}}}
@@ -57,28 +65,19 @@ est_sim <- abs_model$estimate(trial_stim = c(25, 26, 25, 24), confidence=0.5)
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
-  nd_time,
-  s_nd_time = 0,
-  prior_on_resp = c(0, 0),
-  delta,
   lambda,
   n_chains,
   width,
-  distr_name = "norm"
+  distr_name = "norm",
+  nd_time,
+  s_nd_time = 0,
+  prior_on_resp = c(1, 1)
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{nd_time}}{The non-decision time.}
-
-\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
-
-\item{\code{prior_on_resp}}{The beta prior on responses}
-
-\item{\code{delta}}{The stopping rule of the sampling process. It should be an integer.}
-
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
@@ -86,6 +85,12 @@ Create a new 'Zhu23ABS' object.
 \item{\code{width}}{The proposal width of the sampler.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+
+\item{\code{nd_time}}{The non-decision time.}
+
+\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses, defult setting is Beta(1,1)}
 }
 \if{html}{\out{</div>}}
 }
@@ -100,9 +105,11 @@ A new 'Zhu23ABS' object.
 This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$two_alt_force_choice(
+  delta,
   dec_bdry,
   discrim,
   trial_stim,
+  start_point,
   mc3_iterations = 100
 )}\if{html}{\out{</div>}}
 }
@@ -110,11 +117,15 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{delta}}{The relative difference between the number of samples supporting each hypothesis.}
+
 \item{\code{dec_bdry}}{The decision boundary that separates the posterior hypothesis distribution.}
 
 \item{\code{discrim}}{The stimuli discriminability.}
 
 \item{\code{trial_stim}}{The stimulus of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
+
+\item{\code{start_point}}{The start point of the sampler.}
 
 \item{\code{mc3_iterations}}{The number of iterations for each chunk. See details for more information.}
 }
@@ -137,8 +148,9 @@ A data frame with ten columns:
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm')
-tafc_sim <- abs_model$two_alt_force_choice(dec_bdry=0, discrim=1, trial_stim=c(0, 0, 1, 0, 1))
+\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, lambda=10, n_chains=5, width=1, distr_name='norm')
+start_point <- as.matrix(stats::runif(5, min=-3, max=3))
+tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=c(0, 0, 1, 0, 1), start_point=start_point)
 
 }
 \if{html}{\out{</div>}}
@@ -152,12 +164,14 @@ tafc_sim <- abs_model$two_alt_force_choice(dec_bdry=0, discrim=1, trial_stim=c(0
 \subsection{Method \code{estimate()}}{
 This function is for simulating the estimate and confidence interval tasks by Zhu23ABS.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(trial_stim, confidence = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(n_sample, trial_stim, start_point, confidence = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{n_sample}}{The fixed number of samples for each trial.}
+
 \item{\code{trial_stim}}{The stimulus of each trial.}
 
 \item{\code{confidence}}{the required confidence level.}
@@ -177,21 +191,13 @@ A data frame with ten columns:
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), delta=3, lambda=10, n_chains=5, width=1, distr_name='norm')
-est_sim <- abs_model$estimate(trial_stim = c(25, 26, 25, 24), confidence=0.5)
+\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 0), lambda=10, n_chains=5, width=1, distr_name='norm')
+start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
+est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), start_point, confidence=0.5)
 
 }
 \if{html}{\out{</div>}}
 
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Zhu23ABS-prob_judgment"></a>}}
-\if{latex}{\out{\hypertarget{method-Zhu23ABS-prob_judgment}{}}}
-\subsection{Method \code{prob_judgment()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$prob_judgment(trial_bdry, trial_stim)}\if{html}{\out{</div>}}
 }
 
 }

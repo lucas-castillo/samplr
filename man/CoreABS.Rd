@@ -12,8 +12,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{delta}}{The stop rule. It should be an integer.}
-
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
@@ -40,14 +38,12 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(delta, lambda, n_chains, width, distr_name = "norm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(lambda, n_chains, width, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{delta}}{The threshold of the relative difference. It should be an integer.}
-
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
