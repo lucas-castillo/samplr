@@ -14,7 +14,7 @@
 #' @param nd_time The non-decision time.
 #' @param s_nd_time The range of the non-decision time.
 #' @param lambda The rate parameter of the gamma distribution for decision time.
-#' @param trial_fdbk The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).
+#' @param trial_stim The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).
 #' @param n_chains The number of chains of the sampler. It should be an integer.
 #' @param width The proposal width of the sampler.
 #' @param distr_name The type of the posterior hypothesis distribution.
@@ -44,7 +44,7 @@
 #' @export
 #'
 #' @examples
-#' simulation <- rABS(dec_bdry=0, discrim=1, delta=5, prior_on_resp = c(1, 0), nd_time=0.3, s_nd_time=0.5, lambda=6, trial_stim=c(0, 0, 1, 0, 1), n_chains=3, width=1)
+#' simulation <- rABS(dec_bdry=0, discrim=1, delta=5, prior_on_resp = c(1, 0), nd_time=0.3, s_nd_time=0.5, lambda=6, trial_stim=c(1, 2, 1, 2, 1), n_chains=3, width=1)
 #' 
 
 rABS <- function(dec_bdry, discrim, delta, prior_on_resp, nd_time, s_nd_time, lambda, trial_stim, n_chains, width, distr_name='norm', mc3_iterations=100) {
@@ -57,7 +57,7 @@ rABS <- function(dec_bdry, discrim, delta, prior_on_resp, nd_time, s_nd_time, la
   stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
   stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
   stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
-  stopifnot("trial_stim should be a vector with either 0 and/or 1."=all(trial_stim %in% c(0, 1)))
+  stopifnot("trial_stim should be a vector with either 1 and/or 2."=all(trial_stim %in% c(1, 2)))
   stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
   stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
   stopifnot("mc3_iterations should be be an integer"=(mc3_iterations%%1 == 0))

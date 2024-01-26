@@ -28,7 +28,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item \href{#method-CoreABS-new}{\code{CoreABS$new()}}
 \item \href{#method-CoreABS-two_alt_force_choice}{\code{CoreABS$two_alt_force_choice()}}
 \item \href{#method-CoreABS-estimate}{\code{CoreABS$estimate()}}
-\item \href{#method-CoreABS-prob_judgment}{\code{CoreABS$prob_judgment()}}
 \item \href{#method-CoreABS-clone}{\code{CoreABS$clone()}}
 }
 }
@@ -73,15 +72,6 @@ A new 'CoreABS' object.
 \subsection{Method \code{estimate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CoreABS$estimate()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CoreABS-prob_judgment"></a>}}
-\if{latex}{\out{\hypertarget{method-CoreABS-prob_judgment}{}}}
-\subsection{Method \code{prob_judgment()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$prob_judgment()}\if{html}{\out{</div>}}
 }
 
 }
