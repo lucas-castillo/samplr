@@ -16,8 +16,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
-\item{\code{width}}{The proposal width of the sampler.}
-
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
 }
 \if{html}{\out{</div>}}
@@ -26,8 +24,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-CoreABS-new}{\code{CoreABS$new()}}
-\item \href{#method-CoreABS-two_alt_force_choice}{\code{CoreABS$two_alt_force_choice()}}
-\item \href{#method-CoreABS-estimate}{\code{CoreABS$estimate()}}
 \item \href{#method-CoreABS-clone}{\code{CoreABS$clone()}}
 }
 }
@@ -37,7 +33,7 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(lambda, n_chains, width, distr_name = "norm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(lambda, n_chains, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -47,8 +43,6 @@ Create a new 'CoreABS' object.
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
-\item{\code{width}}{The proposal width of the sampler.}
-
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
 }
 \if{html}{\out{</div>}}
@@ -56,24 +50,6 @@ Create a new 'CoreABS' object.
 \subsection{Returns}{
 A new 'CoreABS' object.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CoreABS-two_alt_force_choice"></a>}}
-\if{latex}{\out{\hypertarget{method-CoreABS-two_alt_force_choice}{}}}
-\subsection{Method \code{two_alt_force_choice()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$two_alt_force_choice()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CoreABS-estimate"></a>}}
-\if{latex}{\out{\hypertarget{method-CoreABS-estimate}{}}}
-\subsection{Method \code{estimate()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$estimate()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CoreABS-clone"></a>}}

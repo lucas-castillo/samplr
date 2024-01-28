@@ -16,7 +16,7 @@ abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp = c(1, 1), l
 
 abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
 start_point <- as.matrix(stats::runif(5, min=-3, max=3))
-trial_stim = factor(c('left', 'right', 'left', 'left', 'right'))
+trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
 tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=trial_stim, start_point=start_point)
 
 
@@ -35,6 +35,8 @@ est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), star
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{width}}{The standard deviation of the proposal distribution for MC3}
+
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time.}
@@ -59,19 +61,25 @@ est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), star
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
+  nd_time,
+  s_nd_time = 0,
+  prior_on_resp = c(1, 1),
   lambda,
   n_chains,
   width,
-  distr_name = "norm",
-  nd_time,
-  s_nd_time = 0,
-  prior_on_resp = c(1, 1)
+  distr_name = "norm"
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{nd_time}}{The non-decision time.}
+
+\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
+
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
@@ -79,12 +87,6 @@ Create a new 'Zhu23ABS' object.
 \item{\code{width}}{The proposal width of the sampler.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{nd_time}}{The non-decision time.}
-
-\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
-
-\item{\code{prior_on_resp}}{The beta prior on responses, defult setting is Beta(1,1)}
 }
 \if{html}{\out{</div>}}
 }
@@ -144,7 +146,7 @@ A data frame with ten columns:
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
 start_point <- as.matrix(stats::runif(5, min=-3, max=3))
-trial_stim = factor(c('left', 'right', 'left', 'left', 'right'))
+trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
 tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=trial_stim, start_point=start_point)
 
 }
