@@ -4,19 +4,23 @@
 \alias{Zhu23ABS}
 \title{Auto-correlated Bayesian Sampler by Zhu (2023)}
 \description{
-This Auto-correlated Bayesian Sampler (ABS) model is developed by Zhu.
+This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr} is developed by Zhu.
 }
 \examples{
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp = c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
+
+## ------------------------------------------------
+## Method `Zhu23ABS$new`
+## ------------------------------------------------
+
+abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
 
 
 ## ------------------------------------------------
 ## Method `Zhu23ABS$two_alt_force_choice`
 ## ------------------------------------------------
 
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
-start_point <- as.matrix(stats::runif(5, min=-3, max=3))
 trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
+start_point <- as.matrix(stats::runif(5, min=-3, max=3))
 tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=trial_stim, start_point=start_point)
 
 
@@ -24,10 +28,12 @@ tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial
 ## Method `Zhu23ABS$estimate`
 ## ------------------------------------------------
 
-abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, lambda=10, n_chains=5, width=1, distr_name='norm')
 start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
 est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), start_point, conf_level=0.5)
 
+}
+\references{
+\insertRef{zhuAutocorrelatedBayesian2023}{samplr}
 }
 \section{Super class}{
 \code{\link[samplr:CoreABS]{samplr::CoreABS}} -> \code{Zhu23ABS}
@@ -93,6 +99,15 @@ Create a new 'Zhu23ABS' object.
 \subsection{Returns}{
 A new 'Zhu23ABS' object.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Zhu23ABS-two_alt_force_choice"></a>}}
@@ -127,26 +142,29 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+The \code{two_alt_force_choice} function in the Zhu23ABS class runs simulations in chunks of fixed length determined by the \code{mc3_iterations} argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
+}
+
 \subsection{Returns}{
 A data frame with ten columns:
 \enumerate{
-\item{trial: the index of trials;}
-\item{samples: the samples of ABS sampler for the trial;}
-\item{support: the relative difference between the numbers of supporting samples for each response;}
-\item{length: the length of the sampling sequence;}
-\item{response: the response predicted by ABS;}
-\item{stimulus: the stimuli of the experiment;}
-\item{accuracy: whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
-\item{nd_time: the non-decision time for this trial;}
-\item{rt: the response time, including both the non-decision and the decision time;}
-\item{confidence: the confidence of the response.}
+\item{trial: The index of trials;}
+\item{samples: The samples of ABS sampler for the trial;}
+\item{support: The relative difference between the numbers of supporting samples for each response;}
+\item{length: The length of the sampling sequence;}
+\item{response: The response predicted by ABS;}
+\item{stimulus: The stimuli of the experiment;}
+\item{accuracy: Whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
+\item{nd_time: The non-decision time for this trial;}
+\item{rt: The response time, including both the non-decision and the decision time;}
+\item{confidence: The confidence of the response.}
 }
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
+\preformatted{trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
 start_point <- as.matrix(stats::runif(5, min=-3, max=3))
-trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
 tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=trial_stim, start_point=start_point)
 
 }
@@ -173,25 +191,24 @@ This function is for simulating the estimate and confidence interval tasks by Zh
 
 \item{\code{start_point}}{The start point of the sampler.}
 
-\item{\code{conf_level}}{the required confidence level.}
+\item{\code{conf_level}}{The required confidence level.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 A data frame with ten columns:
 \enumerate{
-\item{trial: the index of trials;}
-\item{samples: the samples of ABS sampler for the trial;}
-\item{stimulus: the stimuli of the experiment;}
-\item{nd_time: the non-decision time for this trial;}
-\item{conf_interval_l: the lower bound of the confidence interval with the given level;}
-\item{conf_interval_u: the upper bound of the confidence interval with the given level;}
+\item{trial: The index of trials;}
+\item{samples: The samples of ABS sampler for the trial;}
+\item{stimulus: The stimuli of the experiment;}
+\item{nd_time: The non-decision time for this trial;}
+\item{conf_interval_l: The lower bound of the confidence interval with the given level;}
+\item{conf_interval_u: The upper bound of the confidence interval with the given level;}
 }
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, lambda=10, n_chains=5, width=1, distr_name='norm')
-start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
+\preformatted{start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
 est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), start_point, conf_level=0.5)
 
 }
