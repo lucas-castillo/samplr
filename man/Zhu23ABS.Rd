@@ -147,16 +147,13 @@ The \code{two_alt_force_choice} function in the Zhu23ABS class runs simulations 
 }
 
 \subsection{Returns}{
-A data frame with ten columns:
+A data frame with seven columns:
 \enumerate{
 \item{trial: The index of trials;}
 \item{samples: The samples of ABS sampler for the trial;}
-\item{support: The relative difference between the numbers of supporting samples for each response;}
-\item{length: The length of the sampling sequence;}
 \item{response: The response predicted by ABS;}
 \item{stimulus: The stimuli of the experiment;}
 \item{accuracy: Whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
-\item{nd_time: The non-decision time for this trial;}
 \item{rt: The response time, including both the non-decision and the decision time;}
 \item{confidence: The confidence of the response.}
 }
