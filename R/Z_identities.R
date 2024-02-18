@@ -128,6 +128,7 @@ Z_identities <- function(
     z18= safe_eval(expression(a_and_b - b + b_given_not_a*not_a))
   )
 }
+
 get_true_probabilities <- function(
     a_and_b,
     b_and_not_a,
@@ -263,6 +264,31 @@ Bayesian_Sampler <- function(
   }
   return(predicted_means)
 }
+
+#' Mean Variance Estimates
+#' 
+#' Estimates number of samples and prior parameters of the Bayesian Sampler using the Mean/Variance relationship as shown by \insertCite{sundh2023UnifiedExplanationVariability}{samplr}. For consistency with the Bayesian Sampler function we call beta the prior parameter, and b0 and b1 slope and intercept respectively. 
+#'
+#' @param rawData Dataframe with the following column variables for N repetitions of each unique query: participant ID ('id'), response query 1, response query 2, ... , response query N
+#' @param idCol Name of the 'ID' column.
+#'
+#' @return A dataframe with values for the intercept (b0) and slope (b1) of the estimated regression, as well as estimates for N, d, and beta (termed b in the paper) for each participant. 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' library(magrittr)
+#' data <- sundh2023e3 %>%
+#'   group_by(ID, querydetail) %>% 
+#'   mutate(iteration = LETTERS[1:n()]) %>% 
+#'   pivot_wider(id_cols = c(ID, querydetail), 
+#'       values_from = estimate, names_from = iteration) %>% 
+#'   mutate(across(where(is.numeric), \(x){x/100})) %>% 
+#'   ungroup %>% 
+#'   select(-querydetail)
+#' head(data)
+#' head(Mean_Variance(data, "ID"))
 Mean_Variance <- function(rawData, idCol){
   #Step 1: Prepare data
   rawDataMatrix <- data.matrix(rawData[colnames(rawData)[colnames(rawData) != idCol]])
