@@ -199,6 +199,10 @@ BS <- function(
     beta, N, N2=NULL){
   if (is.null(N2)){N2 <- N}
   if (N2 > N){warning("N2 is larger than N. I expected N2 <= N")}
+  if(sum(c(a_and_b,
+           b_and_not_a,
+           a_and_not_b,
+           not_a_and_not_b))!= 1){stop("Probabilities must add up to 1")}
   
   true_probabilities <- get_true_probabilities(
     a_and_b, 
