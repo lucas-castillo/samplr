@@ -27,7 +27,8 @@ Imports:
     tibble,
     tidyr,
     lme4,
-    Rdpack
+    Rdpack,
+    R6
 Suggests: 
     knitr,
     rmarkdown,

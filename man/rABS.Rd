@@ -12,7 +12,7 @@ rABS(
   s_nd_time,
   lambda,
   trial_fdbk,
-  nChains,
+  n_chains,
   width,
   distr_name = "norm",
   mc3_iterations = 100
@@ -33,7 +33,7 @@ rABS(
 
 \item{trial_fdbk}{The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
 
-\item{nChains}{The number of chains of the sampler. It should be an integer.}
+\item{n_chains}{The number of chains of the sampler. It should be an integer.}
 
 \item{width}{The proposal width of the sampler.}
 
@@ -63,7 +63,7 @@ This function is for simulating the Auto-correlated Bayesian Sampler \insertCite
 The \code{rABS} function in R runs simulations in chunks of fixed length determined by the \code{mc3_iterations} argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
 }
 \examples{
-simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), nChains=3, width=1)
+simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), n_chains=3, width=1)
 
 }
 \references{
