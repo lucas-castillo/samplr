@@ -25,10 +25,6 @@ sampler_mh_cpp <- function(start, sigma_prop, iterations, distr_name, distr_para
     .Call(`_samplr_sampler_mh_cpp`, start, sigma_prop, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha)
 }
 
-sampler_nuts_cpp <- function(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix, weights, custom_func, useCustom) {
-    .Call(`_samplr_sampler_nuts_cpp`, start, distr_name, distr_params, epsilon, iterations, delta_max, isMix, weights, custom_func, useCustom)
-}
-
 gridDensity_cpp <- function(distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow, densityFunc, useCustomDensity) {
     .Call(`_samplr_gridDensity_cpp`, distr_name, distr_params, isMix, weights, xxRange, yyRange, cellsPerRow, densityFunc, useCustomDensity)
 }
