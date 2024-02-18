@@ -27,14 +27,16 @@ Bayesian_Sampler(
 Named list with predicted probabilities for every possible combination of A and B.
 }
 \description{
-As described in \insertCite{zhu2020BayesianSamplerGeneric}{samplr}.
+As described in \insertCite{zhu2020BayesianSamplerGeneric}{samplr}. Vectors can be provided for each parameter, allowing multiple estimates at once.
 }
 \examples{
 Bayesian_Sampler(
- a_and_b = .4, 
- b_and_not_a = .4, 
- a_and_not_b = .1, 
- not_a_and_not_b = .1, 
- beta = 1, N = 10, N2 = 8
+    a_and_b = c(.4, .25),
+    b_and_not_a = c(.4,  .25),
+    a_and_not_b = c(.1, .25),
+    not_a_and_not_b = c(.1, .25),
+    beta = 1,
+    N <- c(10, 12),
+    N2 <- c(10, 10)
 )
 }
