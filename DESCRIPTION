@@ -26,6 +26,7 @@ Imports:
     magrittr,
     tibble,
     tidyr,
+    lme4,
     Rdpack
 Suggests: 
     knitr,

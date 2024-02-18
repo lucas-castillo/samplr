@@ -263,3 +263,24 @@ Bayesian_Sampler <- function(
   }
   return(predicted_means)
 }
+Mean_Variance <- function(rawData, idCol){
+  #Step 1: Prepare data
+  rawDataMatrix <- data.matrix(rawData[colnames(rawData)[colnames(rawData) != idCol]])
+  meansByQuery <- apply(rawDataMatrix, 1, mean)
+  varianceByQuery <- apply(rawDataMatrix, 1, var)
+  preparedData <- cbind(rawData[idCol], varianceByQuery, meansByQuery*(1-meansByQuery))
+  colnames(preparedData) <- c('id','varia','expect')
+  #Step 2: Apply frequentist regression model
+  linModel <- lme4::lmer(varia ~ expect + (expect | id), data = preparedData)
+  
+  coefficients <- coef(linModel)$id
+  colnames(coefficients) <- c("b0", "b1")
+  
+  coefficients$N <- 1 / coefficients$b1
+  coefficients$d <- (1 - sqrt(coefficients$N * coefficients$b0 * 4 + 1)) / 2
+  coefficients$beta <- (coefficients$N * coefficients$d)  / (1 - 2 * coefficients$d)
+  rownames(coefficients) <- NULL
+
+  return(cbind(rawData[idCol], coefficients))                   
+}
+  
