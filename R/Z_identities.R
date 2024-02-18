@@ -220,12 +220,30 @@ Bayesian_Sampler <- function(
     a_and_not_b,
     not_a_and_not_b,
     beta, N, N2=NULL){
-  if (is.null(N2)){N2 <- N}
-  if (N2 > N){warning("N2 is larger than N. I expected N2 <= N")}
-  if(sum(c(a_and_b,
-           b_and_not_a,
-           a_and_not_b,
-           not_a_and_not_b))!= 1){stop("Probabilities must add up to 1")}
+  
+  if (sd(
+    lengths(
+      list(a_and_b,b_and_not_a,a_and_not_b,not_a_and_not_b)
+    )
+  ) != 0){stop("Probability vectors must all be the same length")}
+  if (length(beta) != 1 & length(beta) != length(a_and_b)){
+    stop("Beta length should be either 1 or the length of the probability vector.")
+  }
+  if (length(N) != 1 & length(N) != length(a_and_b)){
+    stop("N length should be either 1 or the length of the probability vector.")
+  }
+  if (is.null(N2)){N2 <- N} else if (length(N2) != 1 & length(N2) != length(a_and_b)){
+    stop("N2 length should be either 1 or the length of the probability vector.")
+  } else if (any(N2 > N)){
+    stop("N2 is larger than N. N2 <= N is required.")
+  }
+  
+  sums <- apply(matrix(c(a_and_b,
+                         b_and_not_a,
+                         a_and_not_b,
+                         not_a_and_not_b), ncol = 4), 1, sum)
+  
+  if(any(sums != 1)){stop("Probabilities must add up to 1")}
   
   true_probabilities <- get_true_probabilities(
     a_and_b, 
