@@ -17,6 +17,7 @@ reference:
   desc: "Other Functions"
 - contents:
   - Z_identities
+  - Bayesian_Sampler
 
 - title: "ABS"
   desc: "Functions related to the Autocorrelated Bayesian Sampler"

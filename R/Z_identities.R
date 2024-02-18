@@ -191,7 +191,27 @@ get_true_probabilities <- function(
   )
 }
 
-BS <- function(
+#' Bayesian Sampler Model 
+#' 
+#' As described in \insertCite{zhu2020BayesianSamplerGeneric}{samplr}. 
+#'
+#' @param a_and_b,b_and_not_a,a_and_not_b,not_a_and_not_b True probabilites for the conjuctions and disjunctions of A and B. Must add to 1.
+#' @param beta Prior parameter. 
+#' @param N Number of samples drawn
+#' @param N2 Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N. 
+#'
+#' @return Named list with predicted probabilities for every possible combination of A and B. 
+#' @export
+#'
+#' @examples
+#' Bayesian_Sampler(
+#'  a_and_b = .4, 
+#'  b_and_not_a = .4, 
+#'  a_and_not_b = .1, 
+#'  not_a_and_not_b = .1, 
+#'  beta = 1, N = 10, N2 = 8
+#' )
+Bayesian_Sampler <- function(
     a_and_b,
     b_and_not_a,
     a_and_not_b,
@@ -222,4 +242,3 @@ BS <- function(
   }
   return(predicted_means)
 }
-
