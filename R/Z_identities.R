@@ -235,9 +235,9 @@ Bayesian_Sampler <- function(
       if (name %in% c( # treat conjunctions differently
         "b_or_not_a", "not_a_or_not_b", "a_or_b", "a_or_not_b", 
         "a_and_b", "b_and_not_a", "a_and_not_b", "not_a_and_not_b")){
-        predicted_means[name] <- true_probabilities[[name]]*N2/(N2+2*beta)+beta/(N2+2*beta)
+        predicted_means[[name]] <- true_probabilities[[name]]*N2/(N2+2*beta)+beta/(N2+2*beta)
       } else{
-        predicted_means[name] <- true_probabilities[[name]]*N/(N+2*beta)+beta/(N+2*beta)
+        predicted_means[[name]] <- true_probabilities[[name]]*N/(N+2*beta)+beta/(N+2*beta)
       }
   }
   return(predicted_means)
