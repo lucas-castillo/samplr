@@ -8,10 +8,11 @@ rABS(
   dec_bdry,
   discrim,
   delta,
+  prior_on_resp,
   nd_time,
   s_nd_time,
   lambda,
-  trial_fdbk,
+  trial_stim,
   n_chains,
   width,
   distr_name = "norm",
@@ -25,13 +26,15 @@ rABS(
 
 \item{delta}{The threshold of the relative difference. It should be an integer.}
 
+\item{prior_on_resp}{The beta prior on responses}
+
 \item{nd_time}{The non-decision time.}
 
 \item{s_nd_time}{The range of the non-decision time.}
 
 \item{lambda}{The rate parameter of the gamma distribution for decision time.}
 
-\item{trial_fdbk}{The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
+\item{trial_stim}{The feedback of each trial. It should be a numeric vector only consist of 0 (below the decision boundary) and/or 1 (above the decision boundary).}
 
 \item{n_chains}{The number of chains of the sampler. It should be an integer.}
 
@@ -47,13 +50,13 @@ A data frame with ten columns:
 \item{trial: the index of trials;}
 \item{samples: the samples of ABS sampler for the trial;}
 \item{support: the relative difference between the numbers of supporting samples for each response;}
-\item{length: the length of the sequence;}
+\item{length: the length of the sampling sequence;}
 \item{response: the response predicted by ABS. 0 represents the response coded as below the decision boundary and 1 represent the opposite;}
-\item{feedback: the feedback or the true stimuli of the experiment. 0 represents the response coded as below the decision boundary and 1 represent the opposite;}
+\item{stimulus: the stimuli of the experiment. 0 represents the response coded as below the decision boundary and 1 represent the opposite;}
 \item{accuracy: whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
 \item{nd_time: the non-decision time for this trial;}
 \item{rt: the response time, including both the non-decision and the decision time;}
-\item{rept: whether the next trial repeats the same response as the current trial;}
+\item{confidence: the confidence of the response.}
 }
 }
 \description{
@@ -63,7 +66,7 @@ This function is for simulating the Auto-correlated Bayesian Sampler \insertCite
 The \code{rABS} function in R runs simulations in chunks of fixed length determined by the \code{mc3_iterations} argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
 }
 \examples{
-simulation <- rABS(dec_bdry=0, discrim=1, delta=2, nd_time=0.3, s_nd_time=0.5, lambda=6, trial_fdbk=c(0, 0, 1, 0, 1), n_chains=3, width=1)
+simulation <- rABS(dec_bdry=0, discrim=1, delta=5, prior_on_resp = c(1, 0), nd_time=0.3, s_nd_time=0.5, lambda=6, trial_stim=c(1, 2, 1, 2, 1), n_chains=3, width=1)
 
 }
 \references{
