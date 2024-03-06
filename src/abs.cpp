@@ -284,12 +284,12 @@ List Zhu23ABS_cpp(
     double proposal_width,
     int n_chains,
     NumericVector provided_start_point,
-    NumericVector prior_on_resp,
     int stop_rule, 
     double nd_time, 
     double s_nd_time,
     double lambda,
-    bool stim_depend = true, // these three parameters are unused in task 1
+    NumericVector prior_on_resp, // these five parameters are only for tafc tasks
+    bool stim_depend = true,
     int mc3_iterations = 1000,
     double dec_bdry = 0,
     double discrim = 0

@@ -21,8 +21,6 @@ CoreABS <- R6::R6Class("CoreABS",
    nd_time = NULL,
    #' @field s_nd_time The range of the non-decision time.
    s_nd_time = NULL,
-   #' @field prior_on_resp The beta prior on responses.
-   prior_on_resp = NULL,
    
    
    #' @description
@@ -33,25 +31,22 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param start_point The start point of each trial.
    #' @param nd_time The non-decision time.
    #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
-   #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1)
    #'
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, distr_name='norm', start_point=NA, nd_time, s_nd_time, prior_on_resp){
+   initialize = function(n_chains, distr_name='norm', start_point=NA, nd_time, s_nd_time){
      # Check variable types
      
      stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
      # add checks for `distr_name`
      stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
      stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
-     stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
      
      self$n_chains <- n_chains
      self$distr_name <- distr_name
      self$start_point <- start_point
      self$nd_time <- nd_time
      self$s_nd_time <- s_nd_time
-     self$prior_on_resp <- prior_on_resp
    }
 )
 )
@@ -84,7 +79,6 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' @param nd_time The non-decision time.
     #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
-    #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1)
     #' @param lambda The rate parameter of the gamma distribution for decision time.
     #' @param n_chains The number of chains of the sampler. It should be an integer.
     #' @param width The proposal width of the sampler.
@@ -94,10 +88,10 @@ Zhu23ABS <- R6::R6Class(
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
-    #' zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, prior_on_resp = c(1, 1), lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+    #' zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
     #' 
-    initialize = function(nd_time, s_nd_time=0, prior_on_resp=c(1, 1), lambda, n_chains, width, distr_name='norm', start_point=NA) {
-      super$initialize(n_chains, distr_name, start_point, nd_time, s_nd_time, prior_on_resp)
+    initialize = function(nd_time, s_nd_time=0, lambda, n_chains, width, distr_name='norm', start_point=NA) {
+      super$initialize(n_chains, distr_name, start_point, nd_time, s_nd_time)
       
       stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
@@ -112,6 +106,7 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' @param delta The relative difference between the number of samples supporting each hypothesis.
     #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
+    #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1)
     #' @param discrim The stimuli discriminability.
     #' @param trial_stim The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.
     #' @param stim_depend The boolean variable that control whether the prior on responses changes regarding the last stimulus.
@@ -134,10 +129,11 @@ Zhu23ABS <- R6::R6Class(
     #' trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
     #' tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
     #' 
-    two_alt_force_choice = function(delta, dec_bdry, discrim, trial_stim, stim_depend=TRUE, max_iterations=1000){
+    two_alt_force_choice = function(delta, dec_bdry, prior_on_resp = c(1,1), discrim, trial_stim, stim_depend=TRUE, max_iterations=1000){
       #Check inputs
       stopifnot("delta should be an integer."=(delta %% 1==0))
-      stopifnot("The value of delta should be larger than the absolute difference within prior_on_resp."=(delta>abs(self$prior_on_resp[0] - self$prior_on_resp[1])))
+      stopifnot("The value of delta should be larger than the absolute difference within prior_on_resp."=(delta>abs(prior_on_resp[0] - prior_on_resp[1])))
+      stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
       stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
       stopifnot("discrim should be a single numeric value."=(is.numeric(discrim) && length(discrim) == 1))
       stopifnot("trial_stim should be a factor."=is.factor(trial_stim))
@@ -159,7 +155,7 @@ Zhu23ABS <- R6::R6Class(
         proposal_width = self$width,
         n_chains = self$n_chains,
         provided_start_point = self$start_point,
-        prior_on_resp = self$prior_on_resp,
+        prior_on_resp = prior_on_resp,
         stop_rule = delta,
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
@@ -232,7 +228,6 @@ Zhu23ABS <- R6::R6Class(
         n_chains = self$n_chains,
         proposal_width = self$width,
         provided_start_point = self$start_point,
-        prior_on_resp = self$prior_on_resp,
         stop_rule = n_sample,
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
