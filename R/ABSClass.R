@@ -10,34 +10,49 @@
 #' 
 CoreABS <- R6::R6Class("CoreABS",
   public = list(
-    
-    #' @field lambda The rate parameter of the gamma distribution for decision time.
-    lambda = NULL,
-    #' @field n_chains The number of chains of the sampler. It should be an integer.
-    n_chains = NULL,
-    #' @field distr_name The type of the posterior hypothesis distribution.
-    distr_name = NULL,
-    
-    
-    #' @description
-    #' Create a new 'CoreABS' object.
-    #'
-    #' @param lambda The rate parameter of the gamma distribution for decision time.
-    #' @param n_chains The number of chains of the sampler. It should be an integer.
-    #' @param distr_name The type of the posterior hypothesis distribution.
-    #'
-    #' @return A new 'CoreABS' object.
-    #'
-    initialize = function(lambda, n_chains, distr_name='norm'){
-      # Check variable types
-      stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
-      stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
-
-      # add checks for `distr_name`
-      self$lambda <- lambda
-      self$n_chains <- n_chains
-      self$distr_name <- distr_name
-    }
+   
+   #' @field n_chains The number of chains of the sampler. It should be an integer.
+   n_chains = NULL,
+   #' @field distr_name The type of the posterior hypothesis distribution.
+   distr_name = NULL,
+   #' @field start_point The start point of each trial
+   start_point = NULL,
+   #' @field nd_time The non-decision time.
+   nd_time = NULL,
+   #' @field s_nd_time The range of the non-decision time.
+   s_nd_time = NULL,
+   #' @field prior_on_resp The beta prior on responses.
+   prior_on_resp = NULL,
+   
+   
+   #' @description
+   #' Create a new 'CoreABS' object.
+   #'
+   #' @param n_chains The number of chains of the sampler. It should be an integer.
+   #' @param distr_name The type of the posterior hypothesis distribution.
+   #' @param start_point The start point of each trial.
+   #' @param nd_time The non-decision time.
+   #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
+   #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1)
+   #'
+   #' @return A new 'CoreABS' object.
+   #'
+   initialize = function(n_chains, distr_name='norm', start_point=NA, nd_time, s_nd_time, prior_on_resp){
+     # Check variable types
+     
+     stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
+     # add checks for `distr_name`
+     stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
+     stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
+     stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
+     
+     self$n_chains <- n_chains
+     self$distr_name <- distr_name
+     self$start_point <- start_point
+     self$nd_time <- nd_time
+     self$s_nd_time <- s_nd_time
+     self$prior_on_resp <- prior_on_resp
+   }
 )
 )
 
@@ -58,14 +73,10 @@ Zhu23ABS <- R6::R6Class(
   inherit = CoreABS,
   public = list(
     
+    #' @field lambda The rate parameter of the gamma distribution for decision time.
+    lambda = NULL,
     #' @field width The standard deviation of the proposal distribution for MC3
     width = NULL,
-    #' @field nd_time The non-decision time.
-    nd_time = NULL,
-    #' @field s_nd_time The range of the non-decision time.
-    s_nd_time = NULL,
-    #' @field prior_on_resp The beta prior on responses.
-    prior_on_resp = NULL,
     
     
     #' @description
@@ -78,24 +89,21 @@ Zhu23ABS <- R6::R6Class(
     #' @param n_chains The number of chains of the sampler. It should be an integer.
     #' @param width The proposal width of the sampler.
     #' @param distr_name The type of the posterior hypothesis distribution.
+    #' @param start_point The start point of each trial.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
-    #' abs_model <- Zhu23ABS$new(nd_time=0.3, s_nd_time=0.5, prior_on_resp=c(1, 1), lambda=10, n_chains=5, width=1, distr_name='norm')
+    #' zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, prior_on_resp = c(1, 1), lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
     #' 
-    initialize = function(nd_time, s_nd_time=0, prior_on_resp=c(1, 1), lambda, n_chains, width, distr_name='norm') {
-      super$initialize(lambda, n_chains, distr_name)
+    initialize = function(nd_time, s_nd_time=0, prior_on_resp=c(1, 1), lambda, n_chains, width, distr_name='norm', start_point=NA) {
+      super$initialize(n_chains, distr_name, start_point, nd_time, s_nd_time, prior_on_resp)
       
+      stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
-      stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
-      stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
-      stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
       
+      self$lambda <- lambda
       self$width <- width
-      self$nd_time <- nd_time
-      self$s_nd_time <- s_nd_time
-      self$prior_on_resp <- prior_on_resp
     },
     
     
@@ -106,8 +114,8 @@ Zhu23ABS <- R6::R6Class(
     #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
     #' @param discrim The stimuli discriminability.
     #' @param trial_stim The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.
-    #' @param start_point The start point of the sampler.
-    #' @param mc3_iterations The number of iterations for each chunk. See details for more information.
+    #' @param stim_depend The boolean variable that control whether the prior on responses changes regarding the last stimulus.
+    #' @param max_iterations The maximum length of the MCREC sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
     #' 
     #' @return A data frame with seven columns:
     #' \enumerate{
@@ -120,49 +128,51 @@ Zhu23ABS <- R6::R6Class(
     #'  \item{confidence: The confidence of the response.}
     #' }
     #' 
-    #' @details
-    #' The `two_alt_force_choice` function in the Zhu23ABS class runs simulations in chunks of fixed length determined by the `mc3_iterations` argument. In each trial simulation, the function generates the first chunk and checks if the simulated sequence meets the stopping rule within that chunk. If the stopping rule is met, the function cuts the chunk at that point, returns the sequence, and starts a new trial simulation. If the stopping rule is not met, the function proceeds to the next chunk, beginning where the previous chunk ended, and repeats the entire process.
     #' 
     #' 
     #' @examples
-    #' trial_stim <- factor(c('left', 'right', 'left', 'left', 'right'))
-    #' start_point <- as.matrix(stats::runif(5, min=-3, max=3))
-    #' tafc_sim <- abs_model$two_alt_force_choice(delta=4, dec_bdry=0, discrim=1, trial_stim=trial_stim, start_point=start_point)
+    #' trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
+    #' tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
     #' 
-    two_alt_force_choice = function(delta, dec_bdry, discrim, trial_stim, start_point, mc3_iterations=100){
+    two_alt_force_choice = function(delta, dec_bdry, discrim, trial_stim, stim_depend=TRUE, max_iterations=1000){
       #Check inputs
       stopifnot("delta should be an integer."=(delta %% 1==0))
+      stopifnot("The value of delta should be larger than the absolute difference within prior_on_resp."=(delta>abs(self$prior_on_resp[0] - self$prior_on_resp[1])))
       stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
       stopifnot("discrim should be a single numeric value."=(is.numeric(discrim) && length(discrim) == 1))
       stopifnot("trial_stim should be a factor."=is.factor(trial_stim))
-      stopifnot("The dimension of start_point should be (n_chains, 1)"=(all(dim(start_point) == c(self$n_chains, 1))))
-      stopifnot("mc3_iterations should be a single numeric value."=(is.numeric(mc3_iterations) && length(mc3_iterations) == 1))
+      stopifnot("trial_depend should be a boolean variable."=(isTRUE(stim_depend) || isFALSE(stim_depend)))
+      stopifnot("max_iterations should be a single numeric value."=(is.numeric(max_iterations) && length(max_iterations) == 1))
       
       trial_stim_num <- as.numeric(trial_stim)
       stim_levels <- levels(trial_stim)
       
+      if (any(!is.na(self$start_point))){
+        stopifnot("start_point should be a numeric vector" = (is.numeric(self$start_point)))
+        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(self$start_point) == length(trial_stim)))
+      }
+      
       tafc_sim <- Zhu23ABS_cpp(
         task_id = 2,
         trial_stim = trial_stim, 
-        start_point = start_point,
-        distr_name = self$distr_name, 
-        mc3_iterations = mc3_iterations, 
-        n_chains = self$n_chains,
+        distr_name = self$distr_name,
         proposal_width = self$width,
-        dec_bdry = dec_bdry, 
-        discrim = discrim,
+        n_chains = self$n_chains,
+        provided_start_point = self$start_point,
         prior_on_resp = self$prior_on_resp,
-        stop_rule = delta, 
+        stop_rule = delta,
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
-        er_lambda = self$lambda
+        lambda = self$lambda,
+        stim_depend = stim_depend,
+        mc3_iterations = max_iterations,
+        dec_bdry = dec_bdry, 
+        discrim = discrim
       )
       tafc_df <- data.frame(do.call(rbind, tafc_sim))
-      #tafc_df$length <- as.numeric(tafc_df$length)
       tafc_df$stimulus <- trial_stim
       tafc_df$response <- stim_levels[as.numeric(tafc_df$response)]
       tafc_df$accuracy <- as.numeric(tafc_df$accuracy)
-      #tafc_df$nd_time <- as.numeric(tafc_df$nd_time)
       tafc_df$rt <- as.numeric(tafc_df$rt)
       tafc_df$confidence <- as.numeric(tafc_df$confidence)
       
@@ -175,7 +185,6 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' @param n_sample The fixed number of samples for each trial.
     #' @param trial_stim The stimulus of each trial.
-    #' @param start_point The start point of the sampler.
     #' @param conf_level The required confidence level.
     #' 
     #' @return A data frame with ten columns:
@@ -189,12 +198,12 @@ Zhu23ABS <- R6::R6Class(
     #' }
     #' 
     #' @examples
-    #' start_point <- as.matrix(abs(stats::rnorm(5, 0, 100)))
-    #' est_sim <- abs_model$estimate(n_sample = 5, trial_stim = c(25, 26, 25, 24), start_point, conf_level=0.5)
+    #' trial_stim <- c(25, 26, 10, 30)
+    #' est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0.5)
     #'
-    estimate = function(n_sample, trial_stim, start_point, conf_level=FALSE){
+    estimate = function(n_sample, trial_stim, conf_level=FALSE){
       
-      sss_df <- private$single_stim_simulation(n_sample, trial_stim, start_point)
+      sss_df <- private$single_stim_simulation(n_sample, trial_stim)
       sss_df$point_est <- sapply(sss_df$samples, function(samples) samples[length(samples)])
       
       if (conf_level){
@@ -208,23 +217,26 @@ Zhu23ABS <- R6::R6Class(
   ),
   
   private = list(
-    single_stim_simulation = function(n_sample, trial_stim, start_point){
+    single_stim_simulation = function(n_sample, trial_stim){
       #Check inputs
       stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
-      stopifnot("The dimension of the start point should be (n_chains, 1)"=(all(dim(start_point) == c(self$n_chains, 1))))
+      if (any(!is.na(self$start_point))){
+        stopifnot("start_point should be a numeric vector" = (is.numeric(self$start_point)))
+        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(self$start_point) == length(trial_stim)))
+      }
       
       sss_sim = Zhu23ABS_cpp(
         task_id = 1,
-        start_point = start_point,
         trial_stim = trial_stim, 
         distr_name = self$distr_name,
         n_chains = self$n_chains,
+        proposal_width = self$width,
+        provided_start_point = self$start_point,
         prior_on_resp = self$prior_on_resp,
         stop_rule = n_sample,
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
-        er_lambda = self$lambda,
-        proposal_width = self$width
+        lambda = self$lambda
       )
       sss_df <- data.frame(do.call(rbind, sss_sim))
       return(sss_df)

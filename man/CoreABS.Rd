@@ -12,11 +12,17 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
-
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+
+\item{\code{start_point}}{The start point of each trial}
+
+\item{\code{nd_time}}{The non-decision time.}
+
+\item{\code{s_nd_time}}{The range of the non-decision time.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses.}
 }
 \if{html}{\out{</div>}}
 }
@@ -33,17 +39,30 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(lambda, n_chains, distr_name = "norm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
+  n_chains,
+  distr_name = "norm",
+  start_point = NA,
+  nd_time,
+  s_nd_time,
+  prior_on_resp
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
-
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+
+\item{\code{start_point}}{The start point of each trial.}
+
+\item{\code{nd_time}}{The non-decision time.}
+
+\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
 }
 \if{html}{\out{</div>}}
 }
