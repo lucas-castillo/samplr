@@ -5,8 +5,6 @@ Zhu23ABS_cpp <- function(task_id, trial_stim, start_point, distr_name, proposal_
     .Call(`_samplr_Zhu23ABS_cpp`, task_id, trial_stim, start_point, distr_name, proposal_width, n_chains, prior_on_resp, stop_rule, nd_time, s_nd_time, er_lambda, mc3_iterations, dec_bdry, discrim)
 }
 
-LiABS_cpp <- function(task_id, trial_stim, start_point, distr_name, n_chains, traj_length, step_size, momen_rec, prior_on_resp, stop_rule, nd_time, s_nd_time, er_lambda, mcrec_iterations = 100L, dec_bdry = 0, discrim = 0) {
-    .Call(`_samplr_LiABS_cpp`, task_id, trial_stim, start_point, distr_name, n_chains, traj_length, step_size, momen_rec, prior_on_resp, stop_rule, nd_time, s_nd_time, er_lambda, mcrec_iterations, dec_bdry, discrim)
 }
 
 sampler_hmc_cpp <- function(start, distr_name, distr_params, epsilon, L, iterations, isMix, weights, custom_func, useCustom) {
