@@ -231,7 +231,8 @@ Zhu23ABS <- R6::R6Class(
         stop_rule = n_sample,
         nd_time = self$nd_time, 
         s_nd_time = self$s_nd_time,
-        lambda = self$lambda
+        lambda = self$lambda,
+        prior_on_resp = c(1,1) # a place holder
       )
       sss_df <- data.frame(do.call(rbind, sss_sim))
       return(sss_df)
