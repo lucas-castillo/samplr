@@ -12,7 +12,7 @@ This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelated
 ## Method `Zhu23ABS$new`
 ## ------------------------------------------------
 
-zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, prior_on_resp = c(1, 1), lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
 
 
 ## ------------------------------------------------
@@ -64,7 +64,6 @@ Create a new 'Zhu23ABS' object.
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
   nd_time,
   s_nd_time = 0,
-  prior_on_resp = c(1, 1),
   lambda,
   n_chains,
   width,
@@ -79,8 +78,6 @@ Create a new 'Zhu23ABS' object.
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
-
-\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
 
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
@@ -99,7 +96,7 @@ A new 'Zhu23ABS' object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, prior_on_resp = c(1, 1), lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+\preformatted{zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
 
 }
 \if{html}{\out{</div>}}
@@ -116,6 +113,7 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$two_alt_force_choice(
   delta,
   dec_bdry,
+  prior_on_resp = c(1, 1),
   discrim,
   trial_stim,
   stim_depend = TRUE,
@@ -129,6 +127,8 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \item{\code{delta}}{The relative difference between the number of samples supporting each hypothesis.}
 
 \item{\code{dec_bdry}}{The decision boundary that separates the posterior hypothesis distribution.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
 
 \item{\code{discrim}}{The stimuli discriminability.}
 

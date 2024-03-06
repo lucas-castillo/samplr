@@ -21,8 +21,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time.}
-
-\item{\code{prior_on_resp}}{The beta prior on responses.}
 }
 \if{html}{\out{</div>}}
 }
@@ -44,8 +42,7 @@ Create a new 'CoreABS' object.
   distr_name = "norm",
   start_point = NA,
   nd_time,
-  s_nd_time,
-  prior_on_resp
+  s_nd_time
 )}\if{html}{\out{</div>}}
 }
 
@@ -61,8 +58,6 @@ Create a new 'CoreABS' object.
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
-
-\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
 }
 \if{html}{\out{</div>}}
 }
