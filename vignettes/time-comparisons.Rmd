@@ -26,7 +26,6 @@ X <- bench::mark(
     "Metropolis-Hastings" = {samplr::sampler_mh(1, "norm", c(0,1), sigma_prop=1)},
     "MC3" = {samplr::sampler_mc3(1, "norm", c(0,1), sigma_prop=1)},
     "Hamiltonian Monte-Carlo" = {samplr::sampler_hmc(1, "norm", c(0,1))},
-    "NUTS" = {samplr::sampler_nuts(1, "norm", c(0,1))},
     check = FALSE,
 )
 knitr::kable(as.data.frame(X[,c("expression", "min", "median")]))
