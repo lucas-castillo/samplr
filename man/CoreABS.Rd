@@ -14,13 +14,13 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \describe{
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{start_point}}{The start point of each trial}
-
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time.}
+
+\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+
+\item{\code{start_point}}{The start point of each trial}
 }
 \if{html}{\out{</div>}}
 }
@@ -39,10 +39,10 @@ Create a new 'CoreABS' object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
   n_chains,
-  distr_name = "norm",
-  start_point = NA,
   nd_time,
-  s_nd_time
+  s_nd_time,
+  distr_name = "norm",
+  start_point = NA
 )}\if{html}{\out{</div>}}
 }
 
@@ -51,13 +51,13 @@ Create a new 'CoreABS' object.
 \describe{
 \item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{start_point}}{The start point of each trial.}
-
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+
+\item{\code{distr_name}}{The type of the posterior hypothesis distribution. Default is normal distributions.}
+
+\item{\code{start_point}}{The start point of each trial. Default value is NA, which means letting the algorithm generate start points.}
 }
 \if{html}{\out{</div>}}
 }

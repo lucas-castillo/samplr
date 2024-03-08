@@ -12,7 +12,7 @@ This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelated
 ## Method `Zhu23ABS$new`
 ## ------------------------------------------------
 
-zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
 
 
 ## ------------------------------------------------
@@ -40,9 +40,9 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
-
 \item{\code{width}}{The standard deviation of the proposal distribution for MC3}
+
+\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 }
 \if{html}{\out{</div>}}
 }
@@ -62,11 +62,11 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
-  nd_time,
-  s_nd_time = 0,
-  lambda,
-  n_chains,
   width,
+  n_chains,
+  nd_time,
+  s_nd_time,
+  lambda,
   distr_name = "norm",
   start_point = NA
 )}\if{html}{\out{</div>}}
@@ -75,17 +75,17 @@ Create a new 'Zhu23ABS' object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{width}}{The proposal width of the MC3 sampler.}
+
+\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+
 \item{\code{nd_time}}{The non-decision time.}
 
 \item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
 
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
-
-\item{\code{width}}{The proposal width of the sampler.}
-
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+\item{\code{distr_name}}{The type of the posterior hypothesis distribution. Default is normal distributions.}
 
 \item{\code{start_point}}{The start point of each trial.}
 }
@@ -96,7 +96,7 @@ A new 'Zhu23ABS' object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+\preformatted{zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
 
 }
 \if{html}{\out{</div>}}
@@ -113,9 +113,9 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$two_alt_force_choice(
   delta,
   dec_bdry,
-  prior_on_resp = c(1, 1),
   discrim,
   trial_stim,
+  prior_on_resp = c(1, 1),
   stim_depend = TRUE,
   max_iterations = 1000
 )}\if{html}{\out{</div>}}
@@ -128,11 +128,11 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 
 \item{\code{dec_bdry}}{The decision boundary that separates the posterior hypothesis distribution.}
 
-\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
-
 \item{\code{discrim}}{The stimuli discriminability.}
 
 \item{\code{trial_stim}}{The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.}
+
+\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1).}
 
 \item{\code{stim_depend}}{The boolean variable that control whether the prior on responses changes regarding the last stimulus.}
 
