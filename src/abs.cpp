@@ -322,7 +322,7 @@ List Zhu23ABS_cpp(
     switch (task_id){
     case 1:
       
-      distr_params = List::create(trial_stim(i), 4);
+      distr_params = List::create(trial_stim(i), 1);
       
       // set the start point
       
