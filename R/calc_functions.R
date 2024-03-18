@@ -316,7 +316,7 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
     model <- stats::lm(logS ~ logN, data = df)
     intercept <- model$coefficients[["(Intercept)"]]
     slope <- model$coefficients[["logN"]]
-    caption <- paste("Slope = ", slope)
+    caption <- paste("Slope = ", round(slope,3))
     x_lbl <- latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024")
     y_lbl <- latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta t))\u0024")
 
