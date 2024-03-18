@@ -9,10 +9,6 @@ reference:
 - contents:
   - starts_with("sampler")
 
-- title: "Plotting Functions"
-  desc: "Functions for plotting various aspects of the sampling process. Most only work with univariate distributions"
-- contents:
-  - starts_with("plot")
 - title: "Other Utilities"
   desc: "Other Functions"
 - contents:
@@ -25,6 +21,12 @@ reference:
 - contents:
   - CoreABS
   - Zhu23ABS
+  
+- title: "Diagnostic Tools"
+  desc: "Functions for calculating various aspects of the sampling process. Most only work with univariate distributions"
+- contents:
+  - starts_with("calc")
+  - starts_with("plot")
 
 - title: "Data"
 - contents:
