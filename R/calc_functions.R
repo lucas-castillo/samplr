@@ -241,7 +241,6 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
     stop("Please input a one-dimensional vector")
   }
 
-
   if (change){
     y <- change_1d(chain)
     title = "QQ Plot - Change"
@@ -261,6 +260,13 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
     abline(int, slope, col="blue", lwd=2)
   }
   list(
+    "theoretical_quantiles"=v$x,
+    "empirical_quantiles"=v$y,
+    "intercept"=int,
+    "slope"=slope
+    
+  )
+  
 }
 
 #' Sigma Scaling Plotter
