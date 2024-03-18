@@ -99,7 +99,7 @@ change_1d <- function(X){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_levy(chain1[[1]])
+#' calc_levy(chain1[[1]], plot=T)
 calc_levy <- function(chain, plot=F){
   distances <- vector()
 
