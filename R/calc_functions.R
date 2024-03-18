@@ -100,7 +100,7 @@ change_1d <- function(X){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' calc_levy(chain1[[1]])
-calc_levy <- function(chain, plot=TRUE){
+calc_levy <- function(chain, plot=F){
   distances <- vector()
 
   if (is.vector(chain)){
@@ -287,7 +287,7 @@ plot_qqplot <- function(chain, change = TRUE){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_sigma_scaling(chain1[[1]], plot = FALSE)
-plot_sigma_scaling <- function(chain, plot=TRUE){
+plot_sigma_scaling <- function(chain, plot=F){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
