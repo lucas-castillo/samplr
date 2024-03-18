@@ -207,7 +207,7 @@ calc_PSD <- function(chain, plot = F){
     df <- data.frame(lf = lf, lpsd = lpsd)
 
 
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", -Fit[1]))
+    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", round(-Fit[1], 3)))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
     plot(df$lf, df$lpsd, type="l",
