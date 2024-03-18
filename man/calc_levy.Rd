@@ -4,12 +4,12 @@
 \alias{calc_levy}
 \title{Levy Flights Calculator}
 \usage{
-calc_levy(chain, plot = TRUE)
+calc_levy(chain, plot = F)
 }
 \arguments{
 \item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions.}
 
-\item{plot}{Boolean. plot Boolean. Whether to return a plot or the elements used to make it.}
+\item{plot}{Boolean. plot Boolean. Whether to also plot the distance-frequency relationship.}
 }
 \value{
 If plot is true, it returns a simple plot with the log absolute difference in estimates and their frequency, as well as an estimate for the \eqn{\mu} parameter. If false it returns a list with what's required to make the plot.
