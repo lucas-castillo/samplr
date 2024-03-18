@@ -1,0 +1,25 @@
+---
+title: "Simulations-of-the-Autocorrelated-Bayesian-Sampler"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulations-of-the-Autocorrelated-Bayesian-Sampler}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS, Zhu et al., 2023) and the `R` scripts for running simulations of ABS using `samplr` package.
+
+# Introduction of ABS
+
+ABS is a sequential sampling model that assumes people draw autocorrelated samples from the memory of hypotheses according to their posterior beliefs. Samples are then integrated to produce choices, response times, confidence judgments, estimates, confidence intervals, or probability judgments.
+
+```{r setup}
+library(samplr)
+```
