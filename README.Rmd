@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg)](https://github.com/lucas-castillo/samplr/actions)
 [![Codecov test coverage](https://codecov.io/gh/lucas-castillo/samplr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/lucas-castillo/samplr?branch=main)
+ [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 <!-- badges: end -->
 
 The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at [sampling.warwick.ac.uk](sampling.warwick.ac.uk). Get started [here](vignettes/how-to-sample.html).
