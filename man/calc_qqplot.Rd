@@ -4,7 +4,7 @@
 \alias{calc_qqplot}
 \title{QQ-Plotter}
 \usage{
-calc_qqplot(chain, change = TRUE, plot = F)
+calc_qqplot(chain, change = TRUE, plot = FALSE)
 }
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
@@ -20,5 +20,5 @@ Plots a QQ plot of Empirical values against Theoretical values from a normal dis
 \examples{
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_qqplot(chain1[[1]], plot=T)
+calc_qqplot(chain1[[1]], plot = TRUE)
 }
