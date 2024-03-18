@@ -33,7 +33,7 @@ test_that("Change 1D", {
   
 
 test_that("Levy Flights", {
-  res <- plot_levy(sequence, F)
+  res <- calc_levy(sequence, F)
 
   # It's a list of length 4 with named outputs
   expect_type(res, "list")
@@ -44,7 +44,7 @@ test_that("Levy Flights", {
   expect_equal(res[["coef"]], c(-0.4249660, 0.6237538))
 
   ## Test that it works the same with matrices
-  res2 <- plot_levy(matrix(sequence), F)
+  res2 <- calc_levy(matrix(sequence), F)
   expect_equal(res, res2)
 })
 
