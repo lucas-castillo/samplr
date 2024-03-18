@@ -61,15 +61,7 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \subsection{Method \code{new()}}{
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
-  width,
-  n_chains,
-  nd_time,
-  s_nd_time,
-  lambda,
-  distr_name = "norm",
-  start_point = NA
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(width, n_chains, nd_time, s_nd_time, lambda, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -86,8 +78,6 @@ Create a new 'Zhu23ABS' object.
 \item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution. Default is normal distributions.}
-
-\item{\code{start_point}}{The start point of each trial.}
 }
 \if{html}{\out{</div>}}
 }
@@ -116,6 +106,7 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
   discrim,
   trial_stim,
   prior_on_resp = c(1, 1),
+  start_point = NA,
   stim_depend = TRUE,
   max_iterations = 1000
 )}\if{html}{\out{</div>}}
@@ -133,6 +124,8 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 \item{\code{trial_stim}}{The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.}
 
 \item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1).}
+
+\item{\code{start_point}}{The start point of each trial.}
 
 \item{\code{stim_depend}}{The boolean variable that control whether the prior on responses changes regarding the last stimulus.}
 
@@ -169,7 +162,7 @@ tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, tr
 \subsection{Method \code{estimate()}}{
 This function is for simulating the estimate and confidence interval tasks by Zhu23ABS.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(n_sample, trial_stim, conf_level = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(n_sample, trial_stim, start_point = NA, conf_level = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -178,6 +171,8 @@ This function is for simulating the estimate and confidence interval tasks by Zh
 \item{\code{n_sample}}{The fixed number of samples for each trial.}
 
 \item{\code{trial_stim}}{The stimulus of each trial.}
+
+\item{\code{start_point}}{The start point of each trial.}
 
 \item{\code{conf_level}}{The required confidence level.}
 }

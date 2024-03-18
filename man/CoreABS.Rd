@@ -19,8 +19,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item{\code{s_nd_time}}{The range of the non-decision time.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{start_point}}{The start point of each trial}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,13 +35,7 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
-  n_chains,
-  nd_time,
-  s_nd_time,
-  distr_name = "norm",
-  start_point = NA
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(n_chains, nd_time, s_nd_time, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -56,8 +48,6 @@ Create a new 'CoreABS' object.
 \item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution. Default is normal distributions.}
-
-\item{\code{start_point}}{The start point of each trial. Default value is NA, which means letting the algorithm generate start points.}
 }
 \if{html}{\out{</div>}}
 }
