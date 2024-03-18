@@ -286,12 +286,12 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
 #'
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_sigma_scaling(chain1[[1]])
+#' calc_sigma_scaling(chain1[[1]])
 #'
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_sigma_scaling(chain1[[1]], plot = FALSE)
-plot_sigma_scaling <- function(chain, plot=F){
+#' calc_sigma_scaling(chain1[[1]], plot = FALSE)
+calc_sigma_scaling <- function(chain, plot=F){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
