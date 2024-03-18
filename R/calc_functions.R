@@ -210,15 +210,9 @@ calc_PSD <- function(chain, plot = F){
     caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", -Fit[1]))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(lf, lpsd))
-    pl <- pl + ggplot2::geom_line(mapping = ggplot2::aes(lf, lpsd), data = df) +
-      ggplot2::geom_segment(mapping = ggplot2::aes(
-        x = lf[1],
-        y = pracma::polyval(Fit, lf)[1],
-        xend =lf[length(lf)],
-        yend = pracma::polyval(Fit, lf)[length(pracma::polyval(Fit, lf))]), colour = "red", size = 1) +
-      ggplot2::labs(title = "Sigma Scaling", caption =caption, x = x_lbl, y = y_lbl)
-    return(pl)
+    plot(df$lf, df$lpsd, type="l",
+         main="Sigma Scaling", xlab=x_lbl, ylab=y_lbl,sub=caption)
+    abline(Fit[2], Fit[1], col="blue", lwd=2)
 
   } else{
     return(list(
