@@ -226,7 +226,7 @@ calc_PSD <- function(chain, plot = FALSE){
 #' Plots a QQ plot of Empirical values against Theoretical values from a normal distribution. Can plot the chain points or the distances between successive points
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param change Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[SampleR]{change_1d})
+#' @param change Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[samplr]{change_1d})
 #'
 #' @return
 #' QQ plot of Theoretical vs Empirical values

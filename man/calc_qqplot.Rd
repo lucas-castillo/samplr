@@ -9,7 +9,7 @@ calc_qqplot(chain, change = TRUE, plot = FALSE)
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
 
-\item{change}{Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[SampleR]{change_1d})}
+\item{change}{Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[samplr]{change_1d})}
 }
 \value{
 QQ plot of Theoretical vs Empirical values
