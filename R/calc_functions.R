@@ -154,7 +154,7 @@ calc_levy <- function(chain, plot=F){
   slope <- pracma::polyval(coef,fx)
   df <- data.frame(Fx = fx, Fy = fy, Slope = slope)
   if (plot) {
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", -coef[1]))
+    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", round(-coef[1], 3)))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Absolute Difference in Estimates)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
     plot(df$Fx, df$Fy, 
