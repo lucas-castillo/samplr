@@ -164,9 +164,9 @@ calc_levy <- function(chain, plot=F){
   return(list(fx = fx, fy = fy, slope = slope, coef = coef))
 }
 
-#' Power Spectral Density Plotter
+#' Power Spectral Density Calculator
 #'
-#' This function plots the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
+#' This function estimates the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
 #'
 #' A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
@@ -183,7 +183,7 @@ calc_levy <- function(chain, plot=F){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_PSD(chain1[[1]])
-plot_PSD <- function(chain, plot = TRUE){
+calc_PSD <- function(chain, plot = F){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
