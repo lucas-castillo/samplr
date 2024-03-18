@@ -52,8 +52,7 @@ print(chain[[1]][1:20])
 ```
 As well as tools to diagnose the patterns both from samplers and participants:
 ```{r dpi = 300}
-plot_qqplot(chain[[1]], change = TRUE)
-plot_series(chain[[1]])
+v <- calc_qqplot(chain[[1]], change = TRUE, plot=T)
 ```
-
+<!-- TODO: add plot_series(chain[[1]]) again -->
 

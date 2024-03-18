@@ -67,13 +67,8 @@ As well as tools to diagnose the patterns both from samplers and
 participants:
 
 ``` r
-plot_qqplot(chain[[1]], change = TRUE)
+v <- calc_qqplot(chain[[1]], change = TRUE, plot=T)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
-
-``` r
-plot_series(chain[[1]])
-```
-
-![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
+<!-- TODO: add plot_series(chain[[1]]) again -->
