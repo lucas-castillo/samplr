@@ -243,14 +243,24 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
 
 
   if (change){
-    df <- data.frame(X = change_1d(chain))
+    y <- change_1d(chain)
     title = "QQ Plot - Change"
   } else{
-    df <- data.frame(X = chain)
+    y <- chain
     title = "QQ Plot"
   }
-  pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(sample = X))
-  return(pl + ggplot2::stat_qq() + ggplot2::stat_qq_line(colour = "red") + ggplot2::ggtitle(title))
+  v <- qqnorm(y, plot.it = F)
+  probs <- c(.25, .75)
+  x <- qnorm(probs)
+  y <- as.vector(quantile(y, probs, names = F, na.rm = T))
+  slope <- diff(y)/diff(x)
+  int <- y[[1L]] - slope * x[[1L]]
+  if (plot){
+    plot(v$x, v$y, 
+         xlab = "Theoretical Quantiles", ylab="Empirical Quantiles", main=title)
+    abline(int, slope, col="blue", lwd=2)
+  }
+  list(
 }
 
 #' Sigma Scaling Plotter
