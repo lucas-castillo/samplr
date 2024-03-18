@@ -99,8 +99,8 @@ change_1d <- function(X){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_levy(chain1[[1]], plot=T)
-calc_levy <- function(chain, plot=F){
+#' calc_levy(chain1[[1]], plot=TRUE)
+calc_levy <- function(chain, plot=FALSE){
   distances <- vector()
 
   if (is.vector(chain)){
@@ -182,8 +182,8 @@ calc_levy <- function(chain, plot=F){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_PSD(chain1[[1]], plot=T)
-calc_PSD <- function(chain, plot = F){
+#' calc_PSD(chain1[[1]], plot= TRUE)
+calc_PSD <- function(chain, plot = FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
@@ -235,8 +235,8 @@ calc_PSD <- function(chain, plot = F){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_qqplot(chain1[[1]], plot=T)
-calc_qqplot <- function(chain, change = TRUE, plot=F){
+#' calc_qqplot(chain1[[1]], plot = TRUE)
+calc_qqplot <- function(chain, change = TRUE, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
@@ -248,10 +248,10 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
     y <- chain
     title = "QQ Plot"
   }
-  v <- qqnorm(y, plot.it = F)
+  v <- qqnorm(y, plot.it = FALSE)
   probs <- c(.25, .75)
   x <- qnorm(probs)
-  y <- as.vector(quantile(y, probs, names = F, na.rm = T))
+  y <- as.vector(quantile(y, probs, names = FALSE, na.rm = TRUE))
   slope <- diff(y)/diff(x)
   int <- y[[1L]] - slope * x[[1L]]
   if (plot){
@@ -291,7 +291,7 @@ calc_qqplot <- function(chain, change = TRUE, plot=F){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' calc_sigma_scaling(chain1[[1]], plot = FALSE)
-calc_sigma_scaling <- function(chain, plot=F){
+calc_sigma_scaling <- function(chain, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }

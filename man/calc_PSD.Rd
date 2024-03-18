@@ -4,7 +4,7 @@
 \alias{calc_PSD}
 \title{Power Spectral Density Calculator}
 \usage{
-calc_PSD(chain, plot = F)
+calc_PSD(chain, plot = FALSE)
 }
 \arguments{
 \item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions sequence}
@@ -23,5 +23,5 @@ A number of studies have reported that cognitive activities contain a long-range
 \examples{
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_PSD(chain1[[1]], plot=T)
+calc_PSD(chain1[[1]], plot= TRUE)
 }
