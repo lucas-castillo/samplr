@@ -23,5 +23,5 @@ Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, an
 \examples{
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_levy(chain1[[1]])
+calc_levy(chain1[[1]], plot=T)
 }

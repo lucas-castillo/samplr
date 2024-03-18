@@ -4,7 +4,7 @@
 \alias{calc_PSD}
 \title{Power Spectral Density Calculator}
 \usage{
-calc_PSD(chain, plot = TRUE)
+calc_PSD(chain, plot = F)
 }
 \arguments{
 \item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions sequence}
@@ -12,7 +12,7 @@ calc_PSD(chain, plot = TRUE)
 \item{plot}{Boolean. Whether to return a plot or the elements used to make it.}
 }
 \value{
-If plot is, it returns a simple plot with the log PSD against the log frequency, as well as an estimate for the \eqn{\alpha} parameter. If false it returns a list with what's required to make the plot.
+Returns a list with log frequencies, log PSDs, and slope and intercept estimates.
 }
 \description{
 This function estimates the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
@@ -23,5 +23,5 @@ A number of studies have reported that cognitive activities contain a long-range
 \examples{
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_PSD(chain1[[1]])
+calc_PSD(chain1[[1]], plot=T)
 }
