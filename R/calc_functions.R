@@ -83,9 +83,9 @@ change_1d <- function(X){
 }
 
 
-#' Levy Flights Plotter
+#' Levy Flights Calculator
 #'
-#' This plotter analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
+#' This function analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
 #'
 #' Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging [(Viswanathan et al., 1999)](https://www.nature.com/articles/44831). See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
@@ -99,8 +99,8 @@ change_1d <- function(X){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_levy(chain1[[1]])
-plot_levy <- function(chain, plot=TRUE){
+#' calc_levy(chain1[[1]])
+calc_levy <- function(chain, plot=TRUE){
   distances <- vector()
 
   if (is.vector(chain)){
