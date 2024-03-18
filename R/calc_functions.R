@@ -157,12 +157,9 @@ calc_levy <- function(chain, plot=F){
     caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", -coef[1]))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Absolute Difference in Estimates)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(Fx,Fy))
-    pl <- pl +
-      ggplot2::geom_point(data=df) +
-      ggplot2::geom_path(mapping = ggplot2::aes(Fx, Slope), data=df, colour = "red") +
-      ggplot2::labs(title = "Levy Flights", x = x_lbl, y = y_lbl, caption = caption)
-    return(pl)
+    plot(df$Fx, df$Fy, 
+         main="Levy Flights", xlab=x_lbl, ylab=y_lbl, pch=19, sub=caption)
+    abline(lm(df$Slope~df$Fx), col="blue", lwd=2)
   } else{
     return(list(fx = fx, fy = fy, slope = slope, coef = coef))
   }
