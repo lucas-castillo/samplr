@@ -4,7 +4,7 @@
 \alias{plot_sigma_scaling}
 \title{Sigma Scaling Plotter}
 \usage{
-plot_sigma_scaling(chain, plot = TRUE)
+plot_sigma_scaling(chain, plot = F)
 }
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
