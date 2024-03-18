@@ -23,9 +23,7 @@ reference:
 - title: "ABS"
   desc: "Functions related to the Autocorrelated Bayesian Sampler"
 - contents:
-  - rABS
   - CoreABS
-  - LiABS
   - Zhu23ABS
 
 - title: "Data"
