@@ -236,7 +236,7 @@ calc_PSD <- function(chain, plot = F){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_qqplot(chain1[[1]])
-plot_qqplot <- function(chain, change = TRUE){
+calc_qqplot <- function(chain, change = TRUE, plot=F){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
