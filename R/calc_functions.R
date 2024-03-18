@@ -175,7 +175,7 @@ calc_levy <- function(chain, plot=F){
 #' @param plot Boolean. Whether to return a plot or the elements used to make it.
 #'
 #' @return
-#' If plot is, it returns a simple plot with the log PSD against the log frequency, as well as an estimate for the \eqn{\alpha} parameter. If false it returns a list with what's required to make the plot.
+#' Returns a list with log frequencies, log PSDs, and slope and intercept estimates.
 
 #' @export
 #'
@@ -213,14 +213,12 @@ calc_PSD <- function(chain, plot = F){
     plot(df$lf, df$lpsd, type="l",
          main="Sigma Scaling", xlab=x_lbl, ylab=y_lbl,sub=caption)
     abline(Fit[2], Fit[1], col="blue", lwd=2)
-
-  } else{
-    return(list(
-      log_freq = lf,
-      log_psd = lpsd,
-      polyfit = Fit
-    ))
-  }
+  } 
+  return(list(
+    log_freq = lf,
+    log_psd = lpsd,
+    polyfit = Fit
+  ))
 }
 
 #' QQ-Plotter
