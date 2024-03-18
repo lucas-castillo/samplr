@@ -65,9 +65,9 @@ test_that("PSD", {
 
 test_that("Sigma Scaling", {
   ## Error if bad input
-  expect_error(plot_sigma_scaling(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
+  expect_error(calc_sigma_scaling(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
 
-  res <- plot_sigma_scaling(sequence, F)
+  res <- calc_sigma_scaling(sequence, F)
 
   # It's a vector
   expect_type(res, "double")
