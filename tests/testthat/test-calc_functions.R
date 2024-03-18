@@ -79,7 +79,7 @@ test_that("Sigma Scaling", {
 
 test_that("QQ Plotter", {
   ## Error if bad input
-  expect_error(plot_qqplot(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  expect_error(calc_qqplot(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
 })
 
 test_that("Autocorr Plotter", {
