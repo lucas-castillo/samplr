@@ -106,7 +106,7 @@ Zhu23ABS <- R6::R6Class(
     #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1).
     #' @param start_point The start point of each trial.
     #' @param stim_depend The boolean variable that control whether the prior on responses changes regarding the last stimulus.
-    #' @param max_iterations The maximum length of the MCREC sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+    #' @param max_iterations The maximum length of the MC3 sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
     #' 
     #' @return A data frame with seven columns:
     #' \enumerate{

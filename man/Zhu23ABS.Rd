@@ -129,7 +129,7 @@ This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
 
 \item{\code{stim_depend}}{The boolean variable that control whether the prior on responses changes regarding the last stimulus.}
 
-\item{\code{max_iterations}}{The maximum length of the MCREC sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.}
+\item{\code{max_iterations}}{The maximum length of the MC3 sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.}
 }
 \if{html}{\out{</div>}}
 }
