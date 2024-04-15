@@ -286,11 +286,8 @@ calc_qqplot <- function(chain, change = TRUE, plot=FALSE){
 #'
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_sigma_scaling(chain1[[1]])
+#' calc_sigma_scaling(chain1[[1]], plot = TRUE)
 #'
-#' set.seed(1)
-#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' calc_sigma_scaling(chain1[[1]], plot = FALSE)
 calc_sigma_scaling <- function(chain, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
@@ -302,33 +299,35 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
     s_devs[i] <- stats::sd(stats::na.omit(distances))
   }
 
-
+  logS <- log(s_devs, base = 10)
+  logN <- log(1:maxLag, base = 10)
+  model <- stats::lm(logS ~ logN)
+  intercept <- model$coefficients[["(Intercept)"]]
+  slope <- model$coefficients[["logN"]]
+  
+  
   if (plot){
-    logS <- log(s_devs, base = 10)
-    logN <- log(1:maxLag, base = 10)
-    sig_r <- pracma::polyfit(logN, logS, 1)
     x_lims <- c(0, max(logN))
-    y_lims <- c(min(logS), log10(maxLag^max(0.5,sig_r[1]))+sig_r[2])
-
-    df <- data.frame(logN = logN, logS = logS)
-
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(logN, logS))
-    model <- stats::lm(logS ~ logN, data = df)
-    intercept <- model$coefficients[["(Intercept)"]]
-    slope <- model$coefficients[["logN"]]
-    caption <- paste("Slope = ", round(slope,3))
-    x_lbl <- latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta t))\u0024")
-
-
-    return(pl + ggplot2::geom_point() +
-             ggplot2::geom_abline(ggplot2::aes(intercept = intercept, slope = slope), colour = "red") +
-             ggplot2::labs(title = "Sigma Scaling", x = x_lbl, y = y_lbl, caption = caption) +
-             ggplot2::xlim(x_lims) + ggplot2::ylim(y_lims))
-  } else {
-    return(s_devs)
+    y_lims <- c(min(logS), log10(maxLag^max(0.5,slope))+intercept)
+    
+    plot(logN, logS,
+         xlim=x_lims, ylim=y_lims,
+         xlab = latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024"),
+         ylab= latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta x))\u0024"),
+         main="Sigma Scaling", 
+         sub = paste("slope =", round(slope, 3))
+    )
+    abline(intercept, slope, col="blue", lwd=2)  
   }
-
+  
+  return(list(
+    "lag" = 1:maxLag,
+    "log_lag" = logN,
+    "sds" = s_devs,
+    "log_sds" = logS,
+    "intercept" = intercept,
+    "slope" = slope
+  ))  
 }
 
 #' Autocorrelation Plotter
