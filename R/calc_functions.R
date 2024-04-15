@@ -338,7 +338,7 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
 #' Markets display no significant autocorrelations in the returns of a given asset.
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param changeACF Boolean. If true, plot the autocorrelation of the change series. If false, plot the autocorrelation of the given chain.
+#' @param change Boolean. If true, plot the autocorrelation of the change series. If false, plot the autocorrelation of the given chain.
 #' @param alpha Measure of Type I error - defaults to .05
 #' @param lag.max Length of the x axis. How far to examine the lags.
 #'
@@ -350,11 +350,11 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_autocorr(chain1[[1]])
-plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
+plot_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
-  if (changeACF){
+  if (change){
     a <- stats::acf(chain[2:length(chain)] - chain[1:(length(chain)-1)], lag.max = lag.max, plot=FALSE)
     df <- data.frame(Lag = a$lag[-1], Autocorrelation = a$acf[-1])
     upperLine <- NULL
