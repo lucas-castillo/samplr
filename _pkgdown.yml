@@ -34,3 +34,10 @@ reference:
   
 figures:
   fig.width: 8
+
+authors:
+  footer:
+    roles: [cre, aut]
+  sidebar:
+    roles: [cre, aut]
+
