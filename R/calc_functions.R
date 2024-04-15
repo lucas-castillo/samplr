@@ -211,7 +211,7 @@ calc_PSD <- function(chain, plot = FALSE){
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
     plot(df$lf, df$lpsd, type="l",
-         main="Sigma Scaling", xlab=x_lbl, ylab=y_lbl,sub=caption)
+         main="Power Spectral Density", xlab=x_lbl, ylab=y_lbl,sub=caption)
     abline(Fit[2], Fit[1], col="blue", lwd=2)
   } 
   return(list(
