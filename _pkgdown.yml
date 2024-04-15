@@ -41,3 +41,7 @@ authors:
   sidebar:
     roles: [cre, aut]
 
+home:
+  links:
+  - text: SAMPLING Project website
+    href: https://sampling.warwick.ac.uk
