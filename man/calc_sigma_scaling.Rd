@@ -2,31 +2,28 @@
 % Please edit documentation in R/calc_functions.R
 \name{calc_sigma_scaling}
 \alias{calc_sigma_scaling}
-\title{Sigma Scaling Plotter}
+\title{Sigma Scaling Calculator}
 \usage{
 calc_sigma_scaling(chain, plot = FALSE)
 }
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
 
-\item{plot}{Boolean. Whether to return a plot or the elements used to make it.}
+\item{plot}{Boolean. Whether to additionally plot the result.}
 }
 \value{
-If plot is true, a sigma scaling plot. If false, a vector with the standard deviations at each lag
+A list containing the vector of possible lags, the sd of the distances at each lag, their log10 counterparts, and the calculated intercept and slope.
 }
 \description{
-Plots a scaling of the sd in the distribution of price changes across time lags and returns the value of the slope
+Calculates the sigma scaling of the chain, and optionally plots the result.
 }
 \details{
-Markets show sigma scaling exponents around 0.5.
+Sigma scaling is defined as the slope of the regression connecting log time lags and the standard deviation of value changes across time lags. Markets show values of 0.5.
 }
 \examples{
 
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_sigma_scaling(chain1[[1]])
+calc_sigma_scaling(chain1[[1]], plot = TRUE)
 
-set.seed(1)
-chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-calc_sigma_scaling(chain1[[1]], plot = FALSE)
 }

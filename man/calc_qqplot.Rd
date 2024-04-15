@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_functions.R
 \name{calc_qqplot}
 \alias{calc_qqplot}
-\title{QQ-Plotter}
+\title{QQ-Plot Calculator}
 \usage{
 calc_qqplot(chain, change = TRUE, plot = FALSE)
 }
@@ -10,12 +10,14 @@ calc_qqplot(chain, change = TRUE, plot = FALSE)
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
 
 \item{change}{Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[samplr]{change_1d})}
+
+\item{plot}{Boolean. Whether to plot the QQ plot or just return the values.}
 }
 \value{
-QQ plot of Theoretical vs Empirical values
+A list with the theoretical and empirical quantiles, and the intercept and slope of the line connecting the points
 }
 \description{
-Plots a QQ plot of Empirical values against Theoretical values from a normal distribution. Can plot the chain points or the distances between successive points
+Estimates values for a QQ plot of Empirical values against Theoretical values from a normal distribution, for either the chain points or the distances between successive points. Optionally, returns a plot as well as the values.
 }
 \examples{
 set.seed(1)

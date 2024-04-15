@@ -4,10 +4,12 @@
 \alias{plot_series}
 \title{Series Plotter}
 \usage{
-plot_series(chain)
+plot_series(chain, change = FALSE)
 }
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
+
+\item{change}{Boolean. Whether to plot the series of values or the series of changes between values.}
 }
 \value{
 A series plot
