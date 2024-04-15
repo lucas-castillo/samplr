@@ -395,7 +395,7 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
-plot_series <- function(chain, change=TRUE){
+plot_series <- function(chain, change=FALSE){
   if (change){
     y <- c(NA, diff(chain))
   } else{
