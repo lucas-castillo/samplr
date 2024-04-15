@@ -350,7 +350,7 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_autocorr(chain1[[1]], plot=TRUE)
+#' calc_autocorr(chain1[[1]], plot=TRUE)
 calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
