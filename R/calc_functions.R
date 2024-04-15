@@ -331,9 +331,9 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
   ))  
 }
 
-#' Autocorrelation Plotter
+#' Autocorrelation Calculator
 #'
-#' Plots the autocorrelation of a given sequence, or of the size of the steps (returns).
+#' Calculates the autocorrelation of a given sequence, or of the size of the steps (returns).
 #'
 #' Markets display no significant autocorrelations in the returns of a given asset.
 #'
@@ -341,16 +341,16 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
 #' @param change Boolean. If true, plot the autocorrelation of the change series. If false, plot the autocorrelation of the given chain.
 #' @param alpha Measure of Type I error - defaults to .05
 #' @param lag.max Length of the x axis. How far to examine the lags.
+#' @param plot Boolean. Whether to additionally plot the result.
 #'
 #' @return
-#' An autocorrelation plot
+#' A vector with the standard deviations at each lag
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_autocorr(chain1[[1]])
-plot_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100){
+#' plot_autocorr(chain1[[1]], plot=TRUE)
 calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
