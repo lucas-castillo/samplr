@@ -406,28 +406,6 @@ plot_series <- function(chain, change=TRUE){
        main = paste("Series of", ifelse(change, "Changes", "Values"))
        )
 }
-
-#' Change Plotter
-#'
-#' Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets
-#'
-#' @param chain Vector of n length, where n is the number of trials or sampler iterations
-
-#' @return A plot of the change series
-#' @export
-#'
-#' @examples
-#' set.seed(1)
-#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_change(chain1[[1]])
-plot_change <- function(chain){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
-  }
-  df = data.frame(t = 1:(length(chain)-1), X = change_1d(chain))
-  return(ggplot2::ggplot(df, ggplot2::aes(t, X)) + ggplot2::geom_path(size=.1) + ggplot2::labs(title = "Change Series", x = "Iteration", y = "Change from previous"))
-}
-
 #' Plotter Wrapper
 #'
 #' Plots all the plot_* plots into a grid for ease.
