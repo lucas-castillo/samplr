@@ -269,17 +269,18 @@ calc_qqplot <- function(chain, change = TRUE, plot=FALSE){
   )
 }
 
-#' Sigma Scaling Plotter
+#' Sigma Scaling Calculator
 #'
-#' Plots a scaling of the sd in the distribution of price changes across time lags and returns the value of the slope
+#' Calculates the sigma scaling of the chain, and optionally plots the result. 
 #'
-#'Markets show sigma scaling exponents around 0.5.
+# TODO: Ref needed
+#' Sigma scaling is defined as the slope of the regression connecting log time lags and the standard deviation of value changes across time lags. Markets show values of 0.5.
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param plot Boolean. Whether to return a plot or the elements used to make it.
+#' @param plot Boolean. Whether to additionally plot the result.
 #'
 #' @return
-#' If plot is true, a sigma scaling plot. If false, a vector with the standard deviations at each lag
+#' A list containing the vector of possible lags, the sd of the distances at each lag, their log10 counterparts, and the calculated intercept and slope. 
 #' @export
 #'
 #' @examples
