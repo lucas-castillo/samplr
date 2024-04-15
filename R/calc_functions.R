@@ -247,7 +247,7 @@ calc_qqplot <- function(chain, change = TRUE, plot=FALSE){
     title = "QQ Plot - Change"
   } else{
     y <- chain
-    title = "QQ Plot"
+    title = "QQ Plot - Values"
   }
   v <- qqnorm(y, plot.it = FALSE)
   probs <- c(.25, .75)
