@@ -45,7 +45,7 @@ sampler_mc3(
 This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 }
 \details{
-This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}, \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} and \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} among others.
 }
 \examples{
 

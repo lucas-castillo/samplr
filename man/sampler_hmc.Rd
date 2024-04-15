@@ -38,11 +38,13 @@ Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm
 \details{
 This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.
 
-This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
+This algorithm has been used to model human data in \insertCite{aitchison2016HamiltonianBrainEfficient;textual}{samplr}, \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
 }
 \examples{
-
-HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+HMC <- sampler_hmc(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, epsilon = .01, L = 100
+    )
 }
 \references{
 \insertAllCited{}

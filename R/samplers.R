@@ -242,7 +242,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #'
 #' As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the `sigma_prop` parameter, which defaults to the identity matrix if not specified. 
 #' 
-#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
+#' This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -299,7 +299,7 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #'
 #' This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 #'
-#' This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
+#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}, \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} and \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} among others.
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
 #' @param start Either a vector or a matrix. If it is a vector, it will be the starting point of all the chains (with length = number of dimensions). If it's a matrix, every row will be the starting point of one chain (and so it must have as many rows as nChains, and as many columns as number of dimensions in the space).
@@ -390,7 +390,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #'
 #' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions. 
 #' 
-#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
+#' This algorithm has been used to model human data in \insertCite{aitchison2016HamiltonianBrainEfficient;textual}{samplr}, \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -404,8 +404,10 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #'    \insertAllCited{}
 #' @export
 #' @examples
-#'
-#' HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' HMC <- sampler_hmc(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#'     )
 sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, iterations=1024, weights = NULL, custom_density = NULL) {
 
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)

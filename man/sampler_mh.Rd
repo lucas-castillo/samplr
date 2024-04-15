@@ -46,7 +46,7 @@ This sampler navigates the proposal distribution following a random walk. At eac
 \details{
 As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the \code{sigma_prop} parameter, which defaults to the identity matrix if not specified.
 
-This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
+This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
 }
 \examples{
 
