@@ -34,3 +34,23 @@ reference:
   
 figures:
   fig.width: 8
+
+authors:
+  footer:
+    roles: [cre, aut]
+  sidebar:
+    roles: [cre, aut]
+
+footer:
+  structure: 
+    left: [funded, blank, logo]
+    right: [developed_by, blank, built_with]
+  components:
+    logo: 
+      <img src='man/figures/erc.jpg' height='72' alt='ERC Research Council'/>
+    funded: This package is part of a project that has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (Grant agreement No. 817492-SAMPLING). 
+    blank: <br/>
+home:
+  links:
+  - text: SAMPLING Project website
+    href: https://sampling.warwick.ac.uk
