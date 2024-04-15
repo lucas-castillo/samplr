@@ -47,6 +47,13 @@ Read more about it on the [macOS Prerequisites section in the R
 Installation and Administration
 Manual](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites).
 
+### Installing on Windows
+
+You will need to have RTools installed, which you can find
+[here](https://cran.r-project.org/bin/windows/Rtools/). Please make sure
+you install the version corresponding to your R version (i.e. for R
+4.3.3, you’d need RTools 4.3).
+
 ## Example
 
 samplr provides tools to generate samples following particular
