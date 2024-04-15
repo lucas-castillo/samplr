@@ -83,14 +83,14 @@ change_1d <- function(X){
 }
 
 
-#' Levy Flights Plotter
+#' Levy Flights Calculator
 #'
-#' This plotter analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
+#' This function analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
 #'
 #' Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging [(Viswanathan et al., 1999)](https://www.nature.com/articles/44831). See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
 #' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions.
-#' @param plot Boolean. plot Boolean. Whether to return a plot or the elements used to make it.
+#' @param plot Boolean. plot Boolean. Whether to also plot the distance-frequency relationship.
 #'
 #' @return
 #' If plot is true, it returns a simple plot with the log absolute difference in estimates and their frequency, as well as an estimate for the \eqn{\mu} parameter. If false it returns a list with what's required to make the plot.
@@ -99,8 +99,8 @@ change_1d <- function(X){
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_levy(chain1[[1]])
-plot_levy <- function(chain, plot=TRUE){
+#' calc_levy(chain1[[1]], plot=TRUE)
+calc_levy <- function(chain, plot=FALSE){
   distances <- vector()
 
   if (is.vector(chain)){
@@ -154,23 +154,19 @@ plot_levy <- function(chain, plot=TRUE){
   slope <- pracma::polyval(coef,fx)
   df <- data.frame(Fx = fx, Fy = fy, Slope = slope)
   if (plot) {
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", -coef[1]))
+    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", round(-coef[1], 3)))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Absolute Difference in Estimates)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(Fx,Fy))
-    pl <- pl +
-      ggplot2::geom_point(data=df) +
-      ggplot2::geom_path(mapping = ggplot2::aes(Fx, Slope), data=df, colour = "red") +
-      ggplot2::labs(title = "Levy Flights", x = x_lbl, y = y_lbl, caption = caption)
-    return(pl)
-  } else{
-    return(list(fx = fx, fy = fy, slope = slope, coef = coef))
-  }
+    plot(df$Fx, df$Fy, 
+         main="Levy Flights", xlab=x_lbl, ylab=y_lbl, pch=19, sub=caption)
+    abline(lm(df$Slope~df$Fx), col="blue", lwd=2)
+  }    
+  return(list(fx = fx, fy = fy, slope = slope, coef = coef))
 }
 
-#' Power Spectral Density Plotter
+#' Power Spectral Density Calculator
 #'
-#' This function plots the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
+#' This function estimates the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
 #'
 #' A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See [Zhu et al. 2018](https://dl.acm.org/doi/abs/10.5555/3327345.3327477) for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #'
@@ -179,15 +175,15 @@ plot_levy <- function(chain, plot=TRUE){
 #' @param plot Boolean. Whether to return a plot or the elements used to make it.
 #'
 #' @return
-#' If plot is, it returns a simple plot with the log PSD against the log frequency, as well as an estimate for the \eqn{\alpha} parameter. If false it returns a list with what's required to make the plot.
+#' Returns a list with log frequencies, log PSDs, and slope and intercept estimates.
 
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_PSD(chain1[[1]])
-plot_PSD <- function(chain, plot = TRUE){
+#' calc_PSD(chain1[[1]], plot= TRUE)
+calc_PSD <- function(chain, plot = FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
@@ -211,83 +207,89 @@ plot_PSD <- function(chain, plot = TRUE){
     df <- data.frame(lf = lf, lpsd = lpsd)
 
 
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", -Fit[1]))
+    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", round(-Fit[1], 3)))
     x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
     y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(lf, lpsd))
-    pl <- pl + ggplot2::geom_line(mapping = ggplot2::aes(lf, lpsd), data = df) +
-      ggplot2::geom_segment(mapping = ggplot2::aes(
-        x = lf[1],
-        y = pracma::polyval(Fit, lf)[1],
-        xend =lf[length(lf)],
-        yend = pracma::polyval(Fit, lf)[length(pracma::polyval(Fit, lf))]), colour = "red", size = 1) +
-      ggplot2::labs(title = "Sigma Scaling", caption =caption, x = x_lbl, y = y_lbl)
-    return(pl)
-
-  } else{
-    return(list(
-      log_freq = lf,
-      log_psd = lpsd,
-      polyfit = Fit
-    ))
-  }
+    plot(df$lf, df$lpsd, type="l",
+         main="Power Spectral Density", xlab=x_lbl, ylab=y_lbl,sub=caption)
+    abline(Fit[2], Fit[1], col="blue", lwd=2)
+  } 
+  return(list(
+    log_freq = lf,
+    log_psd = lpsd,
+    polyfit = Fit
+  ))
 }
 
-#' QQ-Plotter
+#' QQ-Plot Calculator
 #'
-#' Plots a QQ plot of Empirical values against Theoretical values from a normal distribution. Can plot the chain points or the distances between successive points
+#' Estimates values for a QQ plot of Empirical values against Theoretical values from a normal distribution, for either the chain points or the distances between successive points. Optionally, returns a plot as well as the values. 
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param change Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[SampleR]{change_1d})
-#'
+#' @param change Boolean. If false, it plots a qqplot of the given chain. If true, it creates a chain of step sizes (using \link[samplr]{change_1d})
+#' @param plot Boolean. Whether to plot the QQ plot or just return the values. 
+
 #' @return
-#' QQ plot of Theoretical vs Empirical values
+#' A list with the theoretical and empirical quantiles, and the intercept and slope of the line connecting the points
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_qqplot(chain1[[1]])
-plot_qqplot <- function(chain, change = TRUE){
+#' calc_qqplot(chain1[[1]], plot = TRUE)
+calc_qqplot <- function(chain, change = TRUE, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
 
-
   if (change){
-    df <- data.frame(X = change_1d(chain))
+    y <- change_1d(chain)
     title = "QQ Plot - Change"
   } else{
-    df <- data.frame(X = chain)
-    title = "QQ Plot"
+    y <- chain
+    title = "QQ Plot - Values"
   }
-  pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(sample = X))
-  return(pl + ggplot2::stat_qq() + ggplot2::stat_qq_line(colour = "red") + ggplot2::ggtitle(title))
+  v <- qqnorm(y, plot.it = FALSE)
+  probs <- c(.25, .75)
+  x <- qnorm(probs)
+  y <- as.vector(quantile(y, probs, names = FALSE, na.rm = TRUE))
+  slope <- diff(y)/diff(x)
+  int <- y[[1L]] - slope * x[[1L]]
+  if (plot){
+    plot(v$x, v$y, 
+         xlab = "Theoretical Quantiles", ylab="Empirical Quantiles", main=title)
+    abline(int, slope, col="blue", lwd=2)
+  }
+  list(
+    "theoretical_quantiles"=v$x,
+    "empirical_quantiles"=v$y,
+    "intercept"=int,
+    "slope"=slope
+    
+  )
 }
 
-#' Sigma Scaling Plotter
+#' Sigma Scaling Calculator
 #'
-#' Plots a scaling of the sd in the distribution of price changes across time lags and returns the value of the slope
+#' Calculates the sigma scaling of the chain, and optionally plots the result. 
 #'
-#'Markets show sigma scaling exponents around 0.5.
+# TODO: Ref needed
+#' Sigma scaling is defined as the slope of the regression connecting log time lags and the standard deviation of value changes across time lags. Markets show values of 0.5.
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param plot Boolean. Whether to return a plot or the elements used to make it.
+#' @param plot Boolean. Whether to additionally plot the result.
 #'
 #' @return
-#' If plot is true, a sigma scaling plot. If false, a vector with the standard deviations at each lag
+#' A list containing the vector of possible lags, the sd of the distances at each lag, their log10 counterparts, and the calculated intercept and slope. 
 #' @export
 #'
 #' @examples
 #'
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_sigma_scaling(chain1[[1]])
+#' calc_sigma_scaling(chain1[[1]], plot = TRUE)
 #'
-#' set.seed(1)
-#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_sigma_scaling(chain1[[1]], plot = FALSE)
-plot_sigma_scaling <- function(chain, plot=TRUE){
+calc_sigma_scaling <- function(chain, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
@@ -298,82 +300,84 @@ plot_sigma_scaling <- function(chain, plot=TRUE){
     s_devs[i] <- stats::sd(stats::na.omit(distances))
   }
 
-
+  logS <- log(s_devs, base = 10)
+  logN <- log(1:maxLag, base = 10)
+  model <- stats::lm(logS ~ logN)
+  intercept <- model$coefficients[["(Intercept)"]]
+  slope <- model$coefficients[["logN"]]
+  
+  
   if (plot){
-    logS <- log(s_devs, base = 10)
-    logN <- log(1:maxLag, base = 10)
-    sig_r <- pracma::polyfit(logN, logS, 1)
     x_lims <- c(0, max(logN))
-    y_lims <- c(min(logS), log10(maxLag^max(0.5,sig_r[1]))+sig_r[2])
-
-    df <- data.frame(logN = logN, logS = logS)
-
-    pl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(logN, logS))
-    model <- stats::lm(logS ~ logN, data = df)
-    intercept <- model$coefficients[["(Intercept)"]]
-    slope <- model$coefficients[["logN"]]
-    caption <- paste("Slope = ", slope)
-    x_lbl <- latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta t))\u0024")
-
-
-    return(pl + ggplot2::geom_point() +
-             ggplot2::geom_abline(ggplot2::aes(intercept = intercept, slope = slope), colour = "red") +
-             ggplot2::labs(title = "Sigma Scaling", x = x_lbl, y = y_lbl, caption = caption) +
-             ggplot2::xlim(x_lims) + ggplot2::ylim(y_lims))
-  } else {
-    return(s_devs)
+    y_lims <- c(min(logS), log10(maxLag^max(0.5,slope))+intercept)
+    
+    plot(logN, logS,
+         xlim=x_lims, ylim=y_lims,
+         xlab = latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024"),
+         ylab= latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta x))\u0024"),
+         main="Sigma Scaling", 
+         sub = paste("slope =", round(slope, 3))
+    )
+    abline(intercept, slope, col="blue", lwd=2)  
   }
-
+  
+  return(list(
+    "lag" = 1:maxLag,
+    "log_lag" = logN,
+    "sds" = s_devs,
+    "log_sds" = logS,
+    "intercept" = intercept,
+    "slope" = slope
+  ))  
 }
 
-#' Autocorrelation Plotter
+#' Autocorrelation Calculator
 #'
-#' Plots the autocorrelation of a given sequence, or of the size of the steps (returns).
+#' Calculates the autocorrelation of a given sequence, or of the size of the steps (returns).
 #'
 #' Markets display no significant autocorrelations in the returns of a given asset.
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param changeACF Boolean. If true, plot the autocorrelation of the change series. If false, plot the autocorrelation of the given chain.
+#' @param change Boolean. If true, plot the autocorrelation of the change series. If false, plot the autocorrelation of the given chain.
 #' @param alpha Measure of Type I error - defaults to .05
 #' @param lag.max Length of the x axis. How far to examine the lags.
+#' @param plot Boolean. Whether to additionally plot the result.
 #'
 #' @return
-#' An autocorrelation plot
+#' A vector with the standard deviations at each lag
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_autocorr(chain1[[1]])
-plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
+#' calc_autocorr(chain1[[1]], plot=TRUE)
+calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
-  if (changeACF){
+  if (change){
     a <- stats::acf(chain[2:length(chain)] - chain[1:(length(chain)-1)], lag.max = lag.max, plot=FALSE)
-    df <- data.frame(Lag = a$lag[-1], Autocorrelation = a$acf[-1])
-    upperLine <- NULL
-    lowerLine <- NULL
-    title <- ggplot2::ggtitle("Change ACF")
   } else{
-    c_int <- 1 - alpha
     a <- stats::acf(chain, lag.max = lag.max, plot=FALSE)
-    df <- data.frame(Lag = a$lag, Autocorrelation = a$acf)
-    vcrit <- pracma::erfinv(c_int) * sqrt(2)
-    lconf = -vcrit/sqrt(length(chain));
-    upconf = vcrit/sqrt(length(chain));
-    upperLine <- ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = upconf), colour = "red", linetype = "dashed")
-    lowerLine <- ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = lconf), colour = "red", linetype = "dashed")
-    title <- ggplot2::ggtitle("Autocorrelation")
   }
-
-  gpl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(Lag, Autocorrelation))
-
-  return (gpl + ggplot2::geom_line(data=df) + upperLine + lowerLine + ggplot2::ylim(c(-1,1)) + title)
-  #   # ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = lconf), colour = "red", linetype = "dashed") +
-  #   # ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = upconf), colour = "red", linetype = "dashed") +
-  #     ggplot2::ylim(c(-1,1)) + ggplot2::ggtitle("Change ACF"))
+  atc <- as.vector(a$acf)[-1]
+  if (plot){
+    plot(1:lag.max, atc, 
+         ylim=c(-1, 1), 
+         xlab="Lag", ylab = "ACF", 
+         main = paste("Autocorrelation of", ifelse(change, "Changes", "Values") )
+         )
+    if (!change){
+      c_int <- 1 - alpha
+      vcrit <- pracma::erfinv(c_int) * sqrt(2)
+      lconf = -vcrit/sqrt(length(chain));
+      upconf = vcrit/sqrt(length(chain));
+      lines(1:lag.max, rep(lconf, lag.max), lty="dashed", col="blue")
+      lines(1:lag.max, rep(upconf, lag.max), lty="dashed", col="blue")
+    }
+  }
+  
+  return(atc)
 }
 
 #' Series Plotter
@@ -381,7 +385,7 @@ plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
 #' Plots the value of a one-dimensional series against the iteration where it occurred. Useful to see the general pattern of the chain (white noise, random walk, volatility clustering)
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#'
+#' @param change Boolean. Whether to plot the series of values or the series of changes between values. 
 #' @return
 #' A series plot
 #'
@@ -391,63 +395,61 @@ plot_autocorr <- function(chain, changeACF = TRUE, alpha = .05, lag.max = 100){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
-plot_series <- function(chain){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
+plot_series <- function(chain, change=FALSE){
+  if (change){
+    y <- c(NA, diff(chain))
+  } else{
+    y <- chain
   }
-  df = data.frame(t = 1:length(chain), X = chain)
-  return(ggplot2::ggplot(df, ggplot2::aes(t, X)) + ggplot2::geom_path(size=.1) + ggplot2::labs(title = "Series", x = "Iteration", y = "Value"))
+  plot(1:length(chain), y,
+       xlab = "Iteration", ylab = "Value",
+       main = paste("Series of", ifelse(change, "Changes", "Values"))
+       )
 }
-
-#' Change Plotter
+#' Diagnostics Wrapper
 #'
-#' Plots a change series against iterations. Useful to see if there is clustering of volatility in returns, like occurs in financial markets
+#' Calculates all diagnostic functions in the samplr package for a given chain. Optionally, plots them. 
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-
-#' @return A plot of the change series
-#' @export
-#'
-#' @examples
-#' set.seed(1)
-#' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_change(chain1[[1]])
-plot_change <- function(chain){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
-  }
-  df = data.frame(t = 1:(length(chain)-1), X = change_1d(chain))
-  return(ggplot2::ggplot(df, ggplot2::aes(t, X)) + ggplot2::geom_path(size=.1) + ggplot2::labs(title = "Change Series", x = "Iteration", y = "Change from previous"))
-}
-
-#' Plotter Wrapper
-#'
-#' Plots all the plot_* plots into a grid for ease.
-#'
-#' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param title Title of the uberplot
-#'
+#' @param plot Boolean. Whether to additionally plot the diagnostics. 
+#' @param acf.alpha, acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.
 #' @return
-#' A grid plotting all the plot_* functions
+#' A list with all diagnostic calculations (a list of lists); and optionally a grid of plots.
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_all(chain1[[1]])
-plot_all <- function(chain, title = NULL){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
+#' diagnostics <- calc_all(chain1[[1]])
+#' names(diagnostics)
+calc_all <- function(chain, plot=TRUE, acf.alpha=.05, acf.lag.max=100){
+  if (plot){
+    par(mfrow=c(3,3), mai=c(2,0.22,1.3,0.12), mar=c(5,3,3,2)+.1)
+    plot_series(chain, change=FALSE)
+    plot_series(chain, change=TRUE)
   }
-  p1 <- plot_series(chain)
-  p2 <- plot_autocorr(chain)
-  p3 <- plot_PSD(chain)
-  p4 <- plot_sigma_scaling(chain)
-  p5 <- plot_qqplot(chain)
-  p6 <- plot_levy(chain)
-  p7 <- plot_change(chain)
-
-  full <- gridExtra::grid.arrange(p1,p2,p3,p4,p5, p6, p7, nrow = 3, ncol = 3, top = title, heights = rep(3,3), widths = rep(3,3))
-  return(full)
+  
+  
+  value_qqplot <- calc_qqplot(chain, change = FALSE, plot = plot)
+  change_qqplot <- calc_qqplot(chain, change = TRUE, plot = plot)
+  
+  value_autocorr <- calc_autocorr(chain, change = FALSE, plot = plot, 
+                                  alpha = acf.alpha, lag.max = acf.lag.max)
+  change_autocorr <- calc_autocorr(chain, change = TRUE, plot = plot, 
+                                   alpha = acf.alpha, lag.max = acf.lag.max)
+  
+  levy <- calc_levy(chain, plot = plot)
+  PSD <- calc_PSD(chain, plot = plot)
+  sigma_scaling <- calc_sigma_scaling(chain, plot = plot)
+  
+  return(list(
+    "value_qqplot" = value_qqplot,
+    "change_qqplot" = change_qqplot,
+    "value_autocorr" = value_autocorr,
+    "change_autocorr" = change_autocorr,
+    "levy" = levy,
+    "PSD" = PSD,
+    "sigma_scaling" = sigma_scaling
+  ))
 
 }

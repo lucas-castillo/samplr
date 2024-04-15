@@ -26,7 +26,7 @@ You can install the released version of samplr from
 
     devtools::install_github("lucas-castillo/samplr")
 
-or alternatively use the `remotes` package
+or alternatively using the `remotes` package
 
     remotes::install_github("lucas-castillo/samplr")
 
@@ -47,33 +47,33 @@ Read more about it on the [macOS Prerequisites section in the R
 Installation and Administration
 Manual](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites).
 
+### Installing on Windows
+
+You will need to have RTools installed, which you can find
+[here](https://cran.r-project.org/bin/windows/Rtools/). Please make sure
+you install the version corresponding to your R version (i.e. for R
+4.3.3, you’d need RTools 4.3).
+
 ## Example
 
-samplr provides tools to generate samples following particular
-algorithms
+The samplr package provides tools to generate samples following
+particular algorithms
 
 ``` r
 library(samplr)
 set.seed(1)
 chain <- sampler_mh(start = 1, distr_name = "norm", distr_params = c(0,1), sigma_prop = diag(1) * .5, iterations = 2048)
-print(chain[[1]][1:20])
-#>  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684
-#>  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605
-#> [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723
-#> [19]  1.01645509  1.45473808
+r <- plot_series(chain[[1]], change = FALSE)
 ```
+
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
 As well as tools to diagnose the patterns both from samplers and
 participants:
 
 ``` r
-plot_qqplot(chain[[1]], change = TRUE)
+v <- calc_all(chain[[1]][1:200])
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
-
-``` r
-plot_series(chain[[1]])
-```
-
-![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
+<!-- TODO: add plot_series(chain[[1]]) again -->
