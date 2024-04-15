@@ -385,7 +385,7 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
 #' Plots the value of a one-dimensional series against the iteration where it occurred. Useful to see the general pattern of the chain (white noise, random walk, volatility clustering)
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#'
+#' @param change Boolean. Whether to plot the series of values or the series of changes between values. 
 #' @return
 #' A series plot
 #'
@@ -395,12 +395,16 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
-plot_series <- function(chain){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
+plot_series <- function(chain, change=TRUE){
+  if (change){
+    y <- c(NA, diff(chain))
+  } else{
+    y <- chain
   }
-  df = data.frame(t = 1:length(chain), X = chain)
-  return(ggplot2::ggplot(df, ggplot2::aes(t, X)) + ggplot2::geom_path(size=.1) + ggplot2::labs(title = "Series", x = "Iteration", y = "Value"))
+  plot(1:length(chain), y,
+       xlab = "Iteration", ylab = "Value",
+       main = paste("Series of", ifelse(change, "Changes", "Values"))
+       )
 }
 
 #' Change Plotter
