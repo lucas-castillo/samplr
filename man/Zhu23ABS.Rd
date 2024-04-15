@@ -32,7 +32,7 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 
 }
 \references{
-\insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+\insertAllCited{}
 }
 \section{Super class}{
 \code{\link[samplr:CoreABS]{samplr::CoreABS}} -> \code{Zhu23ABS}

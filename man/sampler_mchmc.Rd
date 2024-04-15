@@ -46,8 +46,13 @@ Metropolis-Coupled version of HMC, i.e. running multiple chains at different tem
 }
 \details{
 Metropolis-Coupled HMC does not support discrete distributions.
+
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
 }
 \examples{
 
 MCHMC <- sampler_mchmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+}
+\references{
+\insertAllCited{}
 }

@@ -49,8 +49,13 @@ Metropolis-Coupled version of Recycled-Momentum HMC, i.e. running multiple chain
 }
 \details{
 Metropolis-Coupled Recycled-Momentum HMC does not support discrete distributions.
+
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
 }
 \examples{
 
 MCREC <- sampler_mcrec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+}
+\references{
+\insertAllCited{}
 }

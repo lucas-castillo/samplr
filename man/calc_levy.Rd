@@ -18,10 +18,13 @@ If plot is true, it returns a simple plot with the log absolute difference in es
 This function analyses if the length of the jumps the sampler is making (\eqn{l}) belongs to a Levy probability density distribution, \eqn{P(l) \approx l^{-\mu}}.
 }
 \details{
-Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging \href{https://www.nature.com/articles/44831}{(Viswanathan et al., 1999)}. See \href{https://dl.acm.org/doi/abs/10.5555/3327345.3327477}{Zhu et al. 2018} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
+Values of \eqn{\mu \approx 2} have been used to describe foraging in animals, and produce the most effective foraging \insertCite{viswanathan1999OptimizingSuccessRandom}{samplr}. See \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 }
 \examples{
 set.seed(1)
 chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 calc_levy(chain1[[1]], plot=TRUE)
+}
+\references{
+\insertAllCited{}
 }
