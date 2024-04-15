@@ -406,34 +406,50 @@ plot_series <- function(chain, change=FALSE){
        main = paste("Series of", ifelse(change, "Changes", "Values"))
        )
 }
-#' Plotter Wrapper
+#' Diagnostics Wrapper
 #'
-#' Plots all the plot_* plots into a grid for ease.
+#' Calculates all diagnostic functions in the samplr package for a given chain. Optionally, plots them. 
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
-#' @param title Title of the uberplot
-#'
+#' @param plot Boolean. Whether to additionally plot the diagnostics. 
+#' @param acf.alpha, acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.
 #' @return
-#' A grid plotting all the plot_* functions
+#' A list with all diagnostic calculations (a list of lists); and optionally a grid of plots.
 #' @export
 #'
 #' @examples
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
-#' plot_all(chain1[[1]])
-plot_all <- function(chain, title = NULL){
-  if (is.matrix(chain) && ncol(chain)>1){
-    stop("Please input a one-dimensional vector")
+#' diagnostics <- calc_all(chain1[[1]])
+#' names(diagnostics)
+calc_all <- function(chain, plot=TRUE, acf.alpha=.05, acf.lag.max=100){
+  if (plot){
+    par(mfrow=c(3,3), mai=c(2,0.22,1.3,0.12), mar=c(5,3,3,2)+.1)
+    plot_series(chain, change=FALSE)
+    plot_series(chain, change=TRUE)
   }
-  p1 <- plot_series(chain)
-  p2 <- plot_autocorr(chain)
-  p3 <- plot_PSD(chain)
-  p4 <- plot_sigma_scaling(chain)
-  p5 <- plot_qqplot(chain)
-  p6 <- plot_levy(chain)
-  p7 <- plot_change(chain)
-
-  full <- gridExtra::grid.arrange(p1,p2,p3,p4,p5, p6, p7, nrow = 3, ncol = 3, top = title, heights = rep(3,3), widths = rep(3,3))
-  return(full)
+  
+  
+  value_qqplot <- calc_qqplot(chain, change = FALSE, plot = plot)
+  change_qqplot <- calc_qqplot(chain, change = TRUE, plot = plot)
+  
+  value_autocorr <- calc_autocorr(chain, change = FALSE, plot = plot, 
+                                  alpha = acf.alpha, lag.max = acf.lag.max)
+  change_autocorr <- calc_autocorr(chain, change = TRUE, plot = plot, 
+                                   alpha = acf.alpha, lag.max = acf.lag.max)
+  
+  levy <- calc_levy(chain, plot = plot)
+  PSD <- calc_PSD(chain, plot = plot)
+  sigma_scaling <- calc_sigma_scaling(chain, plot = plot)
+  
+  return(list(
+    "value_qqplot" = value_qqplot,
+    "change_qqplot" = change_qqplot,
+    "value_autocorr" = value_autocorr,
+    "change_autocorr" = change_autocorr,
+    "levy" = levy,
+    "PSD" = PSD,
+    "sigma_scaling" = sigma_scaling
+  ))
 
 }
