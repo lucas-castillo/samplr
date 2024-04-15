@@ -31,3 +31,6 @@ reference:
 - title: "Data"
 - contents:
   - sundh2023e3
+  
+figures:
+  fig.width: 8
