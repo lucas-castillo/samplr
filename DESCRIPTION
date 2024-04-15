@@ -10,7 +10,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-0274-0777")),
    person(given = "Yun-Xiao",
            family = "Li",
-           role = c("ctb"),
+           role = c("aut"),
            email = "yunxiao.li@warwick.ac.uk",
            comment = c(ORCID = "0000-0002-3509-6618")))
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
