@@ -351,33 +351,33 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_autocorr(chain1[[1]])
 plot_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100){
+calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot=FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
   if (change){
     a <- stats::acf(chain[2:length(chain)] - chain[1:(length(chain)-1)], lag.max = lag.max, plot=FALSE)
-    df <- data.frame(Lag = a$lag[-1], Autocorrelation = a$acf[-1])
-    upperLine <- NULL
-    lowerLine <- NULL
-    title <- ggplot2::ggtitle("Change ACF")
   } else{
-    c_int <- 1 - alpha
     a <- stats::acf(chain, lag.max = lag.max, plot=FALSE)
-    df <- data.frame(Lag = a$lag, Autocorrelation = a$acf)
-    vcrit <- pracma::erfinv(c_int) * sqrt(2)
-    lconf = -vcrit/sqrt(length(chain));
-    upconf = vcrit/sqrt(length(chain));
-    upperLine <- ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = upconf), colour = "red", linetype = "dashed")
-    lowerLine <- ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = lconf), colour = "red", linetype = "dashed")
-    title <- ggplot2::ggtitle("Autocorrelation")
   }
-
-  gpl <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(Lag, Autocorrelation))
-
-  return (gpl + ggplot2::geom_line(data=df) + upperLine + lowerLine + ggplot2::ylim(c(-1,1)) + title)
-  #   # ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = lconf), colour = "red", linetype = "dashed") +
-  #   # ggplot2::geom_hline(mapping = ggplot2::aes(yintercept = upconf), colour = "red", linetype = "dashed") +
-  #     ggplot2::ylim(c(-1,1)) + ggplot2::ggtitle("Change ACF"))
+  atc <- as.vector(a$acf)[-1]
+  if (plot){
+    plot(1:lag.max, atc, 
+         ylim=c(-1, 1), 
+         xlab="Lag", ylab = "ACF", 
+         main = paste("Autocorrelation of", ifelse(change, "Changes", "Values") )
+         )
+    if (!change){
+      c_int <- 1 - alpha
+      vcrit <- pracma::erfinv(c_int) * sqrt(2)
+      lconf = -vcrit/sqrt(length(chain));
+      upconf = vcrit/sqrt(length(chain));
+      lines(1:lag.max, rep(lconf, lag.max), lty="dashed", col="blue")
+      lines(1:lag.max, rep(upconf, lag.max), lty="dashed", col="blue")
+    }
+  }
+  
+  return(atc)
 }
 
 #' Series Plotter
