@@ -416,7 +416,7 @@ plot_series <- function(chain, change=FALSE){
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
 #' @param plot Boolean. Whether to additionally plot the diagnostics. 
-#' @param acf.alpha, acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.
+#' @param acf.alpha,acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.
 #' @return
 #' A list with all diagnostic calculations (a list of lists); and optionally a grid of plots.
 #' @export
