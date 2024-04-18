@@ -11,7 +11,7 @@ calc_all(chain, plot = TRUE, acf.alpha = 0.05, acf.lag.max = 100)
 
 \item{plot}{Boolean. Whether to additionally plot the diagnostics.}
 
-\item{acf.alpha, }{acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.}
+\item{acf.alpha, acf.lag.max}{Additional parameters to \link[samplr]{calc_autocorr}.}
 }
 \value{
 A list with all diagnostic calculations (a list of lists); and optionally a grid of plots.
