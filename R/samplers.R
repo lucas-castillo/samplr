@@ -622,8 +622,8 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 
   return (
     list(
-      "Samples" = res$chain[,1],
-      "Momentums" = res$momentums[,1],
+      "Samples" = res$chain,
+      "Momentums" = res$momentums,
       "Acceptance Ratio" = res$acceptances / iterations
     )
   )
