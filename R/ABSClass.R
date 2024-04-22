@@ -19,6 +19,10 @@ CoreABS <- R6::R6Class("CoreABS",
    s_nd_time = NULL,
    #' @field distr_name The type of the posterior hypothesis distribution.
    distr_name = NULL,
+   #' @field ss_samples The samples drawn by ABS when the task only has single stimuli
+   ss_samples = NULL,
+   #' @field ms_samples The samples drawn by ABS when the task only has single stimuli
+   ms_samples = NULL,
    
    
    #' @description
