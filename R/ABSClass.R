@@ -148,6 +148,7 @@ Zhu23ABS <- R6::R6Class(
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
       
+      
       tafc_sim <- Zhu23ABS_cpp(
         task_id = 2,
         trial_stim = trial_stim, 
@@ -206,7 +207,8 @@ Zhu23ABS <- R6::R6Class(
     #'
     estimate = function(n_sample, trial_stim, start_point=NA, conf_level=FALSE){
       
-      sss_df <- private$single_stim_simulation(start_point, n_sample, trial_stim)
+      private$single_stim_simulation(start_point, n_sample, trial_stim)
+      sss_df <- self$ss_samples
       sss_df$point_est <- sapply(sss_df$samples, function(samples) samples[length(samples)])
       
       if (conf_level){
@@ -215,34 +217,42 @@ Zhu23ABS <- R6::R6Class(
         sss_df$conf_interval_l <- conf_interval[,1]
         sss_df$conf_interval_u <- conf_interval[,2]
       }
+      
+      return(sss_df)
+    },
       return(sss_df)
     }
   ),
   
   private = list(
     single_stim_simulation = function(start_point, n_sample, trial_stim){
+      
       #Check inputs
       stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
       if (any(!is.na(self$start_point))){
         stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
-      
-      sss_sim = Zhu23ABS_cpp(
-        task_id = 1,
-        trial_stim = trial_stim, 
-        distr_name = self$distr_name,
-        n_chains = self$n_chains,
-        proposal_width = self$width,
-        provided_start_point = start_point,
-        stop_rule = n_sample,
-        nd_time = self$nd_time, 
-        s_nd_time = self$s_nd_time,
-        lambda = self$lambda,
-        prior_on_resp = c(1,1) # a place holder
-      )
-      sss_df <- data.frame(do.call(rbind, sss_sim))
-      return(sss_df)
+
+      #Check samples
+      if (is.data.frame(self$ss_samples)){
+        cat("Using the generated samples.\n")
+      } else {
+        sss_sim <- Zhu23ABS_cpp(
+          task_id = 1,
+          trial_stim = trial_stim,
+          distr_name = self$distr_name,
+          n_chains = self$n_chains,
+          proposal_width = self$width,
+          provided_start_point = start_point,
+          stop_rule = n_sample,
+          nd_time = self$nd_time,
+          s_nd_time = self$s_nd_time,
+          lambda = self$lambda,
+          prior_on_resp = c(1,1) # a place holder
+        )
+        self$ss_samples <- data.frame(do.call(rbind, sss_sim))
+      }
     }
   )
 )
