@@ -52,6 +52,8 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \item \href{#method-Zhu23ABS-new}{\code{Zhu23ABS$new()}}
 \item \href{#method-Zhu23ABS-two_alt_force_choice}{\code{Zhu23ABS$two_alt_force_choice()}}
 \item \href{#method-Zhu23ABS-estimate}{\code{Zhu23ABS$estimate()}}
+\item \href{#method-Zhu23ABS-confidence_interval}{\code{Zhu23ABS$confidence_interval()}}
+\item \href{#method-Zhu23ABS-ss_samples_reset}{\code{Zhu23ABS$ss_samples_reset()}}
 \item \href{#method-Zhu23ABS-clone}{\code{Zhu23ABS$clone()}}
 }
 }
@@ -160,7 +162,7 @@ tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, tr
 \if{html}{\out{<a id="method-Zhu23ABS-estimate"></a>}}
 \if{latex}{\out{\hypertarget{method-Zhu23ABS-estimate}{}}}
 \subsection{Method \code{estimate()}}{
-This function is for simulating the estimate and confidence interval tasks by Zhu23ABS.
+This function is for simulating the point and confidence interval estimation tasks by Zhu23ABS.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(n_sample, trial_stim, start_point = NA, conf_level = FALSE)}\if{html}{\out{</div>}}
 }
@@ -179,12 +181,17 @@ This function is for simulating the estimate and confidence interval tasks by Zh
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A data frame with ten columns:
+A data frame with five columns:
 \enumerate{
 \item{trial: The index of trials;}
 \item{samples: The samples of ABS sampler for the trial;}
 \item{stimulus: The stimuli of the experiment;}
-\item{nd_time: The non-decision time for this trial;}
+\item{rt: The response time;}
+\item{point_est: The response of point estimation;}
+}
+
+If \code{conf_level} is provided, the data frame will have two more columns:
+\enumerate{
 \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
 \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
 }

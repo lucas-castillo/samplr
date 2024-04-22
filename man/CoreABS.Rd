@@ -19,6 +19,10 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item{\code{s_nd_time}}{The range of the non-decision time.}
 
 \item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+
+\item{\code{ss_samples}}{The samples drawn by ABS when the task only has single stimuli}
+
+\item{\code{ms_samples}}{The samples drawn by ABS when the task only has single stimuli}
 }
 \if{html}{\out{</div>}}
 }

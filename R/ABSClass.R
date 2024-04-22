@@ -177,7 +177,7 @@ Zhu23ABS <- R6::R6Class(
     
     
     #' @description
-    #' This function is for simulating the estimate and confidence interval tasks by Zhu23ABS.
+    #' This function is for simulating the point and confidence interval estimation tasks by Zhu23ABS.
     #' 
     #' @param n_sample The fixed number of samples for each trial.
     #' @param trial_stim The stimulus of each trial.
@@ -185,12 +185,17 @@ Zhu23ABS <- R6::R6Class(
     #' @param conf_level The required confidence level.
     #' 
     #' 
-    #' @return A data frame with ten columns:
+    #' @return A data frame with five columns:
     #' \enumerate{
     #'  \item{trial: The index of trials;}
     #'  \item{samples: The samples of ABS sampler for the trial;}
     #'  \item{stimulus: The stimuli of the experiment;}
-    #'  \item{nd_time: The non-decision time for this trial;}
+    #'  \item{rt: The response time;}
+    #'  \item{point_est: The response of point estimation;}
+    #'  }
+    #'  
+    #'  If `conf_level` is provided, the data frame will have two more columns:
+    #'  \enumerate{
     #'  \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
     #'  \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
     #' }
