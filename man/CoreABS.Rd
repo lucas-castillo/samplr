@@ -12,17 +12,15 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+\item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{nd_time}}{The non-decision time.}
+\item{\code{nd_time}}{the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{The range of the non-decision time.}
+\item{\code{s_nd_time}}{the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 
-\item{\code{ss_samples}}{The samples drawn by ABS when the task only has single stimuli}
-
-\item{\code{ms_samples}}{The samples drawn by ABS when the task only has single stimuli}
+\item{\code{sim_results}}{a data frame for saving the simulation results.}
 }
 \if{html}{\out{</div>}}
 }
@@ -45,13 +43,13 @@ Create a new 'CoreABS' object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+\item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{nd_time}}{The non-decision time.}
+\item{\code{nd_time}}{the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+\item{\code{s_nd_time}}{the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution. Default is normal distributions.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 }
 \if{html}{\out{</div>}}
 }

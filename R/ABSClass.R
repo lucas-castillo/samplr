@@ -11,27 +11,25 @@
 CoreABS <- R6::R6Class("CoreABS",
   public = list(
    
-   #' @field n_chains The number of chains of the sampler. It should be an integer.
+   #' @field n_chains an integer of the number of chains for the sampler.
    n_chains = NULL,
-   #' @field nd_time The non-decision time.
+   #' @field nd_time the non-decision time (in seconds).
    nd_time = NULL,
-   #' @field s_nd_time The range of the non-decision time.
+   #' @field s_nd_time the inter-trial-variability of the non-decition time (in seconds).
    s_nd_time = NULL,
-   #' @field distr_name The type of the posterior hypothesis distribution.
+   #' @field distr_name a character string indicating the type of the posterior hypothesis distribution.
    distr_name = NULL,
-   #' @field ss_samples The samples drawn by ABS when the task only has single stimuli
-   ss_samples = NULL,
-   #' @field ms_samples The samples drawn by ABS when the task only has single stimuli
-   ms_samples = NULL,
-   
+   #' @field sim_results a data frame for saving the simulation results.
+   sim_results = NULL,
+  
    
    #' @description
    #' Create a new 'CoreABS' object.
    #' 
-   #' @param n_chains The number of chains of the sampler. It should be an integer.
-   #' @param nd_time The non-decision time.
-   #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
-   #' @param distr_name The type of the posterior hypothesis distribution. Default is normal distributions.
+   #' @param n_chains an integer of the number of chains for the sampler.
+   #' @param nd_time the non-decision time (in seconds).
+   #' @param s_nd_time the inter-trial-variability of the non-decition time (in seconds).
+   #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
    #' 
    #' @return A new 'CoreABS' object.
    #'
@@ -68,21 +66,21 @@ Zhu23ABS <- R6::R6Class(
   inherit = CoreABS,
   public = list(
     
-    #' @field width The standard deviation of the proposal distribution for MC3
+    #' @field width the standard deviation of the proposal distribution for MC3.
     width = NULL,
-    #' @field lambda The rate parameter of the gamma distribution for decision time.
+    #' @field lambda the rate parameter of the Erlang distribution for decision time.
     lambda = NULL,
-
+    
     
     #' @description
     #' Create a new 'Zhu23ABS' object.
     #' 
-    #' @param width The proposal width of the MC3 sampler.
-    #' @param n_chains The number of chains of the sampler. It should be an integer.
-    #' @param nd_time The non-decision time.
-    #' @param s_nd_time The range of the non-decision time. Default is 0, implying a fixed non-decision time.
-    #' @param lambda The rate parameter of the gamma distribution for decision time.
-    #' @param distr_name The type of the posterior hypothesis distribution. Default is normal distributions.
+    #' @param width the standard deviation of the proposal distribution for MC3.
+    #' @param n_chains an integer of the number of chains for the sampler.
+    #' @param nd_time the non-decision time (in seconds).
+    #' @param s_nd_time the inter-trial-variability of the non-decition time (in seconds).
+    #' @param lambda the rate parameter of the Erlang distribution for decision time.
+    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
@@ -99,20 +97,42 @@ Zhu23ABS <- R6::R6Class(
       self$width <- width
     },
     
-    
     #' @description
-    #' This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
+    #' Simulate the ABS model.
     #' 
-    #' @param delta The relative difference between the number of samples supporting each hypothesis.
-    #' @param dec_bdry The decision boundary that separates the posterior hypothesis distribution.
-    #' @param discrim The stimuli discriminability.
-    #' @param trial_stim The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.
-    #' @param prior_on_resp The beta prior on responses. Default setting is Beta(1,1).
-    #' @param start_point The start point of each trial.
-    #' @param stim_depend The boolean variable that control whether the prior on responses changes regarding the last stimulus.
-    #' @param max_iterations The maximum length of the MC3 sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+    #' @param stopping_rule a character string indicating the stopping rule of ABS to be applied. Possible values are `"fixed"` and `"relative"`. See also `Details`.
+    #' @param ... further arguments passed to the ABS model, see also `Details`.
     #' 
-    #' @return A data frame with seven columns:
+    #' @details
+    #' The ABS model has two types of stopping rules: fixed and relative. The fixed stopping rule means that a fixed number of samples are drawn to complete the tasks such as estimations and confidence intervals. On the other hand, the relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as two-alternative force choice tasks.
+    #' 
+    #' When `stopping rule` is `"fixed"`, the following arguments are required:
+    #' 
+    #' - `n_sample` the fixed number of samples for each trial.
+    #' - `trial_stim` a numeric vector of the stimulus of each trial.
+    #' - `start_point` a numeric vector setting the start point of each trial for the sampler. Defaults to `NA`, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
+    #' 
+    #' When the stopping rule is "relative", the following arguments are required:
+    #' 
+    #' - `delta` the relative difference between the number of samples supporting each hypothesis.
+    #' - `dec_bdry` the decision boundary that separates the posterior hypothesis distribution.
+    #' - `discrim` the stimuli discriminability.
+    #' - `trial_stim` a factor only consisting of two levels: below and above the decision boundary. It indicates the stimulus of each trial.
+    #' - `prior_on_resp` a numeric vector for the Beta prior on responses. Defaults to `c(1,1)` representing the distribution `Beta(1,1)`.
+    #' - `start_point` a numeric vector setting the start point of each trial for the sampler. Defaults to `NA`, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
+    #' - `stim_depend` a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to `TRUE`. Please refer to the vignette for more information.
+    #' - `max_iterations` the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+    #' 
+    #' No values will be return after running this method, but the field `sim_results` will be updated instead. If the stopping rule is "fixed", `simulation_results` will be a data frame with five columns:
+    #' \enumerate{
+    #'  \item{trial: The index of trials;}
+    #'  \item{samples: The samples of ABS sampler for the trial;}
+    #'  \item{stimulus: The stimuli of the experiment;}
+    #'  \item{rt: The response time;}
+    #'  \item{point_est: The response of point estimation;}
+    #'  }
+    #' 
+    #' On the other hand, if the stopping rule is "relative", `sim_results` will be a data frame with seven columns:
     #' \enumerate{
     #'  \item{trial: The index of trials;}
     #'  \item{samples: The samples of ABS sampler for the trial;}
@@ -123,13 +143,111 @@ Zhu23ABS <- R6::R6Class(
     #'  \item{confidence: The confidence of the response.}
     #' }
     #' 
-    #' 
-    #' 
     #' @examples
-    #' trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-    #' tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
     #' 
-    two_alt_force_choice = function(delta, dec_bdry, discrim, trial_stim, prior_on_resp = c(1,1), start_point=NA, stim_depend=TRUE, max_iterations=1000){
+    #' trial_stim <- round(runif(5, 10, 50))
+    #' zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim)
+    #' zhuabs$sim_results
+    #' 
+    #' zhuabs$reset_sim_results()
+    #' trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
+    #' zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+    #' zhuabs$sim_results
+    #' 
+    simulate = function(stopping_rule, ...){
+      switch(
+        stopping_rule,
+        
+        fixed = {
+          private$simulate_fixed_sr(...)
+        },
+        
+        relative = {
+          private$simulate_relative_sr(...)
+        }
+      ) # end of switch
+      
+      invisible(self)
+    },
+    
+    #' @description
+    #' This function calculates the confidence interval of the `simulate` method's results when the "fixed" stopping rule was used.
+    #'
+    #' @param conf_level the required confidence level.
+    #'
+    #' @details
+    #' No values will be returned by this method. Instead, two new columns will be added to the `sim_results`:
+    #' \enumerate{
+    #'  \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
+    #'  \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
+    #'  }
+    #'
+    #' @examples
+    #' zhuabs$confidence_interval(conf_level = 0.9)
+    #'
+    confidence_interval = function(conf_level){
+
+      # Check ss_samples
+      if (!is.data.frame(self$sim_results)){
+        stop("Please run the `estimate` method first.\n")
+      } else {
+        stopifnot("conf_level should be a single value between 0 and 1."=(is.numeric(conf_level) & length(conf_level) == 1 & conf_level >= 0 & conf_level <= 1))
+
+        conf_interval <- t(sapply(self$sim_results$samples, function(samples) quantile(samples, probs = c((1-conf_level)/2, (1+conf_level)/2))))
+        self$sim_results$conf_interval_l <- conf_interval[,1]
+        self$sim_results$conf_interval_u <- conf_interval[,2]
+      }
+      invisible(self)
+    },
+    
+    
+    #' @description
+    #' This function is for resetting the `ss_samples` to run new simulations.
+    reset_sim_results = function(){
+      self$sim_results <- NULL
+      invisible(self)
+    }
+  ),
+  
+  private = list(
+    
+    simulate_fixed_sr = function(n_sample, trial_stim, start_point=NA){
+      
+      #Check inputs
+      stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
+      if (any(!is.na(self$start_point))){
+        stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
+        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
+      }
+      
+      #Check samples
+      if (is.data.frame(self$sim_results)){
+        stop("Samples have been drawn. Please use the `reset_sim_results` method to reset the samples if you want to rerun the simulation.\n")
+      } else {
+        samples_fixed_sr <- Zhu23ABS_cpp(
+          task_id = 1,
+          trial_stim = trial_stim,
+          distr_name = self$distr_name,
+          n_chains = self$n_chains,
+          proposal_width = self$width,
+          provided_start_point = start_point,
+          stop_rule = n_sample,
+          nd_time = self$nd_time,
+          s_nd_time = self$s_nd_time,
+          lambda = self$lambda,
+          prior_on_resp = c(1,1) # a place holder
+        )
+        self$sim_results <- data.frame(do.call(rbind, samples_fixed_sr))
+        rm(samples_fixed_sr)
+      }
+      
+      self$sim_results$point_est <- sapply(self$sim_results$samples, function(samples) samples[length(samples)])
+      
+      invisible(self)
+    },
+    
+    simulate_relative_sr = function(delta, dec_bdry, discrim, trial_stim, prior_on_resp = c(1,1), start_point=NA, stim_depend=TRUE, max_iterations=1000){
+      
       #Check inputs
       stopifnot("delta should be an integer."=(delta %% 1==0))
       stopifnot("The value of delta should be larger than the absolute difference within prior_on_resp."=(delta>abs(prior_on_resp[0] - prior_on_resp[1])))
@@ -148,150 +266,37 @@ Zhu23ABS <- R6::R6Class(
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
       
-      
-      tafc_sim <- Zhu23ABS_cpp(
-        task_id = 2,
-        trial_stim = trial_stim, 
-        distr_name = self$distr_name,
-        proposal_width = self$width,
-        n_chains = self$n_chains,
-        provided_start_point = start_point,
-        prior_on_resp = prior_on_resp,
-        stop_rule = delta,
-        nd_time = self$nd_time, 
-        s_nd_time = self$s_nd_time,
-        lambda = self$lambda,
-        stim_depend = stim_depend,
-        mc3_iterations = max_iterations,
-        dec_bdry = dec_bdry, 
-        discrim = discrim
-      )
-      tafc_df <- data.frame(do.call(rbind, tafc_sim))
-      tafc_df$stimulus <- trial_stim
-      tafc_df$response <- stim_levels[as.numeric(tafc_df$response)]
-      tafc_df$accuracy <- as.numeric(tafc_df$accuracy)
-      tafc_df$rt <- as.numeric(tafc_df$rt)
-      tafc_df$confidence <- as.numeric(tafc_df$confidence)
-      
-      return(tafc_df)
-    },
-    
-    
-    #' @description
-    #' This function is for simulating the point and confidence interval estimation tasks by Zhu23ABS.
-    #' 
-    #' @param n_sample The fixed number of samples for each trial.
-    #' @param trial_stim The stimulus of each trial.
-    #' @param start_point The start point of each trial.
-    #' @param conf_level The required confidence level.
-    #' 
-    #' 
-    #' @return A data frame with five columns:
-    #' \enumerate{
-    #'  \item{trial: The index of trials;}
-    #'  \item{samples: The samples of ABS sampler for the trial;}
-    #'  \item{stimulus: The stimuli of the experiment;}
-    #'  \item{rt: The response time;}
-    #'  \item{point_est: The response of point estimation;}
-    #'  }
-    #'  
-    #'  If `conf_level` is provided, the data frame will have two more columns:
-    #'  \enumerate{
-    #'  \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
-    #'  \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
-    #' }
-    #' 
-    #' @examples
-    #' trial_stim <- c(25, 26, 10, 30)
-    #' est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0.5)
-    #'
-    estimate = function(n_sample, trial_stim, start_point=NA, conf_level=FALSE){
-      
-      private$single_stim_simulation(start_point, n_sample, trial_stim)
-      sss_df <- self$ss_samples
-      sss_df$point_est <- sapply(sss_df$samples, function(samples) samples[length(samples)])
-      
-      if (conf_level){
-        stopifnot("conf_level should be a single value between 0 and 1."=(is.numeric(conf_level) & length(conf_level) == 1 & conf_level >= 0 & conf_level <= 1))
-        conf_interval <- t(sapply(sss_df$samples, function(samples) quantile(samples, probs = c((1-conf_level)/2, (1+conf_level)/2))))
-        sss_df$conf_interval_l <- conf_interval[,1]
-        sss_df$conf_interval_u <- conf_interval[,2]
-      }
-      
-      return(sss_df)
-    },
-    
-    #' @description
-    #' This function is for calculating the confidence interval of the samples generated by the `estimate` function.
-    #' 
-    #' @param conf_level The required confidence level.
-    #' 
-    #' @return A data frame with six columns:
-    #' \enumerate{
-    #'  \item{trial: The index of trials;}
-    #'  \item{samples: The samples of ABS sampler for the trial;}
-    #'  \item{stimulus: The stimuli of the experiment;}
-    #'  \item{rt: The response time;}
-    #'  \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
-    #'  \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
-    #'  }
-    #' 
-    #' @examples
-    #' conf_intvl <- zhuabs$confidence_interval(conf_level = 0.9)
-    #'
-    confidence_interval = function(conf_level){
-      
-      # Check ss_samples
-      if (!is.data.frame(self$ss_samples)){
-        print("Please run the `estimate` function first.\n")
-      } else {
-        stopifnot("conf_level should be a single value between 0 and 1."=(is.numeric(conf_level) & length(conf_level) == 1 & conf_level >= 0 & conf_level <= 1))
-        
-        sss_df <- self$ss_samples
-        conf_interval <- t(sapply(sss_df$samples, function(samples) quantile(samples, probs = c((1-conf_level)/2, (1+conf_level)/2))))
-        sss_df$conf_interval_l <- conf_interval[,1]
-        sss_df$conf_interval_u <- conf_interval[,2]
-      }
-      
-      return(sss_df)
-    },
-    
-    #' @description
-    #' This function is for resetting the samples to run new simulations.
-    ss_samples_reset = function(){
-      self$ss_samples <- NULL
-    }
-  ),
-  
-  private = list(
-    single_stim_simulation = function(start_point, n_sample, trial_stim){
-      
-      #Check inputs
-      stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
-      if (any(!is.na(self$start_point))){
-        stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
-        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
-      }
-
       #Check samples
-      if (is.data.frame(self$ss_samples)){
-        cat("Using the generated samples.\n")
+      if (is.data.frame(self$sim_results)){
+        stop("Samples have been drawn. Please use the `ms_reset` method to reset the samples if you want to rerun the simulation.\n")
       } else {
-        sss_sim <- Zhu23ABS_cpp(
-          task_id = 1,
-          trial_stim = trial_stim,
+        samples_relative_sr <- Zhu23ABS_cpp(
+          task_id = 2,
+          trial_stim = trial_stim, 
           distr_name = self$distr_name,
-          n_chains = self$n_chains,
           proposal_width = self$width,
+          n_chains = self$n_chains,
           provided_start_point = start_point,
-          stop_rule = n_sample,
-          nd_time = self$nd_time,
+          prior_on_resp = prior_on_resp,
+          stop_rule = delta,
+          nd_time = self$nd_time, 
           s_nd_time = self$s_nd_time,
           lambda = self$lambda,
-          prior_on_resp = c(1,1) # a place holder
+          stim_depend = stim_depend,
+          mc3_iterations = max_iterations,
+          dec_bdry = dec_bdry, 
+          discrim = discrim
         )
-        self$ss_samples <- data.frame(do.call(rbind, sss_sim))
+        self$sim_results <- data.frame(do.call(rbind, samples_relative_sr))
+        rm(samples_relative_sr)
       }
+      self$sim_results$stimulus <- trial_stim
+      self$sim_results$response <- stim_levels[as.numeric(self$sim_results$response)]
+      self$sim_results$accuracy <- as.numeric(self$sim_results$accuracy)
+      self$sim_results$rt <- as.numeric(self$sim_results$rt)
+      self$sim_results$confidence <- as.numeric(self$sim_results$confidence)
+      invisible(self)
     }
   )
+  
 )
