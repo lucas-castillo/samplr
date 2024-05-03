@@ -13,9 +13,9 @@ CoreABS <- R6::R6Class("CoreABS",
    
    #' @field n_chains an integer of the number of chains for the sampler.
    n_chains = NULL,
-   #' @field nd_time the non-decision time (in seconds).
+   #' @field nd_time a numeric value of the non-decision time (in seconds).
    nd_time = NULL,
-   #' @field s_nd_time the inter-trial-variability of the non-decition time (in seconds).
+   #' @field s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
    s_nd_time = NULL,
    #' @field distr_name a character string indicating the type of the posterior hypothesis distribution.
    distr_name = NULL,
@@ -27,8 +27,8 @@ CoreABS <- R6::R6Class("CoreABS",
    #' Create a new 'CoreABS' object.
    #' 
    #' @param n_chains an integer of the number of chains for the sampler.
-   #' @param nd_time the non-decision time (in seconds).
-   #' @param s_nd_time the inter-trial-variability of the non-decition time (in seconds).
+   #' @param nd_time a numeric value of the non-decision time (in seconds).
+   #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
    #' 
    #' @return A new 'CoreABS' object.
@@ -75,11 +75,11 @@ Zhu23ABS <- R6::R6Class(
     #' @description
     #' Create a new 'Zhu23ABS' object.
     #' 
-    #' @param width the standard deviation of the proposal distribution for MC3.
+    #' @param width a numeric value of the standard deviation of the proposal distribution for MC3.
     #' @param n_chains an integer of the number of chains for the sampler.
-    #' @param nd_time the non-decision time (in seconds).
-    #' @param s_nd_time the inter-trial-variability of the non-decition time (in seconds).
-    #' @param lambda the rate parameter of the Erlang distribution for decision time.
+    #' @param nd_time a numeric value of the non-decision time (in seconds). When `s_nd_time` is not 0, `nd_time` represents the lower bound of the non-decision time.
+    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
+    #' @param lambda a numeric value of the rate parameter of the Erlang distribution for decision time.
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' 
     #' @return A new 'Zhu23ABS' object.
@@ -108,20 +108,20 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' When `stopping rule` is `"fixed"`, the following arguments are required:
     #' 
-    #' - `n_sample` the fixed number of samples for each trial.
+    #' - `n_sample` an integer of the fixed number of samples for each trial.
     #' - `trial_stim` a numeric vector of the stimulus of each trial.
     #' - `start_point` a numeric vector setting the start point of each trial for the sampler. Defaults to `NA`, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
     #' 
     #' When the stopping rule is "relative", the following arguments are required:
     #' 
-    #' - `delta` the relative difference between the number of samples supporting each hypothesis.
-    #' - `dec_bdry` the decision boundary that separates the posterior hypothesis distribution.
-    #' - `discrim` the stimuli discriminability.
+    #' - `delta` an integer of the relative difference between the number of samples supporting each hypothesis.
+    #' - `dec_bdry` a numeric value of the decision boundary that separates the posterior hypothesis distribution.
+    #' - `discrim` a numeric value of the stimuli discriminability.
     #' - `trial_stim` a factor only consisting of two levels: below and above the decision boundary. It indicates the stimulus of each trial.
     #' - `prior_on_resp` a numeric vector for the Beta prior on responses. Defaults to `c(1,1)` representing the distribution `Beta(1,1)`.
     #' - `start_point` a numeric vector setting the start point of each trial for the sampler. Defaults to `NA`, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
     #' - `prior_depend` a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to `TRUE`. Please refer to the vignette for more information.
-    #' - `max_iterations` the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+    #' - `max_iterations` an integer of the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
     #' 
     #' No values will be return after running this method, but the field `sim_results` will be updated instead. If the stopping rule is "fixed", `simulation_results` will be a data frame with five columns:
     #' \enumerate{
@@ -246,7 +246,7 @@ Zhu23ABS <- R6::R6Class(
       invisible(self)
     },
     
-    simulate_relative_sr = function(delta, dec_bdry, discrim, trial_stim, prior_on_resp = c(1,1), start_point=NA, stim_depend=TRUE, max_iterations=1000){
+    simulate_relative_sr = function(delta, dec_bdry, discrim, trial_stim, prior_on_resp = c(1,1), start_point=NA, prior_depend=TRUE, max_iterations=1000){
       
       #Check inputs
       stopifnot("delta should be an integer."=(delta %% 1==0))
