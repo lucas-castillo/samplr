@@ -14,9 +14,9 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \describe{
 \item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{nd_time}}{the non-decision time (in seconds).}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
 \item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 
@@ -45,11 +45,11 @@ Create a new 'CoreABS' object.
 \describe{
 \item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{nd_time}}{the non-decision time (in seconds).}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution. The package currently only support \code{norm}, which represents normal distribution.}
 }
 \if{html}{\out{</div>}}
 }

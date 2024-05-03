@@ -74,15 +74,15 @@ Create a new 'Zhu23ABS' object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{width}}{the standard deviation of the proposal distribution for MC3.}
+\item{\code{width}}{a numeric value of the standard deviation of the proposal distribution for MC3.}
 
 \item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{nd_time}}{the non-decision time (in seconds).}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds). When \code{s_nd_time} is not 0, \code{nd_time} represents the lower bound of the non-decision time.}
 
-\item{\code{s_nd_time}}{the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{lambda}}{the rate parameter of the Erlang distribution for decision time.}
+\item{\code{lambda}}{a numeric value of the rate parameter of the Erlang distribution for decision time.}
 
 \item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 }
@@ -107,13 +107,15 @@ A new 'Zhu23ABS' object.
 \subsection{Method \code{simulate()}}{
 Simulate the ABS model.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$simulate(stopping_rule, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$simulate(stopping_rule, start_point, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{stopping_rule}}{a character string indicating the stopping rule of ABS to be applied. Possible values are \code{"fixed"} and \code{"relative"}. See also \code{Details}.}
+
+\item{\code{start_point}}{a numeric vector setting the start point of each trial for the sampler. By default, it's set to \code{NA}, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette.}
 
 \item{\code{...}}{further arguments passed to the ABS model, see also \code{Details}.}
 }
@@ -122,23 +124,21 @@ Simulate the ABS model.
 \subsection{Details}{
 The ABS model has two types of stopping rules: fixed and relative. The fixed stopping rule means that a fixed number of samples are drawn to complete the tasks such as estimations and confidence intervals. On the other hand, the relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as two-alternative force choice tasks.
 
-When \verb{stopping rule} is \code{"fixed"}, the following arguments are required:
+When the \verb{stopping rule} is \code{"fixed"}, the following arguments are required:
 \itemize{
-\item \code{n_sample} the fixed number of samples for each trial.
+\item \code{n_sample} an integer of the fixed number of samples for each trial.
 \item \code{trial_stim} a numeric vector of the stimulus of each trial.
-\item \code{start_point} a numeric vector setting the start point of each trial for the sampler. Defaults to \code{NA}, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
 }
 
-When the stopping rule is "relative", the following arguments are required:
+When the \verb{stopping rule} is \code{"relative"}, the following arguments are required:
 \itemize{
-\item \code{delta} the relative difference between the number of samples supporting each hypothesis.
-\item \code{dec_bdry} the decision boundary that separates the posterior hypothesis distribution.
-\item \code{discrim} the stimuli discriminability.
-\item \code{trial_stim} a factor only consisting of two levels: below and above the decision boundary. It indicates the stimulus of each trial.
+\item \code{delta} an integer of the relative difference between the number of samples supporting each hypothesis.
+\item \code{dec_bdry} a numeric value of the decision boundary that separates the posterior hypothesis distribution.
+\item \code{discrim} a numeric value of the stimuli discriminability.
+\item \code{trial_stim} a factor that indicates the stimuli of each trial. It only consists of either one level or two levels. By definition, level 1 represents the stimulus below the decision boundary, while level 2 represents the stimulus above the decision boundary.
 \item \code{prior_on_resp} a numeric vector for the Beta prior on responses. Defaults to \code{c(1,1)} representing the distribution \code{Beta(1,1)}.
-\item \code{start_point} a numeric vector setting the start point of each trial for the sampler. Defaults to \code{NA}, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
-\item \code{stim_depend} a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to \code{TRUE}. Please refer to the vignette for more information.
-\item \code{max_iterations} the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+\item \code{prior_depend} a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to \code{TRUE}. Please refer to the vignette for more information.
+\item \code{max_iterations} an integer of the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
 }
 
 No values will be return after running this method, but the field \code{sim_results} will be updated instead. If the stopping rule is "fixed", \code{simulation_results} will be a data frame with five columns:
