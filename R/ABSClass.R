@@ -120,7 +120,7 @@ Zhu23ABS <- R6::R6Class(
     #' - `trial_stim` a factor only consisting of two levels: below and above the decision boundary. It indicates the stimulus of each trial.
     #' - `prior_on_resp` a numeric vector for the Beta prior on responses. Defaults to `c(1,1)` representing the distribution `Beta(1,1)`.
     #' - `start_point` a numeric vector setting the start point of each trial for the sampler. Defaults to `NA`, meaning that the start point of each trial is the last sample of the previous trial. Please refer to the vignette for more information.
-    #' - `stim_depend` a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to `TRUE`. Please refer to the vignette for more information.
+    #' - `prior_depend` a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to `TRUE`. Please refer to the vignette for more information.
     #' - `max_iterations` the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
     #' 
     #' No values will be return after running this method, but the field `sim_results` will be updated instead. If the stopping rule is "fixed", `simulation_results` will be a data frame with five columns:
@@ -255,7 +255,7 @@ Zhu23ABS <- R6::R6Class(
       stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
       stopifnot("discrim should be a single numeric value."=(is.numeric(discrim) && length(discrim) == 1))
       stopifnot("trial_stim should be a factor."=is.factor(trial_stim))
-      stopifnot("trial_depend should be a boolean variable."=(isTRUE(stim_depend) || isFALSE(stim_depend)))
+      stopifnot("trial_depend should be a boolean variable."=(isTRUE(prior_depend) || isFALSE(prior_depend)))
       stopifnot("max_iterations should be a single numeric value."=(is.numeric(max_iterations) && length(max_iterations) == 1))
       
       trial_stim_num <- as.numeric(trial_stim)
@@ -282,7 +282,7 @@ Zhu23ABS <- R6::R6Class(
           nd_time = self$nd_time, 
           s_nd_time = self$s_nd_time,
           lambda = self$lambda,
-          stim_depend = stim_depend,
+          prior_depend = prior_depend,
           mc3_iterations = max_iterations,
           dec_bdry = dec_bdry, 
           discrim = discrim

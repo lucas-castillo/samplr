@@ -289,7 +289,7 @@ List Zhu23ABS_cpp(
     double s_nd_time,
     double lambda,
     NumericVector prior_on_resp, // these five parameters are only for tafc tasks
-    bool stim_depend = true,
+    bool prior_depend = true,
     int mc3_iterations = 1000,
     double dec_bdry = 0,
     double discrim = 0
@@ -440,7 +440,7 @@ List Zhu23ABS_cpp(
       
       // update the prior on responses
       acc_evid = clone(prior_on_resp); // reset
-      if (stim_depend){
+      if (prior_depend){
         acc_evid(trial_stim(i)-1) = acc_evid(trial_stim(i)-1) + 1; // update the prior on responses based on the stimulus  
       }
       
