@@ -35,14 +35,20 @@ test_that(".checkNamesMatchParams", {
     if (!(names[i] %in% names_cont_mv)){
       res <-.checkNamesMatchParams(names[i], rep(0, params[i]))
     } else{
-      res <-.checkNamesMatchParams(names[i], as.list(rep(0, params[i])))
-      
+      if (names[i] == "mvnorm"){
+        res <-.checkNamesMatchParams(
+          names[i], list(c(0,0), diag(2)))  
+      } else {
+        if (names[i] == "mvt"){
+          res <-.checkNamesMatchParams(
+            names[i], list(c(0,0), diag(2), 1))  
+        }
+      }
     }
     expect_true(all(res == c(d_uv, c_mv)))
   }
   
   expect_error(.checkNamesMatchParams("asld", 2))
-  expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
   expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
   expect_error(.checkNamesMatchParams("norm", list(rep(0, 2))))
 })
