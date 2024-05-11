@@ -133,9 +133,24 @@
     # give it the arbitrary value of the identity matrix
     return(diag(n_dim))
   } else{
+    # If the user gave a number for a univariate distribution we convert it to a 1x1 matrix
     if (!is.matrix(sigma_prop) && length(sigma_prop) == 1 && n_dim == 1){
       return(matrix(sigma_prop))
+    # Otherwise we check for several possible errors
+    } else if (!is.matrix(sigma_prop)){
+      stop("Please provide a square matrix for the sigma_prop parameter.")
+    } else if ((nrow(sigma_prop) != ncol(sigma_prop))){
+      stop("Please provide a square matrix for the sigma_prop parameter.")
+    } else if (n_dim > 1){
+      if (nrow(sigma_prop) != n_dim){
+        stop(paste(
+          "The dimensions of the sigma_prop parameter must correspond to the size of the target distribution.\n",
+          "At the moment the sigma_prop matrix is ", nrow(sigma_prop)," by ", nrow(sigma_prop),
+          ", but the distribution is ", n_dim,"-dimensional.", sep=""
+        ))
+      }
     }
+    
     return(sigma_prop)
   }
 }

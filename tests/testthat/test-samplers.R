@@ -72,6 +72,10 @@ test_that(".checkSigmaProp", {
   expect_warning(.checkSigmaProp(NULL, 2))
   expect_true(is.matrix(.checkSigmaProp(c(1), 1)))
   expect_no_error(.checkSigmaProp(diag(2), 2))
+  
+  expect_error(.checkSigmaProp(c(0,2,3), 3)) # matrix
+  expect_error(.checkSigmaProp(matrix(0,2,3), 3)) # square matrix
+  expect_error(.checkSigmaProp(diag(2), 3)) # match target distr if mv
 })
 
 test_that(".checkGivenInfo", {
