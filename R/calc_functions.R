@@ -112,7 +112,7 @@ calc_levy <- function(chain, plot=FALSE){
     }
   } else if (is.matrix(chain)){
     for (i in 2:nrow(chain)){
-      distances[i-1] <- euc_d(chain[i], chain[i-1])
+      distances[i-1] <- euc_d(chain[i,], chain[i-1,])
     }
   }#good
   nbins <- 70
