@@ -36,12 +36,18 @@
 }
 .checkNamesMatchParams <- function(distr_name, distr_params){
 
-  names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
-                  "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
+  names_cont <- c(
+    "unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", 
+    "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
+    "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular"
+  )
 
   names_cont_mv <- c("mvnorm", "mvt")
 
-  names_discr <- c("binom", "nbinom", "nbinom_mu", "pois", "geom", "hyper", "wilcox", "signrank")
+  names_discr <- c(
+    "binom", "nbinom", "nbinom_mu", 
+    "pois", "geom", "hyper", "wilcox", "signrank"
+  )
 
   # possible distr parameters
   parameters_cont <- c(2, 2, 2, 2, 2, 3, 1, 2, 1, 2, 2, 3, 2, 1, 2, 2,
@@ -61,7 +67,9 @@
   if (c_uv){
     isValidParameters = parameters_cont[match(distr_name, names_cont)] == length(distr_params)
   } else if(c_mv){
-    isValidParameters = parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && is.list(distr_params)
+    isValidParameters = 
+      parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && 
+      is.list(distr_params)
   } else if (d_uv){
     isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
   } else{
