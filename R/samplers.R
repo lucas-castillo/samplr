@@ -34,6 +34,7 @@
     }
   }
 }
+
 .checkNamesMatchParams <- function(distr_name, distr_params){
 
   names_cont <- c(
@@ -75,17 +76,8 @@
   } else{
     stop(paste("Distribution", distr_name, "is not supported"))
   }
-
-
-
-  if(isValidParameters){
-    # if (length(start) == 1 && substr(returnString, 3, 4) == "mv"){
-    #   stop("Start is length 1 but distribution is multivariate")
-    # } else if (length(start) != 1 && substr(returnString, 3,4) == "uv"){
-    #   stop("Distribution is univariate but start is not length 1")
-    # }
-    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)
-  } else{
+  
+  if(!isValidParameters){
     if (c_mv){
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont_mv[match(distr_name, names_cont_mv)], "parameters are expected in a list"))
     } else if (!d_uv){
@@ -93,8 +85,11 @@
     } else{
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_discr[match(distr_name, names_discr)], "parameters are expected in a vector"))
     }
+  } else{
+    if (c_mv) .checkMVInputs(distr_name, distr_params)
+    
+    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)    
   }
-
 }
 
 .checkStart <- function(info, start_dim){
