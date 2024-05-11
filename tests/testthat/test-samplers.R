@@ -1,3 +1,18 @@
+test_that(".checkMVInputs", {
+  v <- c(0, 1)
+  m <- diag(2)
+  n <- 1
+  
+  expect_no_error(.checkMVInputs("mvnorm", list(v,m)))
+  expect_error(.checkMVInputs("mvnorm", list(v,v)))
+  expect_error(.checkMVInputs("mvnorm", list(m,m)))
+  
+  expect_no_error(.checkMVInputs("mvt", list(v,m,n)))
+  expect_error(.checkMVInputs("mvt", list(m,m,n)))
+  expect_error(.checkMVInputs("mvt", list(v,v,n)))
+  expect_error(.checkMVInputs("mvt", list(v,m,m)))
+})
+  
 test_that(".checkNamesMatchParams", {
   names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
                   "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
