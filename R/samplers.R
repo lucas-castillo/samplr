@@ -1,11 +1,54 @@
+.checkMVInputs <- function(distr_name, distr_params){
+  if (distr_name == "mvnorm"){
+    checks <- c(is.vector(distr_params[[1]]), is.matrix(distr_params[[2]]))
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvnorm distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the mean should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the covariance should be a matrix")
+      }
+      stop(error_msg)
+    }
+  } else if (distr_name == "mvt"){
+    checks <- c(
+      is.vector(distr_params[[1]]), 
+      is.matrix(distr_params[[2]]), 
+      is.numeric(distr_params[[3]]) & 
+          !is.matrix(distr_params[[3]]) & 
+          length(distr_params[[3]]) == 1
+      )
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvt distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the location should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the scale should be a matrix\n")
+      }
+      if (!checks[3]){
+        error_msg <- paste(error_msg, "- the df should be a number")
+      }
+      stop(error_msg)
+    }
+  }
+}
+
 .checkNamesMatchParams <- function(distr_name, distr_params){
 
-  names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
-                  "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
+  names_cont <- c(
+    "unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", 
+    "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
+    "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular"
+  )
 
   names_cont_mv <- c("mvnorm", "mvt")
 
-  names_discr <- c("binom", "nbinom", "nbinom_mu", "pois", "geom", "hyper", "wilcox", "signrank")
+  names_discr <- c(
+    "binom", "nbinom", "nbinom_mu", 
+    "pois", "geom", "hyper", "wilcox", "signrank"
+  )
 
   # possible distr parameters
   parameters_cont <- c(2, 2, 2, 2, 2, 3, 1, 2, 1, 2, 2, 3, 2, 1, 2, 2,
@@ -25,23 +68,16 @@
   if (c_uv){
     isValidParameters = parameters_cont[match(distr_name, names_cont)] == length(distr_params)
   } else if(c_mv){
-    isValidParameters = parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && is.list(distr_params)
+    isValidParameters = 
+      parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && 
+      is.list(distr_params)
   } else if (d_uv){
     isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
   } else{
     stop(paste("Distribution", distr_name, "is not supported"))
   }
-
-
-
-  if(isValidParameters){
-    # if (length(start) == 1 && substr(returnString, 3, 4) == "mv"){
-    #   stop("Start is length 1 but distribution is multivariate")
-    # } else if (length(start) != 1 && substr(returnString, 3,4) == "uv"){
-    #   stop("Distribution is univariate but start is not length 1")
-    # }
-    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)
-  } else{
+  
+  if(!isValidParameters){
     if (c_mv){
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont_mv[match(distr_name, names_cont_mv)], "parameters are expected in a list"))
     } else if (!d_uv){
@@ -49,8 +85,11 @@
     } else{
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_discr[match(distr_name, names_discr)], "parameters are expected in a vector"))
     }
+  } else{
+    if (c_mv) .checkMVInputs(distr_name, distr_params)
+    
+    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)    
   }
-
 }
 
 .checkStart <- function(info, start_dim){

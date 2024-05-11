@@ -1,3 +1,18 @@
+test_that(".checkMVInputs", {
+  v <- c(0, 1)
+  m <- diag(2)
+  n <- 1
+  
+  expect_no_error(.checkMVInputs("mvnorm", list(v,m)))
+  expect_error(.checkMVInputs("mvnorm", list(v,v)))
+  expect_error(.checkMVInputs("mvnorm", list(m,m)))
+  
+  expect_no_error(.checkMVInputs("mvt", list(v,m,n)))
+  expect_error(.checkMVInputs("mvt", list(m,m,n)))
+  expect_error(.checkMVInputs("mvt", list(v,v,n)))
+  expect_error(.checkMVInputs("mvt", list(v,m,m)))
+})
+  
 test_that(".checkNamesMatchParams", {
   names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
                   "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
@@ -20,14 +35,20 @@ test_that(".checkNamesMatchParams", {
     if (!(names[i] %in% names_cont_mv)){
       res <-.checkNamesMatchParams(names[i], rep(0, params[i]))
     } else{
-      res <-.checkNamesMatchParams(names[i], as.list(rep(0, params[i])))
-      
+      if (names[i] == "mvnorm"){
+        res <-.checkNamesMatchParams(
+          names[i], list(c(0,0), diag(2)))  
+      } else {
+        if (names[i] == "mvt"){
+          res <-.checkNamesMatchParams(
+            names[i], list(c(0,0), diag(2), 1))  
+        }
+      }
     }
     expect_true(all(res == c(d_uv, c_mv)))
   }
   
   expect_error(.checkNamesMatchParams("asld", 2))
-  expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
   expect_error(.checkNamesMatchParams("norm", rep(0, 3)))
   expect_error(.checkNamesMatchParams("norm", list(rep(0, 2))))
 })
