@@ -1,3 +1,39 @@
+.checkMVInputs <- function(distr_name, distr_params){
+  if (distr_name == "mvnorm"){
+    checks <- c(is.vector(distr_params[[1]]), is.matrix(distr_params[[2]]))
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvnorm distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the mean should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the covariance should be a matrix")
+      }
+      stop(error_msg)
+    }
+  } else if (distr_name == "mvt"){
+    checks <- c(
+      is.vector(distr_params[[1]]), 
+      is.matrix(distr_params[[2]]), 
+      is.numeric(distr_params[[3]]) & 
+          !is.matrix(distr_params[[3]]) & 
+          length(distr_params[[3]]) == 1
+      )
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvt distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the location should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the scale should be a matrix\n")
+      }
+      if (!checks[3]){
+        error_msg <- paste(error_msg, "- the df should be a number")
+      }
+      stop(error_msg)
+    }
+  }
+}
 .checkNamesMatchParams <- function(distr_name, distr_params){
 
   names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
