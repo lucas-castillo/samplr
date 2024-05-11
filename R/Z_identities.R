@@ -279,6 +279,7 @@ Bayesian_Sampler <- function(
 #' library(dplyr)
 #' library(tidyr)
 #' library(magrittr)
+#' library(samplrData)
 #' data <- sundh2023e3 %>%
 #'   group_by(ID, querydetail) %>% 
 #'   mutate(iteration = LETTERS[1:n()]) %>% 
