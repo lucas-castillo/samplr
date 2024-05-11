@@ -46,6 +46,10 @@ test_that("Levy Flights", {
   ## Test that it works the same with matrices
   res2 <- calc_levy(matrix(sequence), F)
   expect_equal(res, res2)
+  
+  # Test that it works with mv sequences
+  res3 <- calc_levy(matrix(rep(sequence, 2), ncol=2), F)
+  expect_equal(res3[["coef"]], c(-0.4249660, 0.68771756))
 })
 
 test_that("PSD", {
