@@ -137,9 +137,7 @@
     if (!is.matrix(sigma_prop) && length(sigma_prop) == 1 && n_dim == 1){
       return(matrix(sigma_prop))
     # Otherwise we check for several possible errors
-    } else if (!is.matrix(sigma_prop)){
-      stop("Please provide a square matrix for the sigma_prop parameter.")
-    } else if ((nrow(sigma_prop) != ncol(sigma_prop))){
+    } else if (!is.matrix(sigma_prop) || (nrow(sigma_prop) != ncol(sigma_prop))){
       stop("Please provide a square matrix for the sigma_prop parameter.")
     } else if (n_dim > 1){
       if (nrow(sigma_prop) != n_dim){
@@ -210,8 +208,6 @@
     }
     return(list(FALSE, FALSE, 1, sigma_prop))
   }
-
-
 }
 
 #' Density Plotter
