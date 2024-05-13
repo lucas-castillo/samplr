@@ -43,12 +43,12 @@ ABS employs [R6][R6::R6Class] object-oriented programming (OOP) system. Thus we 
 -  the lambda of the Erlang distribution for the response time, `lambda`.
 
 ```{r}
-abs_model <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
+abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
 ```
 
 The simulation process is conducted using the `simulate` function, which requires two arguments: `stopping_rule` and `start_point`. Based on the assumptions of ABS, individuals employ a fixed stopping rule for the estimation task, meaning a predetermined number of samples are drawn. Therefore, `stopping_rule` is set to `'fixed'`.
 
-The `start_point` argument is set to `NA` by default, meaning that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. Alternatively, users can specify starting points for each trial, ensuring that the length of starting points matches the length of `trial_stim`.
+The `start_point` argument is set to `NA` by default, indicating that the starting point of the first trial for each MC3 chain is randomly selected from the posterior of hypotheses, and the starting points of subsequent trials for each chain are set to the last sample of the same chain in the previous trial. Alternatively, users have the option to specify starting points for each trial, ensuring that the length of starting points matches the length of `trial_stim`. It is noteworthy that in each trial, all chains share the same starting point in this condition.
 
 To demonstrate the usage of `start_point`, we will run the simulation twice: once with the default settings and again with specified starting points.
 
@@ -64,7 +64,7 @@ abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_sti
 
 The results of the `simulate` method save in the field `sim_results`. Users can get access to the results by `abs_model$sim_results`. It is important to note that ABS assumes the response time for each trial follows an Erlang distribution, with the shape parameter equal to the length of the samples that is determined by `n_sample`. The response time value provided in the table is a random number drawn from the Erlang distribution.
 
-The following table shows the simulation results. With the default setting of `start_point = NA`, the starting point of the first trial was randomly drawn from the normal distribution `N(22, 1)`. From the second trial, the starting point was set to the last point of the previous trial. For instance, the starting point of the second trial was 23.19899 in this simulation. It is important to note that when `start_point = NA`, only the starting point of the first trial was included in the samples of ABS. The starting points of subsequent trials served merely as initializers for the sampler and were excluded from the ABS samples.
+The table below presents the simulation results, displaying only the samples from the cold chain of the MC3 sampler in the `samples` column. These samples will be used for generating the responses of ABS. With the default setting of `start_point = NA`, the starting point of the first trial was randomly drawn from the normal distribution `N(22, 1)`. From the second trial, the starting point was set to the last point of the previous trial. For instance, the starting point of the second trial was 23.19899 in this simulation. It is important to note that when `start_point = NA`, only the starting point of the first trial was included in the samples of ABS. The starting points of subsequent trials served merely as initializers for the sampler and were excluded from the ABS samples.
 
 ```{r}
 knitr::kable(abs_model$sim_results)
