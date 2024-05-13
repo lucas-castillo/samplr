@@ -131,7 +131,7 @@ To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use 
 - the discriminability, `discrim`, which determine the mean values of the distributions for the posterior of hypotheses. It is analogous to the concept of "sensitivity" in signal detection theory, representing the distance between the mean values of two distributions: one for "left" stimuli and the other for "right" stimuli in 2AFC. Under the assumption of ABS, these two distributions are symmetric around 0, so their mean values are `-discrim/2` and `discrim/2`, respectively.
 - the stimuli, `trial_stim`;
 - the prior on responses, `prior_on_resp`, which determines the prior preference for the stimuli. The default setting is `c(1, 1)`, representing an unbiased prior `Beta(1, 1)`. Users can modify this to reflect different prior preferences.
-- the prior dependency, `prior_depend`, which controls whether the prior on responses changes based on the previous stimulus. The default setting is `TRUE`, which adjusts the prior by adding 1 according to the previous stimulus.
+- the prior dependency, `prior_depend`, which controls whether the prior on responses changes based on the previous stimulus. The default setting is `TRUE`, which adjusts the prior by adding 1 to the `prior_on_resp` according to the previous stimulus.
 - the maximum length of the MC3 sampler, `max_iterations`, which determines the maximum length of the MC3 sampler. The sampler will stop when the length of the samples exceeds this value, even if the samples have not met the relative stop rule. The default setting is 1000, suitable for most cases, but users can adjust it based on the discriminability and the relative stopping rule.
 
 To demonstrate the usage of these arguments, we will also run the simulation twice: once with the default settings and again with some of the settings modified.
@@ -151,6 +151,8 @@ The prior on responses, set to `c(1, 1)`, corresponds to an unbiased Beta distri
 
 With the `prior_depend=TRUE` argument, the prior on responses for the second trial depends on the stimulus of the first trial. Given the stimulus "left" in the first trial, the prior on responses for the second trial is `Beta(2, 1)`. Since no starting points are provided, ABS begins from 0.43261621, the last sample of the first trial, but this sample is excluded from the samples and from the calculation of the posterior on responses. The process then proceeds similarly to the first trial. In this instance, after six samples in total, the posterior reaches `Beta(6, 3)`, satisfying the stopping rule and resulting in a "left" response.
 
+It is important to clarify two points. Firstly, the prior on responses is not accumulated when `prior_depend=TRUE`. In the example above, the prior on responses for the third trial is `Beta(1, 2)` rather than `Beta(2, 2)`. Secondly, it's crucial to distinguish the starting points of ABS from those in the drift diffusion model (DDM; Ratcliff, 1978; Ratcliff & McKoon, 2008). The bias of the starting points in ABS is independent from the bias of the responses, which is captured by the prior on responses.
+
 In the upcoming simulations, we will run the simulation again with two arguments changed: `start_point` and `prior_depend`. To proceed, let us generate some starting points for the simulation.
 
 ```{r}
@@ -169,4 +171,6 @@ knitr::kable(abs_model2$sim_results)
 
 # References
 
+- Ratcliff, R. (1978). A theory of memory retrieval. _Psychological Review_, _85_(2), 59–108. https://doi.org/10.1037/0033-295X.85.2.59
+- Ratcliff, R., & McKoon, G. (2008). The Diffusion Decision Model: Theory and Data for Two-Choice Decision Tasks. _Neural Computation_, _20_(4), 873–922. https://doi.org/10.1162/neco.2008.12-06-420
 - Zhu, J.-Q., Sundh, J., Spicer, J., Chater, N., & Sanborn, A. N. (2023). The Autocorrelated Bayesian Sampler: A rational process for probability judgments, estimates, confidence intervals, choices, confidence judgments, and response times. _Psychological Review_. https://doi.org/10.1037/rev0000427
