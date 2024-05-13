@@ -59,8 +59,8 @@ NumericMatrix mc3_last_sample(NumericMatrix chain, int stop_position, int nChain
 
 
 
-// Samplers for the tafc function of Zhu23ABS
-List sampler_mc3_abs_tafc_cpp(
+// Samplers for the Zhu23ABS with the relative stopping rule
+List sampler_mc3_rltv_stop_cpp(
     NumericMatrix start, // Numeric Matrix of starts for each chain.
     int nChains,
     NumericMatrix sigma_prop,
@@ -401,7 +401,7 @@ List Zhu23ABS_cpp(
         first_sample_idx = 0;
       }
       
-      sampler_results = sampler_mc3_abs_tafc_cpp(
+      sampler_results = sampler_mc3_rltv_stop_cpp(
         start_point_m, // NumericMatrix start
         n_chains, // int nChains,
         sigma_prop, // NumericMatrix sigma_prop,
