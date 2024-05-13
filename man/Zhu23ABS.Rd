@@ -107,7 +107,7 @@ A new 'Zhu23ABS' object.
 \subsection{Method \code{simulate()}}{
 Simulate the ABS model.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$simulate(stopping_rule, start_point, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$simulate(stopping_rule, start_point = NA, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
