@@ -216,10 +216,12 @@ Zhu23ABS <- R6::R6Class(
       
       #Check inputs
       stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
-      if (any(!is.na(self$start_point))){
+      
+      if (any(!is.na(start_point))){
         stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
+      
       
       #Check samples
       if (is.data.frame(self$sim_results)){
@@ -258,14 +260,14 @@ Zhu23ABS <- R6::R6Class(
       stopifnot("trial_stim should be a factor."=is.factor(trial_stim))
       stopifnot("prior_depend should be a boolean variable."=(isTRUE(prior_depend) || isFALSE(prior_depend)))
       stopifnot("max_iterations should be a single numeric value."=(is.numeric(max_iterations) && length(max_iterations) == 1))
-      
-      trial_stim_num <- as.numeric(trial_stim)
-      stim_levels <- levels(trial_stim)
-      
-      if (any(!is.na(self$start_point))){
+
+      if (any(!is.na(start_point))){
         stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
+      
+      trial_stim_num <- as.numeric(trial_stim)
+      stim_levels <- levels(trial_stim)
       
       #Check samples
       if (is.data.frame(self$sim_results)){
