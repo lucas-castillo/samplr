@@ -2,6 +2,7 @@
 #' @description
 #' This is the parent [R6][R6::R6Class] class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 #' 
+#' @import R6
 #' @importFrom Rdpack reprompt
 #' 
 #' @references

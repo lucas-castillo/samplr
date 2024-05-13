@@ -146,7 +146,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP run_testthat_tests(void *);
+RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_samplr_Zhu23ABS_cpp", (DL_FUNC) &_samplr_Zhu23ABS_cpp, 15},
