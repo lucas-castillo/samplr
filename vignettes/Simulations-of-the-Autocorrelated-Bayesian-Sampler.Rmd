@@ -18,7 +18,9 @@ This vignette provides a brief introduction of the Autocorrelated Bayesian Sampl
 
 ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs. These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for 2AFC. In this vignette, we will outline the process of simulating both types of tasks using ABS.
 
-## Estimation task
+## Fixed stopping rule
+
+The fixed stopping rule means that a fixed number of samples are drawn to complete the tasks such as estimations and confidence intervals. This rule applies to tasks such as estimation tasks.
 
 Estimation tasks involve participants providing estimates, such as the number of stimuli (e.g., dots) on a screen or offering confidence intervals of that counts at a specified level.
 
@@ -108,7 +110,9 @@ abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_sti
 knitr::kable(abs_model$sim_results)
 ```
 
-## Two-alternative force choice task (2AFC)
+## Relative stopping rule
+
+The relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as two-alternative force choice tasks (2AFC).
 
 2AFC is a cognitive task that asks participants to make judgments between two alternatives. For instance, in the random dot motion task (RDM), participants are presented with a screen where most dots move coherently in either the left or right direction, and they're asked to perceive the correct direction.
 
