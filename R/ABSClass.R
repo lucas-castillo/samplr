@@ -20,6 +20,8 @@ CoreABS <- R6::R6Class("CoreABS",
    s_nd_time = NULL,
    #' @field distr_name a character string indicating the type of the posterior hypothesis distribution.
    distr_name = NULL,
+   #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
+   distr_params = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
   
@@ -31,21 +33,23 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param nd_time a numeric value of the non-decision time (in seconds).
    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only support `norm`, which represents normal distribution.
+   #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
    #' 
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm'){
+   initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm', distr_params = c(1)){
      # Check variable types
      
      stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
-     # add checks for `distr_name`
      stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
      stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
+     stopifnot("distr_params should be a numeric vector."=(is.numeric(distr_params)))
      
      self$n_chains <- n_chains
      self$nd_time <- nd_time
      self$s_nd_time <- s_nd_time
      self$distr_name <- distr_name
+     self$distr_params <- distr_params
    }
 )
 )
