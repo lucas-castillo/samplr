@@ -156,17 +156,20 @@ Zhu23ABS <- R6::R6Class(
     #' zhuabs$sim_results
     #' 
     simulate = function(stopping_rule, start_point=NA, ...){
-      switch(
-        stopping_rule,
-        
-        fixed = {
-          private$simulate_fixed_sr(start_point = start_point, ...)
-        },
-        
-        relative = {
-          private$simulate_relative_sr(start_point = start_point, ...)
-        }
-      ) # end of switch
+      #Check samples
+      if (is.data.frame(self$sim_results)){
+        stop("Samples have been drawn. Please use the `reset_sim_results` method to reset the samples if you want to rerun the simulation.\n")
+      } else {
+        switch(
+          stopping_rule,
+          fixed = {
+            private$simulate_fixed_sr(start_point = start_point, ...)
+          },
+          relative = {
+            private$simulate_relative_sr(start_point = start_point, ...)
+          }
+        ) # end of switch
+      } # end of if-else
       
       invisible(self)
     },
@@ -219,32 +222,29 @@ Zhu23ABS <- R6::R6Class(
       stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
       
       if (any(!is.na(start_point))){
+        if (all(is.na(start_point))) { # if start_point contains NA
+          warning("start_point contains NA. The simulation will have NA results.")
+        }
         stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
       
-      
-      #Check samples
-      if (is.data.frame(self$sim_results)){
-        stop("Samples have been drawn. Please use the `reset_sim_results` method to reset the samples if you want to rerun the simulation.\n")
-      } else {
-        samples_fixed_sr <- Zhu23ABS_cpp(
-          task_id = 1,
-          trial_stim = trial_stim,
-          distr_name = self$distr_name,
-          n_chains = self$n_chains,
-          proposal_width = self$width,
-          provided_start_point = start_point,
-          stop_rule = n_sample,
-          nd_time = self$nd_time,
-          s_nd_time = self$s_nd_time,
-          lambda = self$lambda,
-          prior_on_resp = c(1,1) # a place holder
-        )
-        self$sim_results <- data.frame(do.call(rbind, samples_fixed_sr))
-        rm(samples_fixed_sr)
-      }
-      
+      samples_fixed_sr <- Zhu23ABS_cpp(
+        task_id = 1,
+        trial_stim = trial_stim,
+        distr_name = self$distr_name,
+        n_chains = self$n_chains,
+        proposal_width = self$width,
+        provided_start_point = start_point,
+        stop_rule = n_sample,
+        nd_time = self$nd_time,
+        s_nd_time = self$s_nd_time,
+        lambda = self$lambda,
+        prior_on_resp = c(1,1) # a place holder
+      )
+      self$sim_results <- data.frame(do.call(rbind, samples_fixed_sr))
+      rm(samples_fixed_sr)
+    
       self$sim_results$point_est <- sapply(self$sim_results$samples, function(samples) samples[length(samples)])
       
       invisible(self)
@@ -263,6 +263,9 @@ Zhu23ABS <- R6::R6Class(
       stopifnot("max_iterations should be a single numeric value."=(is.numeric(max_iterations) && length(max_iterations) == 1))
 
       if (any(!is.na(start_point))){
+        if (all(is.na(start_point))) { # if start_point contains NA
+          warning("start_point contains NA. The simulation will have NA results.")
+        }
         stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
@@ -270,30 +273,26 @@ Zhu23ABS <- R6::R6Class(
       trial_stim_num <- as.numeric(trial_stim)
       stim_levels <- levels(trial_stim)
       
-      #Check samples
-      if (is.data.frame(self$sim_results)){
-        stop("Samples have been drawn. Please use the `ms_reset` method to reset the samples if you want to rerun the simulation.\n")
-      } else {
-        samples_relative_sr <- Zhu23ABS_cpp(
-          task_id = 2,
-          trial_stim = trial_stim, 
-          distr_name = self$distr_name,
-          proposal_width = self$width,
-          n_chains = self$n_chains,
-          provided_start_point = start_point,
-          prior_on_resp = prior_on_resp,
-          stop_rule = delta,
-          nd_time = self$nd_time, 
-          s_nd_time = self$s_nd_time,
-          lambda = self$lambda,
-          prior_depend = prior_depend,
-          mc3_iterations = max_iterations,
-          dec_bdry = dec_bdry, 
-          discrim = discrim
-        )
-        self$sim_results <- data.frame(do.call(rbind, samples_relative_sr))
-        rm(samples_relative_sr)
-      }
+      samples_relative_sr <- Zhu23ABS_cpp(
+        task_id = 2,
+        trial_stim = trial_stim, 
+        distr_name = self$distr_name,
+        proposal_width = self$width,
+        n_chains = self$n_chains,
+        provided_start_point = start_point,
+        prior_on_resp = prior_on_resp,
+        stop_rule = delta,
+        nd_time = self$nd_time, 
+        s_nd_time = self$s_nd_time,
+        lambda = self$lambda,
+        prior_depend = prior_depend,
+        mc3_iterations = max_iterations,
+        dec_bdry = dec_bdry, 
+        discrim = discrim
+      )
+      self$sim_results <- data.frame(do.call(rbind, samples_relative_sr))
+      rm(samples_relative_sr)
+      
       self$sim_results$stimulus <- trial_stim
       self$sim_results$response <- stim_levels[as.numeric(self$sim_results$response)]
       self$sim_results$accuracy <- as.numeric(self$sim_results$accuracy)
