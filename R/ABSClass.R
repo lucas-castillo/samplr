@@ -233,10 +233,18 @@ Zhu23ABS <- R6::R6Class(
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
       
+      if (length(self$distr_params) == 1){
+        distr_add_params = rep(self$distr_params, length(trial_stim))
+      } else {
+        stopifnot("The length of distr_params should equal to either 1 or the length of the stimuli." = (length(self$distr_params) == length(trial_stim)))
+        distr_add_params = self$distr_params
+      }
+      
       samples_fixed_sr <- Zhu23ABS_cpp(
         task_id = 1,
         trial_stim = trial_stim,
         distr_name = self$distr_name,
+        distr_add_params = distr_add_params,
         n_chains = self$n_chains,
         proposal_width = self$width,
         provided_start_point = start_point,
@@ -273,6 +281,13 @@ Zhu23ABS <- R6::R6Class(
         stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
       }
       
+      if (length(self$distr_params) == 1){
+        distr_add_params = rep(self$distr_params, length(trial_stim))
+      } else {
+        stopifnot("The length of distr_params should equal to either 1 or the length of the stimuli." = (length(self$distr_params) == length(trial_stim)))
+        distr_add_params = self$distr_params
+      }
+      
       trial_stim_num <- as.numeric(trial_stim)
       stim_levels <- levels(trial_stim)
       
@@ -280,6 +295,7 @@ Zhu23ABS <- R6::R6Class(
         task_id = 2,
         trial_stim = trial_stim, 
         distr_name = self$distr_name,
+        distr_add_params = distr_add_params,
         proposal_width = self$width,
         n_chains = self$n_chains,
         provided_start_point = start_point,

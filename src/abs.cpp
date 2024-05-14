@@ -281,6 +281,7 @@ List Zhu23ABS_cpp(
     int task_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
     NumericVector trial_stim,
     StringVector distr_name,
+    NumericVector distr_add_params,
     double proposal_width,
     int n_chains,
     NumericVector provided_start_point,
@@ -288,7 +289,7 @@ List Zhu23ABS_cpp(
     double nd_time, 
     double s_nd_time,
     double lambda,
-    NumericVector prior_on_resp = NumericVector::create(1,1), // these five parameters are only for the relative stopping rule
+    NumericVector prior_on_resp = NumericVector::create(1,1), // the following five parameters are only for the relative stopping rule
     bool prior_depend = true,
     int mc3_iterations = 1000,
     double dec_bdry = 0,
@@ -320,9 +321,9 @@ List Zhu23ABS_cpp(
     int first_sample_idx; // either 0 or 1, 0 means the start point is the first sample,
     
     switch (task_id){
-    case 1:
+    case 1:  // fixed stopping rule
       
-      distr_params = List::create(trial_stim(i), 1);
+      distr_params = List::create(trial_stim(i), distr_add_params(i));
       
       // set the start point
       
@@ -371,17 +372,17 @@ List Zhu23ABS_cpp(
       
       break;
       
-    case 2: // force-choice task
+    case 2: // relative stopping rule
       
       if (abs(acc_evid(0) - acc_evid(1)) >= stop_rule) {
         stop("The relative difference is equal or larger than the stopping rule before the sampling process.");
       }
       
-      // for the force-choice task, the trial_stim(i) should be either 1 or 2
+      // for the relative stopping rule, the trial_stim(i) should be either 1 or 2
       if (trial_stim(i) == 1) {
-        distr_params = List::create(-1 * discrim/2, 1);
+        distr_params = List::create(-1 * discrim/2, distr_add_params(i));
       } else if (trial_stim(i) == 2) {
-        distr_params = List::create(discrim/2, 1);
+        distr_params = List::create(discrim/2, distr_add_params(i));
       } else {
         stop("trial_stim has more than two levels.");
       }
