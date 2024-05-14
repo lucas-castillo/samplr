@@ -243,8 +243,7 @@ Zhu23ABS <- R6::R6Class(
         stop_rule = n_sample,
         nd_time = self$nd_time,
         s_nd_time = self$s_nd_time,
-        lambda = self$lambda,
-        prior_on_resp = c(1,1) # a place holder
+        lambda = self$lambda
       )
       self$sim_results <- data.frame(do.call(rbind, samples_fixed_sr))
       rm(samples_fixed_sr)

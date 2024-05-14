@@ -278,7 +278,7 @@ List sampler_mc3_rltv_stop_cpp(
 
 //[[Rcpp::export]]
 List Zhu23ABS_cpp(
-    int task_id, // 1 represent estimate task, 2 represent two-alternative choice task
+    int task_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
     NumericVector trial_stim,
     StringVector distr_name,
     double proposal_width,
@@ -288,7 +288,7 @@ List Zhu23ABS_cpp(
     double nd_time, 
     double s_nd_time,
     double lambda,
-    NumericVector prior_on_resp, // these five parameters are only for tafc tasks
+    NumericVector prior_on_resp = NumericVector::create(1,1), // these five parameters are only for the relative stopping rule
     bool prior_depend = true,
     int mc3_iterations = 1000,
     double dec_bdry = 0,
