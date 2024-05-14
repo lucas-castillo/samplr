@@ -163,17 +163,17 @@ Zhu23ABS <- R6::R6Class(
       #Check samples
       if (is.data.frame(self$sim_results)){
         stop("Samples have been drawn. Please use the `reset_sim_results` method to reset the samples if you want to rerun the simulation.\n")
-      } else {
-        switch(
-          stopping_rule,
-          fixed = {
-            private$simulate_fixed_sr(start_point = start_point, ...)
-          },
-          relative = {
-            private$simulate_relative_sr(start_point = start_point, ...)
-          }
-        ) # end of switch
-      } # end of if-else
+      }
+      
+      switch(
+        stopping_rule,
+        fixed = {
+          private$simulate_fixed_sr(start_point = start_point, ...)
+        },
+        relative = {
+          private$simulate_relative_sr(start_point = start_point, ...)
+        }
+      ) # end of switch
       
       invisible(self)
     },
