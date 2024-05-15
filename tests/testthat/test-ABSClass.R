@@ -82,5 +82,13 @@ test_that("starting points",{
 })
 
 
+test_that("the fixed stopping rule", {
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10)
+  trial_stim <- round(runif(5, 10, 50))
+  n_sample = round(runif(1, 2, 20))
+  zhuabs$simulate(stopping_rule='fixed', n_sample = n_sample, trial_stim = trial_stim)
+  counts <- sapply(zhuabs$sim_results$samples, function(samples) length(samples))
+  expect_equal(rep(n_sample, length(trial_stim)), counts)
+})
 
 
