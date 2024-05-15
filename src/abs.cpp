@@ -375,7 +375,7 @@ List Zhu23ABS_cpp(
     case 2: // relative stopping rule ----------------------------------------------------------------------------------
       
       if (abs(acc_evid(0) - acc_evid(1)) >= stop_rule) {
-        stop("The relative difference is equal or larger than the stopping rule before the sampling process.");
+        stop("The relative difference in the prior on responses should be smaller than the relative stopping rule before the sampling process. Please adjust \"delta\" or \"prior_on_resp\".");
       }
       
       // for the relative stopping rule, the trial_stim(i) should be either 1 or 2
@@ -384,7 +384,7 @@ List Zhu23ABS_cpp(
       } else if (trial_stim(i) == 2) {
         distr_params = List::create(discrim/2, distr_add_params(i));
       } else {
-        stop("trial_stim has more than two levels.");
+        stop("Argument \"trial_stim\" should not have more than two levels.");
       }
       
       // set the start point
