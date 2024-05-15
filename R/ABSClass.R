@@ -43,10 +43,11 @@ CoreABS <- R6::R6Class("CoreABS",
    initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm', distr_params = 1, custom_density = NULL){
      # Check variable types
      
-     stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
-     stopifnot("nd_time should be a single numeric value."=(is.numeric(nd_time) && length(nd_time) == 1))
-     stopifnot("s_nd_time should be a single numeric value."=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
-     stopifnot("distr_params should be a numeric vector."=(is.numeric(distr_params)))
+     stopifnot('Argument "n_chains" should be a single integer.'=is.numeric(n_chains))
+     stopifnot('Argument "n_chains" should be a single integer.'=((n_chains%%1 == 0) & length(n_chains) == 1))
+     stopifnot('Argument "nd_time" should be a single numeric value.'=(is.numeric(nd_time) && length(nd_time) == 1))
+     stopifnot('Argument "s_nd_time" should be a single numeric value.'=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
+     stopifnot('Argument "distr_params" should be a numeric vector.'=(is.numeric(distr_params)))
      
      self$n_chains <- n_chains
      self$nd_time <- nd_time
@@ -101,8 +102,8 @@ Zhu23ABS <- R6::R6Class(
     initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = 'norm', distr_params = 1, custom_density = NULL) {
       super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_density)
       
-      stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
-      stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
+      stopifnot('Argument "lambda" should be a single numeric value.'=(is.numeric(lambda) && length(lambda) == 1))
+      stopifnot('Argument "width" should be a single numeric value.'=(is.numeric(width) && length(width) == 1))
       
       self$lambda <- lambda
       self$width <- width
@@ -204,14 +205,20 @@ Zhu23ABS <- R6::R6Class(
       # Check ss_samples
       if (!is.data.frame(self$sim_results)){
         stop("Please run the `estimate` method first.\n")
-      } else {
-        stopifnot("conf_level should be a single value between 0 and 1."=(is.numeric(conf_level) & length(conf_level) == 1 & conf_level >= 0 & conf_level <= 1))
-        # add a check of stopping rule
-
-        conf_interval <- t(sapply(self$sim_results$samples, function(samples) quantile(samples, probs = c((1-conf_level)/2, (1+conf_level)/2))))
-        self$sim_results$conf_interval_l <- conf_interval[,1]
-        self$sim_results$conf_interval_u <- conf_interval[,2]
       }
+      
+      # Check the stopping rule
+      if(private$stopping_rule == 'relative'){
+        warning("The simulation results were geneated by the relative stopping rule.")
+      }
+      
+      # Check conf_level  
+      stopifnot('Argument "conf_level" should be a single value between 0 and 1.'=(is.numeric(conf_level) & length(conf_level) == 1 & conf_level >= 0 & conf_level <= 1))
+
+      conf_interval <- t(sapply(self$sim_results$samples, function(samples) quantile(samples, probs = c((1-conf_level)/2, (1+conf_level)/2))))
+      self$sim_results$conf_interval_l <- conf_interval[,1]
+      self$sim_results$conf_interval_u <- conf_interval[,2]
+      
       invisible(self)
     },
     
@@ -229,20 +236,23 @@ Zhu23ABS <- R6::R6Class(
     simulate_fixed_sr = function(n_sample, trial_stim, start_point){
       
       #Check inputs
-      stopifnot("trial_stim should be a numeric vector."=(is.numeric(trial_stim)))
+      
+      stopifnot('Argument "n_sample" should be a single integer.'=is.numeric(n_sample))
+      stopifnot('Argument "n_sample" should be a single integer.'=(n_sample %% 1==0 & length(n_sample) == 1))
+      stopifnot('Argument "trial_stim" should be a numeric vector.'=(is.numeric(trial_stim)))
       
       if (any(!is.na(start_point))){
-        if (all(is.na(start_point))) { # if start_point contains NA
-          warning("start_point contains NA. The simulation will have NA results.")
+        if (any(is.na(start_point))) { # if start_point contains NA
+          warning('Argument "start_point" contains NA. The simulation will have NA results.')
         }
-        stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
-        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
+        stopifnot('Argument "start_point" should be a numeric vector.' = (is.numeric(start_point)))
+        stopifnot('The length of "start_point" should equal to the length of "trial_stim".' = (length(start_point) == length(trial_stim)))
       }
       
       if (length(self$distr_params) == 1){
         distr_add_params = rep(self$distr_params, length(trial_stim))
       } else {
-        stopifnot("The length of distr_params should equal to either 1 or the length of the stimuli." = (length(self$distr_params) == length(trial_stim)))
+        stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
         distr_add_params = self$distr_params
       }
       
@@ -270,27 +280,27 @@ Zhu23ABS <- R6::R6Class(
     simulate_relative_sr = function(delta, dec_bdry, discrim, trial_stim, start_point, prior_on_resp = c(1,1), prior_depend=TRUE, max_iterations=1000){
       
       #Check inputs
-      stopifnot("delta should be an integer."=(delta %% 1==0))
-      stopifnot("The value of delta should be larger than the absolute difference within prior_on_resp."=(delta>abs(prior_on_resp[0] - prior_on_resp[1])))
-      stopifnot("prior_on_resp should be a numeric vector with two values."=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
-      stopifnot("dec_bdry should be a single numeric value."=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
-      stopifnot("discrim should be a single numeric value."=(is.numeric(discrim) && length(discrim) == 1))
-      stopifnot("trial_stim should be a factor."=is.factor(trial_stim))
-      stopifnot("prior_depend should be a boolean variable."=(isTRUE(prior_depend) || isFALSE(prior_depend)))
-      stopifnot("max_iterations should be a single numeric value."=(is.numeric(max_iterations) && length(max_iterations) == 1))
+      stopifnot('Argument "delta" should be a single integer.'=is.numeric(delta))
+      stopifnot('Argument "delta" should be a single integer.'=(delta %% 1==0 & length(delta) == 1))
+      stopifnot('Argument "prior_on_resp" should be a numeric vector with two values.'=(is.numeric(prior_on_resp) && length(prior_on_resp) == 2))
+      stopifnot('Argument "dec_bdry" should be a single numeric value.'=(is.numeric(dec_bdry) && length(dec_bdry) == 1))
+      stopifnot('Argument "discrim" should be a single numeric value.'=(is.numeric(discrim) && length(discrim) == 1))
+      stopifnot('Argument "trial_stim" should be a factor.'=is.factor(trial_stim))
+      stopifnot('Argument "prior_depend" should be a boolean variable.'=(isTRUE(prior_depend) || isFALSE(prior_depend)))
+      stopifnot('Argument "max_iterations" should be a single numeric value.'=(is.numeric(max_iterations) && length(max_iterations) == 1))
 
       if (any(!is.na(start_point))){
-        if (all(is.na(start_point))) { # if start_point contains NA
-          warning("start_point contains NA. The simulation will have NA results.")
+        if (any(is.na(start_point))) { # if start_point contains NA
+          warning('Argument "start_point" contains NA. The simulation will have NA results.')
         }
-        stopifnot("start_point should be a numeric vector" = (is.numeric(start_point)))
-        stopifnot("The length of start_point should equal to the length of the stimuli." = (length(start_point) == length(trial_stim)))
+        stopifnot('Arguent "start_point" should be a numeric vector' = (is.numeric(start_point)))
+        stopifnot('The length of "start_point" should equal to the length of "trial_stim".' = (length(start_point) == length(trial_stim)))
       }
       
       if (length(self$distr_params) == 1){
         distr_add_params = rep(self$distr_params, length(trial_stim))
       } else {
-        stopifnot("The length of distr_params should equal to either 1 or the length of the stimuli." = (length(self$distr_params) == length(trial_stim)))
+        stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
         distr_add_params = self$distr_params
       }
       
