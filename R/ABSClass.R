@@ -56,7 +56,12 @@ CoreABS <- R6::R6Class("CoreABS",
      self$distr_params <- distr_params
      self$custom_density <- custom_density
    }
-)
+),
+  
+  private = list(
+    #' @field stopping_rule a string character to save the information of the stopping rule
+    stopping_rule = NULL
+  )
 )
 
 
@@ -175,9 +180,11 @@ Zhu23ABS <- R6::R6Class(
       switch(
         stopping_rule,
         fixed = {
+          private$stopping_rule <- 'fixed'
           private$simulate_fixed_sr(start_point = start_point, ...)
         },
         relative = {
+          private$stopping_rule <- 'relative'
           private$simulate_relative_sr(start_point = start_point, ...)
         }
       ) # end of switch
