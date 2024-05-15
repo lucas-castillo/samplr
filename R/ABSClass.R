@@ -202,7 +202,7 @@ Zhu23ABS <- R6::R6Class(
     #'
     confidence_interval = function(conf_level){
 
-      # Check ss_samples
+      # Check sim_results
       if (!is.data.frame(self$sim_results)){
         stop("Please run the `estimate` method first.\n")
       }
@@ -224,7 +224,7 @@ Zhu23ABS <- R6::R6Class(
     
     
     #' @description
-    #' This function is for resetting the `ss_samples` to run new simulations.
+    #' This function is for resetting the `sim_results` to run new simulations.
     reset_sim_results = function(){
       self$sim_results <- NULL
       invisible(self)
