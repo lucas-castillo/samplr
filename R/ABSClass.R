@@ -22,6 +22,8 @@ CoreABS <- R6::R6Class("CoreABS",
    distr_name = NULL,
    #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
+   #' @field custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+   custom_density = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
   
@@ -34,10 +36,11 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only support `norm`, which represents normal distribution.
    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
+   #' @param custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
    #' 
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm', distr_params = c(1)){
+   initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm', distr_params = 1, custom_density = NULL){
      # Check variable types
      
      stopifnot("n_chains should be an integer."=(n_chains%%1 == 0))
@@ -50,6 +53,7 @@ CoreABS <- R6::R6Class("CoreABS",
      self$s_nd_time <- s_nd_time
      self$distr_name <- distr_name
      self$distr_params <- distr_params
+     self$custom_density <- custom_density
    }
 )
 )
@@ -86,14 +90,16 @@ Zhu23ABS <- R6::R6Class(
     #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
     #' @param lambda a numeric value of the rate parameter of the Erlang distribution for decision time.
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
+    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
+    #' @param custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
     #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
     #' 
-    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name='norm') {
-      super$initialize(n_chains, nd_time, s_nd_time, distr_name)
+    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = 'norm', distr_params = 1, custom_density = NULL) {
+      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_density)
       
       stopifnot("lambda should be a single numeric value."=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot("width should be a single numeric value."=(is.numeric(width) && length(width) == 1))
