@@ -321,7 +321,7 @@ List Zhu23ABS_cpp(
     int first_sample_idx; // either 0 or 1, 0 means the start point is the first sample,
     
     switch (task_id){
-    case 1:  // fixed stopping rule
+    case 1:  // fixed stopping rule -----------------------------------------------------------------------------------
       
       distr_params = List::create(trial_stim(i), distr_add_params(i));
       
@@ -372,7 +372,7 @@ List Zhu23ABS_cpp(
       
       break;
       
-    case 2: // relative stopping rule
+    case 2: // relative stopping rule ----------------------------------------------------------------------------------
       
       if (abs(acc_evid(0) - acc_evid(1)) >= stop_rule) {
         stop("The relative difference is equal or larger than the stopping rule before the sampling process.");
