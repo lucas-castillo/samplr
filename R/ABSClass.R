@@ -22,7 +22,7 @@ CoreABS <- R6::R6Class("CoreABS",
    distr_name = NULL,
    #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
-   #' @field custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+   #' @field custom_density a function that returns a distribution when the user prefer a customised posterior hypothesis distribution.
    custom_density = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
