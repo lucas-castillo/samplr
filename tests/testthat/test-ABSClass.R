@@ -63,4 +63,24 @@ test_that("bad inputs in the confidence interval function",{
 })
 
 
+test_that("starting points",{
+  # the fixed stopping rule
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10)
+  trial_stim <- round(runif(5, 10, 50))
+  start_point <- runif(5, 10, 50)
+  zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point)
+  first_sample <- sapply(zhuabs$sim_results$samples, function(samples) samples[1])
+  expect_equal(first_sample, start_point)
+  
+  # the relative stopping rule
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10)
+  trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
+  start_point <- runif(5, -3, 3)
+  zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 3, trial_stim = trial_stim, start_point = start_point)
+  first_sample <- sapply(zhuabs$sim_results$samples, function(samples) samples[1])
+  expect_equal(first_sample, start_point)
+})
+
+
+
 
