@@ -172,9 +172,13 @@ Zhu23ABS <- R6::R6Class(
     #' zhuabs$sim_results
     #' 
     simulate = function(stopping_rule, start_point=NA, ...){
-      #Check samples
+      # Check samples
       if (is.data.frame(self$sim_results)){
         stop("Samples have been drawn. Please use the `reset_sim_results` method to reset the samples if you want to rerun the simulation.\n")
+      }
+      # Check stopping rule
+      if (!(stopping_rule %in% c('fixed', 'relative'))){
+        stop(paste0('The stopping rule "', stopping_rule, '" is not supported by ABS.'))
       }
       
       switch(
