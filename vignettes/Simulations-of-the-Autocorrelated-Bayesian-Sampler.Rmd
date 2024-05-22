@@ -1,6 +1,8 @@
 ---
 title: "Simulations of the Autocorrelated Bayesian Sampler"
 output: rmarkdown::html_vignette
+bibliography: REFERENCES.bib
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Simulations-of-the-Autocorrelated-Bayesian-Sampler}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS, Zhu et al., 2023) and the `R` scripts for running simulations of ABS using `samplr` package.
+This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhuAutocorrelatedBayesian2023) and the `R` scripts for running simulations of ABS using `samplr` package.
 
 ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs. These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice (2AFC) tasks. Notably, ABS employs different stopping rules depending on the type of tasks. In this vignette, we will outline the process of simulating ABS under both stopping rules.
 
@@ -151,7 +153,7 @@ The prior on responses, set to `c(1, 1)`, corresponds to an unbiased Beta distri
 
 With the `prior_depend=TRUE` argument, the prior on responses for the second trial depends on the stimulus of the first trial. Given that "left" was the correct response in the first trial, the prior on responses for the second trial is `Beta(2, 1)`. Since no starting points are provided, ABS begins from 0.43261621, the last sample of the first trial, but this sample is excluded from the samples and from the calculation of the posterior on responses. The process then proceeds similarly to the first trial. In this instance, after six samples in total, the posterior reaches `Beta(6, 3)`, satisfying the stopping rule and resulting in a "left" response.
 
-It is important to clarify two points. Firstly, the prior on responses is not accumulated when `prior_depend=TRUE`. In the example above, the prior on responses for the third trial is `Beta(1, 2)` rather than `Beta(2, 2)`. Secondly, it's crucial to distinguish the starting points of ABS from those in the drift diffusion model (DDM; Ratcliff, 1978; Ratcliff & McKoon, 2008). The bias of the starting points in ABS is independent from the bias of the responses, which is captured by the prior on responses.
+It is important to clarify two points. Firstly, the prior on responses is not accumulated when `prior_depend=TRUE`. In the example above, the prior on responses for the third trial is `Beta(1, 2)` rather than `Beta(2, 2)`. Secondly, it's crucial to distinguish the starting points of ABS from those in the drift diffusion model (DDM; @ratcliffTheoryMemory1978, @ratcliffDiffusionDecision2008). The bias of the starting points in ABS is independent from the bias of the responses, which is captured by the prior on responses.
 
 In the upcoming simulations, we will run the simulation again with two arguments changed: `start_point` and `prior_depend`. To proceed, let us generate some starting points for the simulation.
 
@@ -168,9 +170,3 @@ abs_model2$simulate(stopping_rule = 'relative', delta = 3, dec_bdry = 0, discrim
 knitr::kable(abs_model2$sim_results)
 ```
 
-
-# References
-
-- Ratcliff, R. (1978). A theory of memory retrieval. _Psychological Review_, _85_(2), 59–108. https://doi.org/10.1037/0033-295X.85.2.59
-- Ratcliff, R., & McKoon, G. (2008). The Diffusion Decision Model: Theory and Data for Two-Choice Decision Tasks. _Neural Computation_, _20_(4), 873–922. https://doi.org/10.1162/neco.2008.12-06-420
-- Zhu, J.-Q., Sundh, J., Spicer, J., Chater, N., & Sanborn, A. N. (2023). The Autocorrelated Bayesian Sampler: A rational process for probability judgments, estimates, confidence intervals, choices, confidence judgments, and response times. _Psychological Review_. https://doi.org/10.1037/rev0000427
