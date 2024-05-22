@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS, Zhu et al., 2023) and the `R` scripts for running simulations of ABS using `samplr` package.
 
-ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs. These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for 2AFC. In this vignette, we will outline the process of simulating both types of tasks using ABS.
+ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs. These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice tasks. In this vignette, we will outline the process of simulating both types of tasks using ABS.
 
 ## Fixed stopping rule
 
@@ -34,7 +34,7 @@ trial_stim <- sample(20:25, 10, replace=TRUE)
 print(trial_stim)
 ```
 
-ABS employs [R6][R6::R6Class] object-oriented programming (OOP) system. Thus we need to construct a new object before running simulations. In the initialising step, we need to provide the values of five parameters:
+ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus we need to construct a new object before running simulations. In the initialising step, we need to provide the values of five parameters:
 
 -  the proposal width of the MC3 sampler, `width`;
 -  the number of chains of the MC3 sampler, `n_chains`;
