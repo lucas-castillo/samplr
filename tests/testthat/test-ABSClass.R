@@ -34,7 +34,7 @@ test_that("bad inputs in simulations with the fixed stopping rule", {
 
 test_that("bad inputs in simulations with the relative stopping rule",{
   # the relative stopping rule
-  zhuabs$reset_sim_results()
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
   trial_stim <- factor(c('left', 'left', 'right', 'right', 'right'))
   expect_error(zhuabs$simulate(stopping_rule='relative', delta = "4", dec_bdry = 0, discrim = 1, trial_stim = trial_stim), 'Argument "delta" should be a single integer.')
   expect_error(zhuabs$simulate(stopping_rule='relative', delta = 3, dec_bdry = 0, discrim = 1, trial_stim = trial_stim, prior_on_resp = c(3, 1)), "The relative difference in the prior on responses should be smaller than the relative stopping rule before the sampling process. Please adjust \"delta\" or \"prior_on_resp\".")
