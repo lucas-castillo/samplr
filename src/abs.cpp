@@ -383,8 +383,6 @@ List Zhu23ABS_cpp(
         distr_params = List::create(-1 * discrim/2, distr_add_params(i));
       } else if (trial_stim(i) == 2) {
         distr_params = List::create(discrim/2, distr_add_params(i));
-      } else {
-        stop("Argument \"trial_stim\" should not have more than two levels.");
       }
       
       // set the start point

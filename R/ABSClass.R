@@ -317,7 +317,10 @@ Zhu23ABS <- R6::R6Class(
       
       trial_stim_num <- as.numeric(trial_stim)
       stim_levels <- levels(trial_stim)
+      stopifnot('Argument "trial_stim" should not have more than two levels.' = (length(stim_levels) <= 2))
       
+      
+      # start the simulation
       samples_relative_sr <- Zhu23ABS_cpp(
         task_id = 2,
         trial_stim = trial_stim, 
