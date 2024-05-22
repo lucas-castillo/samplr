@@ -2,7 +2,7 @@
 #' @description
 #' This is the parent [R6][R6::R6Class] class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 #' 
-#' @import R6
+#' @importFrom R6 R6Class
 #' @importFrom Rdpack reprompt
 #' 
 #' @references
@@ -16,13 +16,13 @@ CoreABS <- R6::R6Class("CoreABS",
    n_chains = NULL,
    #' @field nd_time a numeric value of the non-decision time (in seconds).
    nd_time = NULL,
-   #' @field s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
+   #' @field s_nd_time a numeric value of the inter-trial-variability of the non-decision time (in seconds).
    s_nd_time = NULL,
    #' @field distr_name a character string indicating the type of the posterior hypothesis distribution.
    distr_name = NULL,
    #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
-   #' @field custom_density a function that returns a distribution when the user prefer a customised posterior hypothesis distribution.
+   #' @field custom_density a function that returns a distribution when the user prefers a customised posterior hypothesis distribution.
    custom_density = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
@@ -33,8 +33,8 @@ CoreABS <- R6::R6Class("CoreABS",
    #' 
    #' @param n_chains an integer of the number of chains for the sampler.
    #' @param nd_time a numeric value of the non-decision time (in seconds).
-   #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
-   #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only support `norm`, which represents normal distribution.
+   #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decision time (in seconds).
+   #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only supports `norm`, which represents normal distribution.
    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
    #' @param custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
    #' 
@@ -93,7 +93,7 @@ Zhu23ABS <- R6::R6Class(
     #' @param width a numeric value of the standard deviation of the proposal distribution for MC3.
     #' @param n_chains an integer of the number of chains for the sampler.
     #' @param nd_time a numeric value of the non-decision time (in seconds). When `s_nd_time` is not 0, `nd_time` represents the lower bound of the non-decision time.
-    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decition time (in seconds).
+    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decision time (in seconds).
     #' @param lambda a numeric value of the rate parameter of the Erlang distribution for decision time.
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
@@ -119,7 +119,7 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' 
     #' @param stopping_rule a character string indicating the stopping rule of ABS to be applied. Possible values are `"fixed"` and `"relative"`. See also `Details`.
-    #' @param start_point a numeric vector setting the start point of each trial for the sampler. By default, it's set to `NA`, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette.
+    #' @param start_point a numeric vector setting the start point of each trial for the sampler. By default, it's set to `NA`, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette "Simulations of the Autocorrelated Bayesian Sampler".
     #' @param ... further arguments passed to the ABS model, see also `Details`.
     #' 
     #' @details
