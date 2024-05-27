@@ -12,14 +12,15 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // Zhu23ABS_cpp
-List Zhu23ABS_cpp(int task_id, NumericVector trial_stim, StringVector distr_name, double proposal_width, int n_chains, NumericVector provided_start_point, int stop_rule, double nd_time, double s_nd_time, double lambda, NumericVector prior_on_resp, bool stim_depend, int mc3_iterations, double dec_bdry, double discrim);
-RcppExport SEXP _samplr_Zhu23ABS_cpp(SEXP task_idSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP proposal_widthSEXP, SEXP n_chainsSEXP, SEXP provided_start_pointSEXP, SEXP stop_ruleSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP lambdaSEXP, SEXP prior_on_respSEXP, SEXP stim_dependSEXP, SEXP mc3_iterationsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP) {
+List Zhu23ABS_cpp(int task_id, NumericVector trial_stim, StringVector distr_name, NumericVector distr_add_params, double proposal_width, int n_chains, NumericVector provided_start_point, int stop_rule, double nd_time, double s_nd_time, double lambda, NumericVector prior_on_resp, bool prior_depend, int mc3_iterations, double dec_bdry, double discrim);
+RcppExport SEXP _samplr_Zhu23ABS_cpp(SEXP task_idSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP distr_add_paramsSEXP, SEXP proposal_widthSEXP, SEXP n_chainsSEXP, SEXP provided_start_pointSEXP, SEXP stop_ruleSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP lambdaSEXP, SEXP prior_on_respSEXP, SEXP prior_dependSEXP, SEXP mc3_iterationsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type task_id(task_idSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type trial_stim(trial_stimSEXP);
     Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distr_add_params(distr_add_paramsSEXP);
     Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
     Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type provided_start_point(provided_start_pointSEXP);
@@ -28,11 +29,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type s_nd_time(s_nd_timeSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type prior_on_resp(prior_on_respSEXP);
-    Rcpp::traits::input_parameter< bool >::type stim_depend(stim_dependSEXP);
+    Rcpp::traits::input_parameter< bool >::type prior_depend(prior_dependSEXP);
     Rcpp::traits::input_parameter< int >::type mc3_iterations(mc3_iterationsSEXP);
     Rcpp::traits::input_parameter< double >::type dec_bdry(dec_bdrySEXP);
     Rcpp::traits::input_parameter< double >::type discrim(discrimSEXP);
-    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_cpp(task_id, trial_stim, distr_name, proposal_width, n_chains, provided_start_point, stop_rule, nd_time, s_nd_time, lambda, prior_on_resp, stim_depend, mc3_iterations, dec_bdry, discrim));
+    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_cpp(task_id, trial_stim, distr_name, distr_add_params, proposal_width, n_chains, provided_start_point, stop_rule, nd_time, s_nd_time, lambda, prior_on_resp, prior_depend, mc3_iterations, dec_bdry, discrim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -149,7 +150,7 @@ END_RCPP
 RcppExport SEXP run_testthat_tests(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_samplr_Zhu23ABS_cpp", (DL_FUNC) &_samplr_Zhu23ABS_cpp, 15},
+    {"_samplr_Zhu23ABS_cpp", (DL_FUNC) &_samplr_Zhu23ABS_cpp, 16},
     {"_samplr_sampler_hmc_cpp", (DL_FUNC) &_samplr_sampler_hmc_cpp, 10},
     {"_samplr_sampler_mc3_cpp", (DL_FUNC) &_samplr_sampler_mc3_cpp, 14},
     {"_samplr_sampler_mc_rec_cpp", (DL_FUNC) &_samplr_sampler_mc_rec_cpp, 15},

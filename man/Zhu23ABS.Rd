@@ -12,23 +12,29 @@ This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelated
 ## Method `Zhu23ABS$new`
 ## ------------------------------------------------
 
-zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
 
 
 ## ------------------------------------------------
-## Method `Zhu23ABS$two_alt_force_choice`
+## Method `Zhu23ABS$simulate`
 ## ------------------------------------------------
 
+
+trial_stim <- round(runif(5, 10, 50))
+zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim)
+zhuabs$sim_results
+
+zhuabs$reset_sim_results()
 trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+zhuabs$sim_results
 
 
 ## ------------------------------------------------
-## Method `Zhu23ABS$estimate`
+## Method `Zhu23ABS$confidence_interval`
 ## ------------------------------------------------
 
-trial_stim <- c(25, 26, 10, 30)
-est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0.5)
+zhuabs$confidence_interval(conf_level = 0.9)
 
 }
 \references{
@@ -40,9 +46,9 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
+\item{\code{width}}{the standard deviation of the proposal distribution for MC3.}
 
-\item{\code{width}}{The standard deviation of the proposal distribution for MC3}
+\item{\code{lambda}}{the rate parameter of the Erlang distribution for decision time.}
 }
 \if{html}{\out{</div>}}
 }
@@ -50,8 +56,9 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Zhu23ABS-new}{\code{Zhu23ABS$new()}}
-\item \href{#method-Zhu23ABS-two_alt_force_choice}{\code{Zhu23ABS$two_alt_force_choice()}}
-\item \href{#method-Zhu23ABS-estimate}{\code{Zhu23ABS$estimate()}}
+\item \href{#method-Zhu23ABS-simulate}{\code{Zhu23ABS$simulate()}}
+\item \href{#method-Zhu23ABS-confidence_interval}{\code{Zhu23ABS$confidence_interval()}}
+\item \href{#method-Zhu23ABS-reset_sim_results}{\code{Zhu23ABS$reset_sim_results()}}
 \item \href{#method-Zhu23ABS-clone}{\code{Zhu23ABS$clone()}}
 }
 }
@@ -61,33 +68,23 @@ est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0
 \subsection{Method \code{new()}}{
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
-  nd_time,
-  s_nd_time = 0,
-  lambda,
-  n_chains,
-  width,
-  distr_name = "norm",
-  start_point = NA
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(width, n_chains, nd_time, s_nd_time, lambda, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{nd_time}}{The non-decision time.}
+\item{\code{width}}{a numeric value of the standard deviation of the proposal distribution for MC3.}
 
-\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+\item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{lambda}}{The rate parameter of the gamma distribution for decision time.}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds). When \code{s_nd_time} is not 0, \code{nd_time} represents the lower bound of the non-decision time.}
 
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{width}}{The proposal width of the sampler.}
+\item{\code{lambda}}{a numeric value of the rate parameter of the Erlang distribution for decision time.}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
-
-\item{\code{start_point}}{The start point of each trial.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 }
 \if{html}{\out{</div>}}
 }
@@ -96,7 +93,7 @@ A new 'Zhu23ABS' object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{zhuabs <- Zhu23ABS$new(nd_time = 0.3, s_nd_time = 0.5, lambda = 10, n_chains = 5, width = 1, distr_name = 'norm')
+\preformatted{zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
 
 }
 \if{html}{\out{</div>}}
@@ -105,43 +102,55 @@ A new 'Zhu23ABS' object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Zhu23ABS-two_alt_force_choice"></a>}}
-\if{latex}{\out{\hypertarget{method-Zhu23ABS-two_alt_force_choice}{}}}
-\subsection{Method \code{two_alt_force_choice()}}{
-This function is for simulating two-alternative-force choice tasks by Zhu23ABS.
+\if{html}{\out{<a id="method-Zhu23ABS-simulate"></a>}}
+\if{latex}{\out{\hypertarget{method-Zhu23ABS-simulate}{}}}
+\subsection{Method \code{simulate()}}{
+Simulate the ABS model.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$two_alt_force_choice(
-  delta,
-  dec_bdry,
-  prior_on_resp = c(1, 1),
-  discrim,
-  trial_stim,
-  stim_depend = TRUE,
-  max_iterations = 1000
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$simulate(stopping_rule, start_point = NA, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{delta}}{The relative difference between the number of samples supporting each hypothesis.}
+\item{\code{stopping_rule}}{a character string indicating the stopping rule of ABS to be applied. Possible values are \code{"fixed"} and \code{"relative"}. See also \code{Details}.}
 
-\item{\code{dec_bdry}}{The decision boundary that separates the posterior hypothesis distribution.}
+\item{\code{start_point}}{a numeric vector setting the start point of each trial for the sampler. By default, it's set to \code{NA}, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette.}
 
-\item{\code{prior_on_resp}}{The beta prior on responses. Default setting is Beta(1,1)}
-
-\item{\code{discrim}}{The stimuli discriminability.}
-
-\item{\code{trial_stim}}{The stimulus of each trial. It should be a factor only consisting of two levels: below and above the decision boundary.}
-
-\item{\code{stim_depend}}{The boolean variable that control whether the prior on responses changes regarding the last stimulus.}
-
-\item{\code{max_iterations}}{The maximum length of the MCREC sampler. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.}
+\item{\code{...}}{further arguments passed to the ABS model, see also \code{Details}.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Returns}{
-A data frame with seven columns:
+\subsection{Details}{
+The ABS model has two types of stopping rules: fixed and relative. The fixed stopping rule means that a fixed number of samples are drawn to complete the tasks such as estimations and confidence intervals. This rule applies to tasks such as estimation tasks. On the other hand, the relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as two-alternative force choice tasks.
+
+When the \verb{stopping rule} is \code{"fixed"}, the following arguments are required:
+\itemize{
+\item \code{n_sample} an integer of the fixed number of samples for each trial.
+\item \code{trial_stim} a numeric vector of the stimulus of each trial.
+}
+
+When the \verb{stopping rule} is \code{"relative"}, the following arguments are required:
+\itemize{
+\item \code{delta} an integer of the relative difference between the number of samples supporting each hypothesis.
+\item \code{dec_bdry} a numeric value of the decision boundary that separates the posterior hypothesis distribution.
+\item \code{discrim} a numeric value of the stimuli discriminability.
+\item \code{trial_stim} a factor that indicates the stimuli of each trial. It only consists of either one level or two levels. By definition, level 1 represents the stimulus below the decision boundary, while level 2 represents the stimulus above the decision boundary.
+\item \code{prior_on_resp} a numeric vector for the Beta prior on responses. Defaults to \code{c(1,1)} representing the distribution \code{Beta(1,1)}.
+\item \code{prior_depend} a boolean variable that control whether the prior on responses changes regarding the last stimulus. Defaults to \code{TRUE}. Please refer to the vignette for more information.
+\item \code{max_iterations} an integer of the maximum length of the MC3 sampler. Defaults to 1000. The program will stop the sampling process after the length of the sampling sequence reaches to this limitation.
+}
+
+No values will be return after running this method, but the field \code{sim_results} will be updated instead. If the stopping rule is "fixed", \code{simulation_results} will be a data frame with five columns:
+\enumerate{
+\item{trial: The index of trials;}
+\item{samples: The samples of ABS sampler for the trial;}
+\item{stimulus: The stimuli of the experiment;}
+\item{rt: The response time;}
+\item{point_est: The response of point estimation;}
+}
+
+On the other hand, if the stopping rule is "relative", \code{sim_results} will be a data frame with seven columns:
 \enumerate{
 \item{trial: The index of trials;}
 \item{samples: The samples of ABS sampler for the trial;}
@@ -152,10 +161,18 @@ A data frame with seven columns:
 \item{confidence: The confidence of the response.}
 }
 }
+
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+\preformatted{
+trial_stim <- round(runif(5, 10, 50))
+zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim)
+zhuabs$sim_results
+
+zhuabs$reset_sim_results()
+trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
+zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+zhuabs$sim_results
 
 }
 \if{html}{\out{</div>}}
@@ -164,44 +181,46 @@ tafc_sim <- zhuabs$two_alt_force_choice(delta = 4, dec_bdry = 0, discrim = 1, tr
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Zhu23ABS-estimate"></a>}}
-\if{latex}{\out{\hypertarget{method-Zhu23ABS-estimate}{}}}
-\subsection{Method \code{estimate()}}{
-This function is for simulating the estimate and confidence interval tasks by Zhu23ABS.
+\if{html}{\out{<a id="method-Zhu23ABS-confidence_interval"></a>}}
+\if{latex}{\out{\hypertarget{method-Zhu23ABS-confidence_interval}{}}}
+\subsection{Method \code{confidence_interval()}}{
+This function calculates the confidence interval of the \code{simulate} method's results when the "fixed" stopping rule was used.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$estimate(n_sample, trial_stim, conf_level = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$confidence_interval(conf_level)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{n_sample}}{The fixed number of samples for each trial.}
-
-\item{\code{trial_stim}}{The stimulus of each trial.}
-
-\item{\code{conf_level}}{The required confidence level.}
+\item{\code{conf_level}}{the required confidence level.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Returns}{
-A data frame with ten columns:
+\subsection{Details}{
+No values will be returned by this method. Instead, two new columns will be added to the \code{sim_results}:
 \enumerate{
-\item{trial: The index of trials;}
-\item{samples: The samples of ABS sampler for the trial;}
-\item{stimulus: The stimuli of the experiment;}
-\item{nd_time: The non-decision time for this trial;}
 \item{conf_interval_l: The lower bound of the confidence interval with the given level;}
 \item{conf_interval_u: The upper bound of the confidence interval with the given level;}
 }
 }
+
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{trial_stim <- c(25, 26, 10, 30)
-est_sim <- zhuabs$estimate(n_sample = 5, trial_stim = trial_stim, conf_level = 0.5)
+\preformatted{zhuabs$confidence_interval(conf_level = 0.9)
 
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Zhu23ABS-reset_sim_results"></a>}}
+\if{latex}{\out{\hypertarget{method-Zhu23ABS-reset_sim_results}{}}}
+\subsection{Method \code{reset_sim_results()}}{
+This function is for resetting the \code{ss_samples} to run new simulations.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$reset_sim_results()}\if{html}{\out{</div>}}
 }
 
 }

@@ -59,8 +59,8 @@ NumericMatrix mc3_last_sample(NumericMatrix chain, int stop_position, int nChain
 
 
 
-// Samplers for the tafc function of Zhu23ABS
-List sampler_mc3_abs_tafc_cpp(
+// Samplers for the Zhu23ABS with the relative stopping rule
+List sampler_mc3_rltv_stop_cpp(
     NumericMatrix start, // Numeric Matrix of starts for each chain.
     int nChains,
     NumericMatrix sigma_prop,
@@ -278,9 +278,10 @@ List sampler_mc3_abs_tafc_cpp(
 
 //[[Rcpp::export]]
 List Zhu23ABS_cpp(
-    int task_id, // 1 represent estimate task, 2 represent two-alternative choice task
+    int task_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
     NumericVector trial_stim,
     StringVector distr_name,
+    NumericVector distr_add_params,
     double proposal_width,
     int n_chains,
     NumericVector provided_start_point,
@@ -288,8 +289,8 @@ List Zhu23ABS_cpp(
     double nd_time, 
     double s_nd_time,
     double lambda,
-    NumericVector prior_on_resp, // these five parameters are only for tafc tasks
-    bool stim_depend = true,
+    NumericVector prior_on_resp = NumericVector::create(1,1), // the following five parameters are only for the relative stopping rule
+    bool prior_depend = true,
     int mc3_iterations = 1000,
     double dec_bdry = 0,
     double discrim = 0
@@ -320,9 +321,9 @@ List Zhu23ABS_cpp(
     int first_sample_idx; // either 0 or 1, 0 means the start point is the first sample,
     
     switch (task_id){
-    case 1:
+    case 1:  // fixed stopping rule -----------------------------------------------------------------------------------
       
-      distr_params = List::create(trial_stim(i), 4);
+      distr_params = List::create(trial_stim(i), distr_add_params(i));
       
       // set the start point
       
@@ -371,19 +372,17 @@ List Zhu23ABS_cpp(
       
       break;
       
-    case 2: // force-choice task
+    case 2: // relative stopping rule ----------------------------------------------------------------------------------
       
       if (abs(acc_evid(0) - acc_evid(1)) >= stop_rule) {
-        stop("The relative difference is equal or larger than the stopping rule before the sampling process.");
+        stop("The relative difference in the prior on responses should be smaller than the relative stopping rule before the sampling process. Please adjust \"delta\" or \"prior_on_resp\".");
       }
       
-      // for the force-choice task, the trial_stim(i) should be either 1 or 2
+      // for the relative stopping rule, the trial_stim(i) should be either 1 or 2
       if (trial_stim(i) == 1) {
-        distr_params = List::create(-1 * discrim/2, 1);
+        distr_params = List::create(-1 * discrim/2, distr_add_params(i));
       } else if (trial_stim(i) == 2) {
-        distr_params = List::create(discrim/2, 1);
-      } else {
-        stop("trial_stim has more than two levels.");
+        distr_params = List::create(discrim/2, distr_add_params(i));
       }
       
       // set the start point
@@ -401,7 +400,7 @@ List Zhu23ABS_cpp(
         first_sample_idx = 0;
       }
       
-      sampler_results = sampler_mc3_abs_tafc_cpp(
+      sampler_results = sampler_mc3_rltv_stop_cpp(
         start_point_m, // NumericMatrix start
         n_chains, // int nChains,
         sigma_prop, // NumericMatrix sigma_prop,
@@ -440,7 +439,7 @@ List Zhu23ABS_cpp(
       
       // update the prior on responses
       acc_evid = clone(prior_on_resp); // reset
-      if (stim_depend){
+      if (prior_depend){
         acc_evid(trial_stim(i)-1) = acc_evid(trial_stim(i)-1) + 1; // update the prior on responses based on the stimulus  
       }
       

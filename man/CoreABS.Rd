@@ -12,15 +12,15 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+\item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{start_point}}{The start point of each trial}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{nd_time}}{The non-decision time.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 
-\item{\code{s_nd_time}}{The range of the non-decision time.}
+\item{\code{sim_results}}{a data frame for saving the simulation results.}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,27 +37,19 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
-  n_chains,
-  distr_name = "norm",
-  start_point = NA,
-  nd_time,
-  s_nd_time
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(n_chains, nd_time, s_nd_time, distr_name = "norm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{n_chains}}{The number of chains of the sampler. It should be an integer.}
+\item{\code{n_chains}}{an integer of the number of chains for the sampler.}
 
-\item{\code{distr_name}}{The type of the posterior hypothesis distribution.}
+\item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{start_point}}{The start point of each trial.}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
 
-\item{\code{nd_time}}{The non-decision time.}
-
-\item{\code{s_nd_time}}{The range of the non-decision time. Default is 0, implying a fixed non-decision time.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution. The package currently only support \code{norm}, which represents normal distribution.}
 }
 \if{html}{\out{</div>}}
 }
