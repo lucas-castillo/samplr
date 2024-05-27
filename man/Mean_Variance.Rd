@@ -21,6 +21,7 @@ Estimates number of samples and prior parameters of the Bayesian Sampler using t
 library(dplyr)
 library(tidyr)
 library(magrittr)
+library(samplrData)
 data <- sundh2023e3 \%>\%
   group_by(ID, querydetail) \%>\% 
   mutate(iteration = LETTERS[1:n()]) \%>\% 

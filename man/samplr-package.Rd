@@ -11,16 +11,23 @@ The goal of samplr is to provide tools to understand human performance from the 
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://lucas-castillo.github.io/samplr}
+  \item \url{https://github.com/lucas-castillo/samplr}
+  \item Report bugs at \url{https://github.com/lucas-castillo/samplr/issues}
 }
 
 }
 \author{
 \strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID})
 
+Authors:
+\itemize{
+  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID})
+  \item Adam N Sanborn \email{a.n.sanborn@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0442-4372}{ORCID})
+}
+
 Other contributors:
 \itemize{
-  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID}) [contributor]
+  \item European Research Council (ERC) [funder]
 }
 
 }

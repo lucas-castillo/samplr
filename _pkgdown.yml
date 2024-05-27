@@ -9,10 +9,6 @@ reference:
 - contents:
   - starts_with("sampler")
 
-- title: "Plotting Functions"
-  desc: "Functions for plotting various aspects of the sampling process. Most only work with univariate distributions"
-- contents:
-  - starts_with("plot")
 - title: "Other Utilities"
   desc: "Other Functions"
 - contents:
@@ -23,11 +19,38 @@ reference:
 - title: "ABS"
   desc: "Functions related to the Autocorrelated Bayesian Sampler"
 - contents:
-  - rABS
   - CoreABS
-  - LiABS
   - Zhu23ABS
+  
+- title: "Diagnostic Tools"
+  desc: "Functions for calculating various aspects of the sampling process. Most only work with univariate distributions"
+- contents:
+  - starts_with("calc")
+  - starts_with("plot")
 
 - title: "Data"
 - contents:
   - sundh2023e3
+  
+figures:
+  fig.width: 8
+
+authors:
+  footer:
+    roles: [cre, aut]
+  sidebar:
+    roles: [cre, aut]
+
+footer:
+  structure: 
+    left: [funded, blank, logo]
+    right: [developed_by, blank, built_with]
+  components:
+    logo: 
+      <img src='man/figures/erc.jpg' height='72' alt='ERC Research Council'/>
+    funded: This package is part of a project that has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (Grant agreement No. 817492-SAMPLING). 
+    blank: <br/>
+home:
+  links:
+  - text: SAMPLING Project website
+    href: https://sampling.warwick.ac.uk

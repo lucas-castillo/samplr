@@ -42,8 +42,13 @@ Recycled-Momentum HMC is a sampling algorithm that uses Hamiltonian Dynamics to 
 While in HMC the momentum in each iteration is an independent draw,, here the momentum of the last utterance \eqn{p^{n-1}} is also involved. In each iteration, the momentum \eqn{p} is obtained as follows \deqn{p \gets \alpha \times p^{n-1} + (1 - \alpha^2)^{\frac{1}{2}} \times v}; where \eqn{v \sim N(0, I)}.
 
 Recycled-Momentum HMC does not support discrete distributions.
+
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}
 }
 \examples{
 
 REC <- sampler_rec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+}
+\references{
+\insertAllCited{}
 }

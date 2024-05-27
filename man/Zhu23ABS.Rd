@@ -38,7 +38,7 @@ zhuabs$confidence_interval(conf_level = 0.9)
 
 }
 \references{
-\insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+\insertAllCited{}
 }
 \section{Super class}{
 \code{\link[samplr:CoreABS]{samplr::CoreABS}} -> \code{Zhu23ABS}

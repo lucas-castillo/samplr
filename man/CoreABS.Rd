@@ -7,7 +7,7 @@
 This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 }
 \references{
-\insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+\insertAllCited{}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

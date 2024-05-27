@@ -33,7 +33,7 @@ test_that("Change 1D", {
   
 
 test_that("Levy Flights", {
-  res <- plot_levy(sequence, F)
+  res <- calc_levy(sequence, F)
 
   # It's a list of length 4 with named outputs
   expect_type(res, "list")
@@ -44,15 +44,19 @@ test_that("Levy Flights", {
   expect_equal(res[["coef"]], c(-0.4249660, 0.6237538))
 
   ## Test that it works the same with matrices
-  res2 <- plot_levy(matrix(sequence), F)
+  res2 <- calc_levy(matrix(sequence), F)
   expect_equal(res, res2)
+  
+  # Test that it works with mv sequences
+  res3 <- calc_levy(matrix(rep(sequence, 2), ncol=2), F)
+  expect_equal(res3[["coef"]], c(-0.4249660, 0.68771756))
 })
 
 test_that("PSD", {
   ## Error if bad input
-  expect_error(plot_PSD(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
+  expect_error(calc_PSD(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
 
-  res <- plot_PSD(sequence, F)
+  res <- calc_PSD(sequence, F)
 
   # It's a list of length 3 with named outputs
   expect_type(res, "list")
@@ -65,9 +69,9 @@ test_that("PSD", {
 
 test_that("Sigma Scaling", {
   ## Error if bad input
-  expect_error(plot_sigma_scaling(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
+  expect_error(calc_sigma_scaling(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
 
-  res <- plot_sigma_scaling(sequence, F)
+  res <- calc_sigma_scaling(sequence, F)
 
   # It's a vector
   expect_type(res, "double")
@@ -79,7 +83,7 @@ test_that("Sigma Scaling", {
 
 test_that("QQ Plotter", {
   ## Error if bad input
-  expect_error(plot_qqplot(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  expect_error(calc_qqplot(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
 })
 
 test_that("Autocorr Plotter", {

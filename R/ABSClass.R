@@ -6,7 +6,7 @@
 #' @importFrom Rdpack reprompt
 #' 
 #' @references
-#'    \insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+#'    \insertAllCited{}
 #'
 #' 
 CoreABS <- R6::R6Class("CoreABS",
@@ -71,8 +71,8 @@ CoreABS <- R6::R6Class("CoreABS",
 #' This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr} is developed by Zhu.
 #' 
 #'
-#'@references
-#'    \insertRef{zhuAutocorrelatedBayesian2023}{samplr}
+#' @references
+#'    \insertAllCited{}
 #'
 #' @export
 #'

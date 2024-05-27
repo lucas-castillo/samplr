@@ -44,8 +44,14 @@ sampler_mc3(
 \description{
 This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 }
+\details{
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}, \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} and \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} among others.
+}
 \examples{
 
 # Sample from a normal distribution
 mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+}
+\references{
+\insertAllCited{}
 }
