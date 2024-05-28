@@ -268,7 +268,7 @@ Zhu23ABS <- R6::R6Class(
       }
       
       samples_fixed_sr <- Zhu23ABS_cpp(
-        task_id = 1,
+        stop_rule_id = 1,
         trial_stim = trial_stim,
         distr_name = self$distr_name,
         distr_add_params = distr_add_params,
@@ -322,7 +322,7 @@ Zhu23ABS <- R6::R6Class(
       
       # start the simulation
       samples_relative_sr <- Zhu23ABS_cpp(
-        task_id = 2,
+        stop_rule_id = 2,
         trial_stim = trial_stim, 
         distr_name = self$distr_name,
         distr_add_params = distr_add_params,

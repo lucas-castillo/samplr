@@ -278,7 +278,7 @@ List sampler_mc3_rltv_stop_cpp(
 
 //[[Rcpp::export]]
 List Zhu23ABS_cpp(
-    int task_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
+    int stop_rule_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
     NumericVector trial_stim,
     StringVector distr_name,
     NumericVector distr_add_params,
@@ -320,7 +320,7 @@ List Zhu23ABS_cpp(
     double conf;
     int first_sample_idx; // either 0 or 1, 0 means the start point is the first sample,
     
-    switch (task_id){
+    switch (stop_rule_id){
     case 1:  // fixed stopping rule -----------------------------------------------------------------------------------
       
       distr_params = List::create(trial_stim(i), distr_add_params(i));
