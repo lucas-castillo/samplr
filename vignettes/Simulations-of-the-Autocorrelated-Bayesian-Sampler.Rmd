@@ -45,7 +45,7 @@ ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus
 -  the rate parameter of the Erlang distribution for the response time, `lambda`.
 
 ```{r}
-abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
+abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
 ```
 
 The simulation process is conducted using the `simulate` function, which requires two arguments: `stopping_rule` and `start_point`. Based on the assumptions of ABS, individuals employ a fixed stopping rule for the estimation task, meaning a predetermined number of samples are drawn. Therefore, `stopping_rule` is set to `'fixed'`.
@@ -139,7 +139,7 @@ To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use 
 To demonstrate the usage of these arguments, we will also run the simulation twice: once with the default settings and again with some of the settings modified.
 
 ```{r, results=FALSE}
-abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
+abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
 abs_model2$simulate(stopping_rule = 'relative', delta = 3, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
 ```
 

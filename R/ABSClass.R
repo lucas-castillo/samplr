@@ -40,21 +40,28 @@ CoreABS <- R6::R6Class("CoreABS",
    #' 
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, nd_time, s_nd_time, distr_name='norm', distr_params = 1, custom_density = NULL){
-     # Check variable types
+   initialize = function(n_chains, nd_time, s_nd_time, distr_name = NULL, distr_params = NULL, custom_distr = NULL){
      
+     # Check variable types
      stopifnot('Argument "n_chains" should be a single integer.'=is.numeric(n_chains))
      stopifnot('Argument "n_chains" should be a single integer.'=((n_chains%%1 == 0) & length(n_chains) == 1))
      stopifnot('Argument "nd_time" should be a single numeric value.'=(is.numeric(nd_time) && length(nd_time) == 1))
      stopifnot('Argument "s_nd_time" should be a single numeric value.'=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
-     stopifnot('Argument "distr_params" should be a numeric vector.'=(is.numeric(distr_params)))
+     if (!is.null(distr_name)){
+       stopifnot('Argument "distr_params" should be a numeric vector.'=(is.numeric(distr_params)))
+     }
+     
+     # Check custom distributions
+     if (!is.null(distr_name) & !is.null(custom_distr)){
+       message('Both "distr_name" and "custom_distr" are provided. The distribution defined by "custom_distr" will be used as the posterior hypothesis.')
+     }
      
      self$n_chains <- n_chains
      self$nd_time <- nd_time
      self$s_nd_time <- s_nd_time
      self$distr_name <- distr_name
      self$distr_params <- distr_params
-     self$custom_density <- custom_density
+     self$custom_distr <- custom_distr
    }
 ),
   
@@ -97,15 +104,15 @@ Zhu23ABS <- R6::R6Class(
     #' @param lambda a numeric value of the rate parameter of the Erlang distribution for decision time.
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
-    #' @param custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+    #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
-    #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
+    #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
     #' 
-    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = 'norm', distr_params = 1, custom_density = NULL) {
-      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_density)
+    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL) {
+      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr)
       
       stopifnot('Argument "lambda" should be a single numeric value.'=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot('Argument "width" should be a single numeric value.'=(is.numeric(width) && length(width) == 1))
@@ -220,7 +227,7 @@ Zhu23ABS <- R6::R6Class(
       
       # Check the stopping rule
       if(private$stopping_rule == 'relative'){
-        warning("The simulation results were geneated by the relative stopping rule.")
+        warning("The simulation results were geneated with the relative stopping rule.")
       }
       
       # Check conf_level  
