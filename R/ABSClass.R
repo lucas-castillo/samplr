@@ -22,8 +22,8 @@ CoreABS <- R6::R6Class("CoreABS",
    distr_name = NULL,
    #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
-   #' @field custom_density a function that returns a distribution when the user prefers a customised posterior hypothesis distribution.
-   custom_density = NULL,
+   #' @field custom_distr a function that returns a distribution when the user prefers a customised posterior hypothesis distribution.
+   custom_distr = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
   
@@ -36,7 +36,7 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decision time (in seconds).
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only supports `norm`, which represents normal distribution.
    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
-   #' @param custom_density a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+   #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
    #' 
    #' @return A new 'CoreABS' object.
    #'
