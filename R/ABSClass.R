@@ -20,10 +20,12 @@ CoreABS <- R6::R6Class("CoreABS",
    s_nd_time = NULL,
    #' @field distr_name a character string indicating the type of the posterior hypothesis distribution.
    distr_name = NULL,
-   #' @field distr_params a numeric vector of the the additional parameters for the posterior hypothesis distribution.
+   #' @field distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
    #' @field custom_distr a function that returns a distribution when the user prefers a customised posterior hypothesis distribution.
    custom_distr = NULL,
+   #' @field custom_domain a numeric vector of the domain for the custom distribution.
+   custom_domain = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
   
@@ -37,23 +39,32 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only supports `norm`, which represents normal distribution.
    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
    #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+   #' @param custom_domain a numeric vector of the domain for the custom distribution.
    #' 
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, nd_time, s_nd_time, distr_name = NULL, distr_params = NULL, custom_distr = NULL){
+   initialize = function(n_chains, nd_time, s_nd_time, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_domain = NULL){
      
      # Check variable types
      stopifnot('Argument "n_chains" should be a single integer.'=is.numeric(n_chains))
      stopifnot('Argument "n_chains" should be a single integer.'=((n_chains%%1 == 0) & length(n_chains) == 1))
      stopifnot('Argument "nd_time" should be a single numeric value.'=(is.numeric(nd_time) && length(nd_time) == 1))
      stopifnot('Argument "s_nd_time" should be a single numeric value.'=(is.numeric(s_nd_time) && length(s_nd_time) == 1))
+     
+     # Check distributions
+     if (is.null(distr_name) & is.null(custom_distr)) {
+       stop('Both "distr_name" and "custom_distr" are empty.')
+     }
      if (!is.null(distr_name)){
        stopifnot('Argument "distr_params" should be a numeric vector.'=(is.numeric(distr_params)))
      }
-     
-     # Check custom distributions
      if (!is.null(distr_name) & !is.null(custom_distr)){
        message('Both "distr_name" and "custom_distr" are provided. The distribution defined by "custom_distr" will be used as the posterior hypothesis.')
+     }
+     
+     # Check `custom_domain`
+     if (!is.null(custom_distr)){
+       stopifnot('Argument "custom_domain" should be a numeric vector.' = (is.numeric(custom_domain)))
      }
      
      self$n_chains <- n_chains
@@ -62,6 +73,7 @@ CoreABS <- R6::R6Class("CoreABS",
      self$distr_name <- distr_name
      self$distr_params <- distr_params
      self$custom_distr <- custom_distr
+     self$custom_domain <- custom_domain
    }
 ),
   
@@ -105,14 +117,15 @@ Zhu23ABS <- R6::R6Class(
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
     #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
+    #' @param custom_domain a numeric vector of the domain for the custom distribution.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
     #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
     #' 
-    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL) {
-      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr)
+    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_domain = NULL) {
+      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr, custom_domain)
       
       stopifnot('Argument "lambda" should be a single numeric value.'=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot('Argument "width" should be a single numeric value.'=(is.numeric(width) && length(width) == 1))
@@ -254,33 +267,53 @@ Zhu23ABS <- R6::R6Class(
     simulate_fixed_sr = function(n_sample, trial_stim, start_point){
       
       #Check inputs
-      
       stopifnot('Argument "n_sample" should be a single integer.'=is.numeric(n_sample))
       stopifnot('Argument "n_sample" should be a single integer.'=(n_sample %% 1==0 & length(n_sample) == 1))
       stopifnot('Argument "trial_stim" should be a numeric vector.'=(is.numeric(trial_stim)))
       
+      # Check starting points
       if (any(!is.na(start_point))){
         if (any(is.na(start_point))) { # if start_point contains NA
-          warning('Argument "start_point" contains NA. The simulation will have NA results.')
+          stop('Argument "start_point" contains NA.')
         }
         stopifnot('Argument "start_point" should be a numeric vector.' = (is.numeric(start_point)))
         stopifnot('The length of "start_point" should equal to the length of "trial_stim".' = (length(start_point) == length(trial_stim)))
       }
       
-      if (length(self$distr_params) == 1){
-        distr_add_params = rep(self$distr_params, length(trial_stim))
+      # Prepare for the custom distributions
+      if (is.null(self$custom_distr)){
+        distr_name <- self$distr_name
+        custom_distr <- function(x){}
+        custom_domain <- c(1)
+        use_custom <- FALSE
+        
+        # Check the inputs of `distr_params`
+        if (length(self$distr_params) == 1){
+          distr_add_params <- rep(self$distr_params, length(trial_stim))
+        } else {
+          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
+          distr_add_params <- self$distr_params
+        }
+        
       } else {
-        stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
-        distr_add_params = self$distr_params
+        distr_name <- ""
+        distr_add_params <- 1
+        use_custom <- TRUE
+        custom_distr <- self$custom_distr
+        custom_domain <- self$custom_domain
       }
       
+      # Start the simulation
       samples_fixed_sr <- Zhu23ABS_cpp(
         stop_rule_id = 1,
         trial_stim = trial_stim,
-        distr_name = self$distr_name,
+        distr_name = distr_name,
         distr_add_params = distr_add_params,
-        n_chains = self$n_chains,
+        custom_func = custom_distr,
+        custom_domain = custom_domain,
+        useCustom = use_custom,
         proposal_width = self$width,
+        n_chains = self$n_chains,
         provided_start_point = start_point,
         stop_rule = n_sample,
         nd_time = self$nd_time,
@@ -306,20 +339,37 @@ Zhu23ABS <- R6::R6Class(
       stopifnot('Argument "trial_stim" should be a factor.'=is.factor(trial_stim))
       stopifnot('Argument "prior_depend" should be a boolean variable.'=(isTRUE(prior_depend) || isFALSE(prior_depend)))
       stopifnot('Argument "max_iterations" should be a single numeric value.'=(is.numeric(max_iterations) && length(max_iterations) == 1))
-
+      
+      # Check starting points
       if (any(!is.na(start_point))){
         if (any(is.na(start_point))) { # if start_point contains NA
-          warning('Argument "start_point" contains NA. The simulation will have NA results.')
+          stop('Argument "start_point" contains NA.')
         }
         stopifnot('Arguent "start_point" should be a numeric vector' = (is.numeric(start_point)))
         stopifnot('The length of "start_point" should equal to the length of "trial_stim".' = (length(start_point) == length(trial_stim)))
       }
       
-      if (length(self$distr_params) == 1){
-        distr_add_params = rep(self$distr_params, length(trial_stim))
+      # Prepare for the custom distributions
+      if (is.null(self$custom_distr)){
+        distr_name <- self$distr_name
+        custom_distr <- function(x){}
+        custom_domain <- 1
+        use_custom <- FALSE
+        
+        # Check the inputs of `distr_params`
+        if (length(self$distr_params) == 1){
+          distr_add_params <- rep(self$distr_params, length(trial_stim))
+        } else {
+          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
+          distr_add_params <- self$distr_params
+        }
+        
       } else {
-        stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
-        distr_add_params = self$distr_params
+        distr_name <- ""
+        distr_add_params <- 1
+        use_custom <- TRUE
+        custom_distr <- self$custom_distr
+        custom_domain <- self$custom_domain
       }
       
       trial_stim_num <- as.numeric(trial_stim)
@@ -327,12 +377,15 @@ Zhu23ABS <- R6::R6Class(
       stopifnot('Argument "trial_stim" should not have more than two levels.' = (length(stim_levels) <= 2))
       
       
-      # start the simulation
+      # Start the simulation
       samples_relative_sr <- Zhu23ABS_cpp(
         stop_rule_id = 2,
         trial_stim = trial_stim, 
-        distr_name = self$distr_name,
+        distr_name = distr_name,
         distr_add_params = distr_add_params,
+        custom_func = custom_distr,
+        custom_domain = custom_domain,
+        useCustom = use_custom,
         proposal_width = self$width,
         n_chains = self$n_chains,
         provided_start_point = start_point,

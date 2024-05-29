@@ -6,7 +6,8 @@ test_that("bad inputs in initialising",{
   expect_error(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, distr_name = 'norm', distr_params = 1))
   
   zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = c(10, 11))
-  expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim))
+  trial_stim <- round(runif(5, 10, 50))
+  expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim), 'The length of "distr_params" should equal to either 1 or the length of "trial_stim".')
 })
 
 
@@ -23,9 +24,7 @@ test_that("bad inputs in simulations with the fixed stopping rule", {
   start_point <- runif(4, 10, 50)
   expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point), 'The length of "start_point" should equal to the length of "trial_stim".')
   start_point[5] <- NA
-  expect_warning(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point))
-  
-  zhuabs$reset_sim_results()
+  expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point), 'Argument "start_point" contains NA.')
   start_point <- rep('1', 5)
   expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point), 'Argument "start_point" should be a numeric vector.')
   

@@ -8,6 +8,7 @@
 #include <R.h>
 #include "mc3.h"
 #include "mcrec.h"
+#include "rdistr_manage.h"
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
@@ -272,6 +273,9 @@ List Zhu23ABS_cpp(
     NumericVector trial_stim,
     StringVector distr_name,
     NumericVector distr_add_params,
+    Function custom_func,
+    NumericVector custom_domain,
+    bool useCustom,
     double proposal_width,
     int n_chains,
     NumericVector provided_start_point,
@@ -313,13 +317,13 @@ List Zhu23ABS_cpp(
     switch (stop_rule_id){
     case 1:  // fixed stopping rule -----------------------------------------------------------------------------------
       
+      // The posterior distributions could be different across trials
       distr_params = List::create(trial_stim(i), distr_add_params(i));
       
       // set the start point
-      
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params);
+          start_point = rDistr(distr_name, distr_params, custom_func, custom_domain, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -343,8 +347,8 @@ List Zhu23ABS_cpp(
         false, // discreteValues
         false, // isMix
         1, // weights
-        f, // custom_func
-        false // useCustom
+        custom_func, // custom_func
+        useCustom // useCustom
       );
       
       trialSamples = subset_range(sampler_results["chain"], first_sample_idx, stop_rule + first_sample_idx - 1); // cold chain
@@ -378,7 +382,7 @@ List Zhu23ABS_cpp(
       // set the start point
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params);
+          start_point = rDistr(distr_name, distr_params, custom_func, custom_domain, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -402,8 +406,8 @@ List Zhu23ABS_cpp(
         false, // bool discreteValues,
         false, // bool isMix,
         1, // NumericVector weights,
-        f, // Function custom_func,
-        false, // bool useCustom,
+        custom_func, // Function custom_func,
+        useCustom, // bool useCustom,
         stop_rule, // int stop_rule, // these three parameters are for the ABS
         first_sample_idx, // int save_first_sample
         acc_evid, // NumericVector acc_evid,
