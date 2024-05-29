@@ -170,3 +170,4 @@ abs_model2$simulate(stopping_rule = 'relative', delta = 3, dec_bdry = 0, discrim
 knitr::kable(abs_model2$sim_results)
 ```
 
+## References
