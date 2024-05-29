@@ -38,14 +38,6 @@ NumericMatrix double_to_matrix(double x, int n_rep){
   return(m);
 }
 
-// A function that returns one random value with a given distribution and related parameters
-double rDistr(StringVector distr_name, List distr_params) {
-  if (distr_name(0) == "norm") {
-    return R::rnorm(distr_params(0), distr_params(1));
-  } else {
-    stop("Distribution not supported.");
-  }
-}
 
 // A function for getting the last sample from the chain
 NumericMatrix mc3_last_sample(NumericMatrix chain, int stop_position, int nChains, int total_iterations){
