@@ -74,7 +74,6 @@ List sampler_mc3_rltv_stop_cpp(
   // init the vars of mc3 ------------------------------------------------
   NumericVector acceptances(nChains);
   double alpha=0;
-  int swap_attempts = 0;
   int swap_accepts= 0;
   NumericMatrix swaps(iterations*nChains, 3);
   int n_dim = start.ncol();
@@ -179,7 +178,6 @@ List sampler_mc3_rltv_stop_cpp(
         
         // swap nSwaps times (depending on swap_all)
         for (int k = 0; k < nSwaps; k++){
-          swap_attempts++;
           int m = v[k*2];
           int n = v[k*2 + 1];
           // chains are swapped with probability alpha, which is the ratio between:
