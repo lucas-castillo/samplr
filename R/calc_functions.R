@@ -400,6 +400,9 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
 plot_series <- function(chain, change=FALSE){
+  if (is.matrix(chain) && ncol(chain)>1){
+    stop("Please input a one-dimensional vector")
+  }
   if (change){
     y <- c(NA, diff(chain))
   } else{
