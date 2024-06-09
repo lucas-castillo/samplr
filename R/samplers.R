@@ -272,7 +272,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 
 
   df <- data.frame(x = xxRange, y = yyRange, density = density)
-
+  x <- y <- density <- NULL # declare variables to avoid cran note
   if (plot){
     map <- ggplot2::ggplot(df) +
       ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = density)) +
