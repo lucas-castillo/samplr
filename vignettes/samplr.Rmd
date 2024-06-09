@@ -27,7 +27,7 @@ A popular explanation to many human behaviours is that people produce samples wh
 The `samplr` package provides an easy way for researchers to study these models. We provide functions that produce samples using MCMC algorithms, as well as diagnostic tools to compare human data to the performance of these sampling algorithms. Finally, the package includes the BS and ABS models, so that they can easily be applied. 
 
 ### Sampling Algorithms
-We provide six MCMC algorithms that have previously been compared to human data [@castillo2024ExplainingFlawsHuman; @spicer2022HowPeoplePredict; @spicer2022PerceptualCognitiveJudgments; @zhu2022UnderstandingStructureCognitive]. For an introduction on how to use these see the [How to Sample vignette](how-to-sample.html). If you want to use them in mixture distributions or with custom functions, see the [Multivariate Mixtures](multivariate-mixtures.html) and [Custom Density Functions](custom-density-functions.html) vignettes respectively. 
+We provide six MCMC algorithms that have previously been compared to human data [@castillo2024ExplainingFlawsHuman; @spicer2022HowPeoplePredict; @spicer2022PerceptualCognitiveJudgments; @zhu2022UnderstandingStructureCognitive]. For an introduction on how to use these see the [How to Sample vignette](how-to-sample.html), which covers most use cases. If you want to use them in multivariate mixture distributions or with custom functions, see the [Multivariate Mixtures](multivariate-mixtures.html) and [Custom Density Functions](custom-density-functions.html) vignettes respectively. 
 
 ### Diagnostic Tools
 We provide several diagnostic tools to compare human data to MCMC algorithms (listed in the [Reference section](../reference/index.html)). 
