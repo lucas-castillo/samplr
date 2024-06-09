@@ -321,7 +321,9 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #'                        )
 #'
 #' # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-#' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
+#' metropolis_hastings <- sampler_mh(
+#'     distr_name = "norm", distr_params = c(0,1), start = 1
+#' )
 #'
 #'
 
@@ -368,7 +370,10 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+#' mc_3 <- sampler_mc3(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, sigma_prop = diag(1)
+#' )
 sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
 
 
@@ -516,7 +521,10 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @export
 #' @examples
 #'
-#' MCHMC <- sampler_mchmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' MCHMC <- sampler_mchmc(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
 
 sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -631,7 +639,10 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
 #'  \insertAllCited{}
 #' @examples
 #'
-#' REC <- sampler_rec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' REC <- sampler_rec(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
 
 sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -705,7 +716,10 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @export
 #' @examples
 #'
-#' MCREC <- sampler_mcrec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' MCREC <- sampler_mcrec(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
 
 sampler_mcrec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 

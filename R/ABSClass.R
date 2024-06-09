@@ -122,7 +122,10 @@ Zhu23ABS <- R6::R6Class(
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
-    #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
+    #' zhuabs <- Zhu23ABS$new(
+    #'     width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, 
+    #'     lambda = 10, distr_name = 'norm', distr_params = 1
+    #' )
     #' 
     initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_start = NULL) {
       super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr, custom_start)

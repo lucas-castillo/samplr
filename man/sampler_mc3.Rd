@@ -50,7 +50,10 @@ This algorithm has been used to model human data in \insertCite{castillo2024Expl
 \examples{
 
 # Sample from a normal distribution
-mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+mc_3 <- sampler_mc3(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, sigma_prop = diag(1)
+)
 }
 \references{
 \insertAllCited{}

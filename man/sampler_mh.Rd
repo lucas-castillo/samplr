@@ -57,7 +57,9 @@ metropolis_hastings <- sampler_mh(
                        )
 
 # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
+metropolis_hastings <- sampler_mh(
+    distr_name = "norm", distr_params = c(0,1), start = 1
+)
 
 
 }

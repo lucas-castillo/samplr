@@ -54,7 +54,10 @@ This algorithm has been used to model human data in \insertCite{castillo2024Expl
 }
 \examples{
 
-MCREC <- sampler_mcrec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+MCREC <- sampler_mcrec(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, epsilon = .01, L = 100
+)
 }
 \references{
 \insertAllCited{}
