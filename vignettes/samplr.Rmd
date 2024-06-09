@@ -2,7 +2,7 @@
 title: "The samplr package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{how-to-sample}
+  %\VignetteIndexEntry{samplr-package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: REFERENCES.bib
