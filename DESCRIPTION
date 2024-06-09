@@ -32,7 +32,8 @@ Imports:
     stats,
     lme4,
     Rdpack,
-    R6
+    R6,
+    graphics
 Suggests: 
     knitr,
     rmarkdown,
