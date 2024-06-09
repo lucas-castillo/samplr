@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 library(samplr)
 ```
 
-The current distributions in the samplr package are those supported by [Rcpp](http://rcpp.org/) and [RcppDist](https://github.com/duckmayr/RcppDist).
+The current distributions in the samplr package are those supported by [Rcpp](https://rcpp.org/) and [RcppDist](https://github.com/duckmayr/RcppDist).
 
 ## Univariate Distributions
 The parameters these distributions take can be provided in a vector, e.g. a vector `c(0,1)` for the standard normal distribution.
