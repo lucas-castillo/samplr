@@ -78,7 +78,6 @@ CoreABS <- R6::R6Class("CoreABS",
 ),
   
   private = list(
-    #' @field stopping_rule a string character to save the information of the stopping rule.
     stopping_rule = NULL
   )
 )

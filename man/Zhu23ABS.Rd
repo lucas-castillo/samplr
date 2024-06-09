@@ -12,7 +12,10 @@ This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelated
 ## Method `Zhu23ABS$new`
 ## ------------------------------------------------
 
-zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
+zhuabs <- Zhu23ABS$new(
+    width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, 
+    lambda = 10, distr_name = 'norm', distr_params = 1
+)
 
 
 ## ------------------------------------------------
@@ -26,7 +29,10 @@ zhuabs$sim_results
 
 zhuabs$reset_sim_results()
 trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+zhuabs$simulate(stopping_rule='relative', 
+   delta = 4, dec_bdry = 0, 
+   discrim = 1, trial_stim = trial_stim
+)
 zhuabs$sim_results
 
 
@@ -109,7 +115,10 @@ A new 'Zhu23ABS' object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
+\preformatted{zhuabs <- Zhu23ABS$new(
+    width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, 
+    lambda = 10, distr_name = 'norm', distr_params = 1
+)
 
 }
 \if{html}{\out{</div>}}
@@ -187,7 +196,10 @@ zhuabs$sim_results
 
 zhuabs$reset_sim_results()
 trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+zhuabs$simulate(stopping_rule='relative', 
+   delta = 4, dec_bdry = 0, 
+   discrim = 1, trial_stim = trial_stim
+)
 zhuabs$sim_results
 
 }
