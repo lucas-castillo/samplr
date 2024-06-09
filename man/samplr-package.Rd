@@ -6,7 +6,7 @@
 \alias{samplr-package}
 \title{samplr: Tools To Compare Human Performance To Sampling Algorithms}
 \description{
-The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
+A set of tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
 }
 \seealso{
 Useful links:
