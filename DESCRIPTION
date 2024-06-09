@@ -40,6 +40,8 @@ Suggests:
     testthat (>= 3.0.0),
     bench,
     dplyr,
+    tidyr,
+    magrittr,
     mvtnorm,
     xml2,
     samplrData
