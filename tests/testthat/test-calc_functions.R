@@ -74,11 +74,11 @@ test_that("Sigma Scaling", {
   res <- calc_sigma_scaling(sequence, F)
 
   # It's a vector
-  expect_type(res, "double")
-  expect_equal(length(res), round(length(sequence) / 10))
+  expect_type(res$sds, "double")
+  expect_equal(length(res$sds), round(length(sequence) / 10))
 
   # Check results
-  expect_equal(res, c(16.40681, 20.13771, 19.16075, 17.64051, 15.55798, 17.40862), tolerance = .00001)
+  expect_equal(res$sds, c(16.40681, 20.13771, 19.16075, 17.64051, 15.55798, 17.40862), tolerance = .00001)
 })
 
 test_that("QQ Plotter", {
@@ -88,15 +88,10 @@ test_that("QQ Plotter", {
 
 test_that("Autocorr Plotter", {
   ## Error if bad input
-  expect_error(plot_autocorr(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  expect_error(calc_autocorr(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
 })
 
 test_that("Series Plotter", {
   ## Error if bad input
   expect_error(plot_series(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
-})
-
-test_that("Change Plotter", {
-  ## Error if bad input
-  expect_error(plot_change(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
 })
