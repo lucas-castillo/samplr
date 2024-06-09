@@ -191,7 +191,10 @@ Zhu23ABS <- R6::R6Class(
     #' 
     #' zhuabs$reset_sim_results()
     #' trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
-    #' zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+    #' zhuabs$simulate(stopping_rule='relative', 
+    #'    delta = 4, dec_bdry = 0, 
+    #'    discrim = 1, trial_stim = trial_stim
+    #' )
     #' zhuabs$sim_results
     #' 
     simulate = function(stopping_rule, start_point=NA, ...){
