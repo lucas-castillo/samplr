@@ -44,6 +44,17 @@ sampler_mcrec(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A list containing
+\enumerate{
+\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{the history of momentum values}
+\item{the acceptance ratio of each chain}
+\item{The set of temperatures used in each chain}
+\item{The history of swaps made}
+\item{The ratio of swap acceptances}
+}
+}
 \description{
 Metropolis-Coupled version of Recycled-Momentum HMC, i.e. running multiple chains at different temperatures which stochastically swap positions.
 }

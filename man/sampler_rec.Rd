@@ -35,6 +35,14 @@ sampler_rec(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A list containing
+\enumerate{
+\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{the history of momentum values}
+\item{acceptance ratio}
+}
+}
 \description{
 Recycled-Momentum HMC is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike in standard HMC, proposals are autocorrelated, as the momentum of the current trajectory is not independent of the last trajectory, but is instead updated by a parameter alpha (see Details).
 }

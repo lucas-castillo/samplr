@@ -365,6 +365,15 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
 #' @references
 #'  \insertAllCited{}
+#' @return A list containing
+#' \enumerate{
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{The set of temperatures used in each chain}
+#'  \item{the history of chain swaps}
+#'  \item{The ratio of swap acceptances}
+#'  \item{The ratio of proposal acceptances for each chain}
+#' }
 #' @export
 #'
 #' @examples
@@ -455,6 +464,12 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @return A list containing
+#' \enumerate{
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of momentum values}
+#'  \item{acceptance ratio}
+#' }
 #' @references 
 #'    \insertAllCited{}
 #' @export
@@ -516,6 +531,15 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
+#' @return A list containing
+#' \enumerate{
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of momentum values}
+#'  \item{the acceptance ratio of each chain}
+#'  \item{The set of temperatures used in each chain}
+#'  \item{The history of swaps made}
+#'  \item{The ratio of swap acceptances}
+#' }
 #' @references
 #'  \insertAllCited{}
 #' @export
@@ -634,6 +658,12 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @return A list containing
+#' \enumerate{
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of momentum values}
+#'  \item{acceptance ratio}
+#' }
 #' @export
 #' @references
 #'  \insertAllCited{}
@@ -711,6 +741,15 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
+#' @return A list containing
+#' \enumerate{
+#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{the history of momentum values}
+#'  \item{the acceptance ratio of each chain}
+#'  \item{The set of temperatures used in each chain}
+#'  \item{The history of swaps made}
+#'  \item{The ratio of swap acceptances}
+#' }
 #' @references
 #'  \insertAllCited{}
 #' @export

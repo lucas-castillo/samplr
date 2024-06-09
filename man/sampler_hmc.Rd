@@ -32,6 +32,14 @@ sampler_hmc(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A list containing
+\enumerate{
+\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{the history of momentum values}
+\item{acceptance ratio}
+}
+}
 \description{
 Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read in \insertCite{betancourt2018ConceptualIntroductionHamiltonian;textual}{samplr}.
 }

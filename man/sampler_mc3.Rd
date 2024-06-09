@@ -41,6 +41,17 @@ sampler_mc3(
 
 \item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
 }
+\value{
+A list containing
+\enumerate{
+\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{The set of temperatures used in each chain}
+\item{the history of chain swaps}
+\item{The ratio of swap acceptances}
+\item{The ratio of proposal acceptances for each chain}
+}
+}
 \description{
 This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 }
