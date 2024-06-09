@@ -27,13 +27,9 @@ License: CC BY 4.0
 Imports: 
     Rcpp (>= 1.0.6),
     ggplot2,
-    gridExtra,
     latex2exp,
     pracma,
     stats,
-    magrittr,
-    tibble,
-    tidyr,
     lme4,
     Rdpack,
     R6
