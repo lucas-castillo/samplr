@@ -66,18 +66,19 @@ double custom_rDistr(
   return sample_distr;
 }
 
+
 //[[Rcpp::export]]
 double rDistr(
     const StringVector &distr_name,
     const List &distr_params,
     const Function &custom_func,
-    const NumericVector &x_domains,
+    const double &custom_start,
     const bool &useCustom
 ){
   double sample_distr;
 
   if (useCustom){
-    sample_distr  = custom_rDistr(custom_func, x_domains);
+    sample_distr  = custom_start;
   } else {
     sample_distr = get_rDistr(distr_name(0), distr_params);
   }

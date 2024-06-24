@@ -12,7 +12,7 @@ This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelated
 ## Method `Zhu23ABS$new`
 ## ------------------------------------------------
 
-zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
+zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
 
 
 ## ------------------------------------------------
@@ -68,7 +68,17 @@ zhuabs$confidence_interval(conf_level = 0.9)
 \subsection{Method \code{new()}}{
 Create a new 'Zhu23ABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(width, n_chains, nd_time, s_nd_time, lambda, distr_name = "norm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$new(
+  width,
+  n_chains,
+  nd_time,
+  s_nd_time,
+  lambda,
+  distr_name = NULL,
+  distr_params = NULL,
+  custom_distr = NULL,
+  custom_start = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -80,11 +90,17 @@ Create a new 'Zhu23ABS' object.
 
 \item{\code{nd_time}}{a numeric value of the non-decision time (in seconds). When \code{s_nd_time} is not 0, \code{nd_time} represents the lower bound of the non-decision time.}
 
-\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decision time (in seconds).}
 
 \item{\code{lambda}}{a numeric value of the rate parameter of the Erlang distribution for decision time.}
 
 \item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
+
+\item{\code{distr_params}}{a numeric vector of the additional parameters for the posterior hypothesis distribution.}
+
+\item{\code{custom_distr}}{a list of functions that define the posterior hypothesis distribution.}
+
+\item{\code{custom_start}}{a numeric value of the starting point if "custom_distr" is provided.}
 }
 \if{html}{\out{</div>}}
 }
@@ -93,7 +109,7 @@ A new 'Zhu23ABS' object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10)
+\preformatted{zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
 
 }
 \if{html}{\out{</div>}}
@@ -115,7 +131,7 @@ Simulate the ABS model.
 \describe{
 \item{\code{stopping_rule}}{a character string indicating the stopping rule of ABS to be applied. Possible values are \code{"fixed"} and \code{"relative"}. See also \code{Details}.}
 
-\item{\code{start_point}}{a numeric vector setting the start point of each trial for the sampler. By default, it's set to \code{NA}, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette.}
+\item{\code{start_point}}{a numeric vector setting the start point of each trial for the sampler. By default, it's set to \code{NA}, indicating that the starting point of the first trial is a random point from the posterior of hypotheses, and the starting points of subsequent trials are set to the last sample of the previous trial. For more detailed information, please refer to the vignette "Simulations of the Autocorrelated Bayesian Sampler".}
 
 \item{\code{...}}{further arguments passed to the ABS model, see also \code{Details}.}
 }
@@ -218,7 +234,7 @@ No values will be returned by this method. Instead, two new columns will be adde
 \if{html}{\out{<a id="method-Zhu23ABS-reset_sim_results"></a>}}
 \if{latex}{\out{\hypertarget{method-Zhu23ABS-reset_sim_results}{}}}
 \subsection{Method \code{reset_sim_results()}}{
-This function is for resetting the \code{ss_samples} to run new simulations.
+This function is for resetting the \code{sim_results} to run new simulations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Zhu23ABS$reset_sim_results()}\if{html}{\out{</div>}}
 }

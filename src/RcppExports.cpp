@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // Zhu23ABS_cpp
-List Zhu23ABS_cpp(int stop_rule_id, NumericVector trial_stim, StringVector distr_name, NumericVector distr_add_params, Function custom_func, NumericVector custom_domain, bool useCustom, double proposal_width, int n_chains, NumericVector provided_start_point, int stop_rule, double nd_time, double s_nd_time, double lambda, NumericVector prior_on_resp, bool prior_depend, int mc3_iterations, double dec_bdry, double discrim);
-RcppExport SEXP _samplr_Zhu23ABS_cpp(SEXP stop_rule_idSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP distr_add_paramsSEXP, SEXP custom_funcSEXP, SEXP custom_domainSEXP, SEXP useCustomSEXP, SEXP proposal_widthSEXP, SEXP n_chainsSEXP, SEXP provided_start_pointSEXP, SEXP stop_ruleSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP lambdaSEXP, SEXP prior_on_respSEXP, SEXP prior_dependSEXP, SEXP mc3_iterationsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP) {
+List Zhu23ABS_cpp(int stop_rule_id, NumericVector trial_stim, StringVector distr_name, NumericVector distr_add_params, List custom_func, double custom_start, bool useCustom, double proposal_width, int n_chains, NumericVector provided_start_point, int stop_rule, double nd_time, double s_nd_time, double lambda, NumericVector prior_on_resp, bool prior_depend, int mc3_iterations, double dec_bdry, double discrim);
+RcppExport SEXP _samplr_Zhu23ABS_cpp(SEXP stop_rule_idSEXP, SEXP trial_stimSEXP, SEXP distr_nameSEXP, SEXP distr_add_paramsSEXP, SEXP custom_funcSEXP, SEXP custom_startSEXP, SEXP useCustomSEXP, SEXP proposal_widthSEXP, SEXP n_chainsSEXP, SEXP provided_start_pointSEXP, SEXP stop_ruleSEXP, SEXP nd_timeSEXP, SEXP s_nd_timeSEXP, SEXP lambdaSEXP, SEXP prior_on_respSEXP, SEXP prior_dependSEXP, SEXP mc3_iterationsSEXP, SEXP dec_bdrySEXP, SEXP discrimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,8 +21,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type trial_stim(trial_stimSEXP);
     Rcpp::traits::input_parameter< StringVector >::type distr_name(distr_nameSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type distr_add_params(distr_add_paramsSEXP);
-    Rcpp::traits::input_parameter< Function >::type custom_func(custom_funcSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type custom_domain(custom_domainSEXP);
+    Rcpp::traits::input_parameter< List >::type custom_func(custom_funcSEXP);
+    Rcpp::traits::input_parameter< double >::type custom_start(custom_startSEXP);
     Rcpp::traits::input_parameter< bool >::type useCustom(useCustomSEXP);
     Rcpp::traits::input_parameter< double >::type proposal_width(proposal_widthSEXP);
     Rcpp::traits::input_parameter< int >::type n_chains(n_chainsSEXP);
@@ -36,7 +36,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type mc3_iterations(mc3_iterationsSEXP);
     Rcpp::traits::input_parameter< double >::type dec_bdry(dec_bdrySEXP);
     Rcpp::traits::input_parameter< double >::type discrim(discrimSEXP);
-    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_cpp(stop_rule_id, trial_stim, distr_name, distr_add_params, custom_func, custom_domain, useCustom, proposal_width, n_chains, provided_start_point, stop_rule, nd_time, s_nd_time, lambda, prior_on_resp, prior_depend, mc3_iterations, dec_bdry, discrim));
+    rcpp_result_gen = Rcpp::wrap(Zhu23ABS_cpp(stop_rule_id, trial_stim, distr_name, distr_add_params, custom_func, custom_start, useCustom, proposal_width, n_chains, provided_start_point, stop_rule, nd_time, s_nd_time, lambda, prior_on_resp, prior_depend, mc3_iterations, dec_bdry, discrim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -150,17 +150,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // rDistr
-double rDistr(const StringVector& distr_name, const List& distr_params, const Function& custom_func, const NumericVector& x_domains, const bool& useCustom);
-RcppExport SEXP _samplr_rDistr(SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP custom_funcSEXP, SEXP x_domainsSEXP, SEXP useCustomSEXP) {
+double rDistr(const StringVector& distr_name, const List& distr_params, const Function& custom_func, const double& custom_start, const bool& useCustom);
+RcppExport SEXP _samplr_rDistr(SEXP distr_nameSEXP, SEXP distr_paramsSEXP, SEXP custom_funcSEXP, SEXP custom_startSEXP, SEXP useCustomSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const StringVector& >::type distr_name(distr_nameSEXP);
     Rcpp::traits::input_parameter< const List& >::type distr_params(distr_paramsSEXP);
     Rcpp::traits::input_parameter< const Function& >::type custom_func(custom_funcSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type x_domains(x_domainsSEXP);
+    Rcpp::traits::input_parameter< const double& >::type custom_start(custom_startSEXP);
     Rcpp::traits::input_parameter< const bool& >::type useCustom(useCustomSEXP);
-    rcpp_result_gen = Rcpp::wrap(rDistr(distr_name, distr_params, custom_func, x_domains, useCustom));
+    rcpp_result_gen = Rcpp::wrap(rDistr(distr_name, distr_params, custom_func, custom_start, useCustom));
     return rcpp_result_gen;
 END_RCPP
 }

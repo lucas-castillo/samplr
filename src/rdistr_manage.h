@@ -33,7 +33,7 @@ double rDistr(
     const StringVector &distr_name,
     const List &distr_params,
     const Function &custom_func,
-    const NumericVector &x_domains,
+    const double &custom_start,
     const bool &useCustom
 );
 

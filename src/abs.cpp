@@ -273,8 +273,8 @@ List Zhu23ABS_cpp(
     NumericVector trial_stim,
     StringVector distr_name,
     NumericVector distr_add_params,
-    Function custom_func,
-    NumericVector custom_domain,
+    List custom_func,
+    double custom_start,
     bool useCustom,
     double proposal_width,
     int n_chains,
@@ -323,7 +323,7 @@ List Zhu23ABS_cpp(
       // set the start point
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params, custom_func, custom_domain, useCustom);
+          start_point = rDistr(distr_name, distr_params, custom_func[i], custom_start, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -347,7 +347,7 @@ List Zhu23ABS_cpp(
         false, // discreteValues
         false, // isMix
         1, // weights
-        custom_func, // custom_func
+        custom_func[i], // custom_func
         useCustom // useCustom
       );
       
@@ -382,7 +382,7 @@ List Zhu23ABS_cpp(
       // set the start point
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params, custom_func, custom_domain, useCustom);
+          start_point = rDistr(distr_name, distr_params, custom_func[i], custom_start, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -406,7 +406,7 @@ List Zhu23ABS_cpp(
         false, // bool discreteValues,
         false, // bool isMix,
         1, // NumericVector weights,
-        custom_func, // Function custom_func,
+        custom_func[i], // Function custom_func,
         useCustom, // bool useCustom,
         stop_rule, // int stop_rule, // these three parameters are for the ABS
         first_sample_idx, // int save_first_sample

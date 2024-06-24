@@ -69,7 +69,7 @@ List sampler_mc3_cpp(
   
   // run the sampler ------------------------------------------------
   for (int i = 1; i < iterations; i++){
-    
+
     for (int ch = 0; ch < nChains; ch++){
       NumericVector accept;
       if (i ==1){
@@ -85,7 +85,7 @@ List sampler_mc3_cpp(
           discreteValues, // const bool &discreteValues, 
           beta(ch), // const double &beta, 
           0  // const double &alpha
-        );  
+        );
       } else{
         accept =  autocorrelated_metropolis_step_cpp(
           chain, // NumericMatrix &chain, 
@@ -99,7 +99,7 @@ List sampler_mc3_cpp(
           discreteValues, // const bool &discreteValues, 
           beta(ch), // const double &beta, 
           alpha // const double &alpha
-        );  
+        );
       }
       
       ps(ch, i) = accept(0);

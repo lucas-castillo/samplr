@@ -17,12 +17,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID})
+\strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID})
-  \item Adam N Sanborn \email{a.n.sanborn@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0442-4372}{ORCID})
+  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID}) [copyright holder]
+  \item Adam N Sanborn \email{a.n.sanborn@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0442-4372}{ORCID}) [copyright holder]
 }
 
 Other contributors:

@@ -22,10 +22,10 @@ CoreABS <- R6::R6Class("CoreABS",
    distr_name = NULL,
    #' @field distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
    distr_params = NULL,
-   #' @field custom_distr a function that returns a distribution when the user prefers a customised posterior hypothesis distribution.
+   #' @field custom_distr a list of functions that define the posterior hypothesis distribution.
    custom_distr = NULL,
-   #' @field custom_domain a numeric vector of the domain for the custom distribution.
-   custom_domain = NULL,
+   #' @field custom_start a numeric value of the starting point if "custom_distr" is provided.
+   custom_start = NULL,
    #' @field sim_results a data frame for saving the simulation results.
    sim_results = NULL,
   
@@ -38,12 +38,12 @@ CoreABS <- R6::R6Class("CoreABS",
    #' @param s_nd_time a numeric value of the inter-trial-variability of the non-decision time (in seconds).
    #' @param distr_name a character string indicating the type of the posterior hypothesis distribution. The package currently only supports `norm`, which represents normal distribution.
    #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
-   #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
-   #' @param custom_domain a numeric vector of the domain for the custom distribution.
+   #' @param custom_distr a list of functions that define the posterior hypothesis distribution.
+   #' @param custom_start a numeric value of the starting point if "custom_distr" is provided.
    #' 
    #' @return A new 'CoreABS' object.
    #'
-   initialize = function(n_chains, nd_time, s_nd_time, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_domain = NULL){
+   initialize = function(n_chains, nd_time, s_nd_time, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_start = NULL){
      
      # Check variable types
      stopifnot('Argument "n_chains" should be a single integer.'=is.numeric(n_chains))
@@ -62,9 +62,9 @@ CoreABS <- R6::R6Class("CoreABS",
        message('Both "distr_name" and "custom_distr" are provided. The distribution defined by "custom_distr" will be used as the posterior hypothesis.')
      }
      
-     # Check `custom_domain`
+     # Check `custom_start`
      if (!is.null(custom_distr)){
-       stopifnot('Argument "custom_domain" should be a numeric vector.' = (is.numeric(custom_domain)))
+       stopifnot('Argument "custom_start" should be a numeric value.' = (is.numeric(custom_start) && length(custom_start) == 1))
      }
      
      self$n_chains <- n_chains
@@ -73,12 +73,12 @@ CoreABS <- R6::R6Class("CoreABS",
      self$distr_name <- distr_name
      self$distr_params <- distr_params
      self$custom_distr <- custom_distr
-     self$custom_domain <- custom_domain
+     self$custom_start <- custom_start
    }
 ),
   
   private = list(
-    #' @field stopping_rule a string character to save the information of the stopping rule
+    #' @field stopping_rule a string character to save the information of the stopping rule.
     stopping_rule = NULL
   )
 )
@@ -116,16 +116,16 @@ Zhu23ABS <- R6::R6Class(
     #' @param lambda a numeric value of the rate parameter of the Erlang distribution for decision time.
     #' @param distr_name a character string indicating the type of the posterior hypothesis distribution.
     #' @param distr_params a numeric vector of the additional parameters for the posterior hypothesis distribution.
-    #' @param custom_distr a function that returns a distribution when the user prefer a customed posterior hypothesis distribution.
-    #' @param custom_domain a numeric vector of the domain for the custom distribution.
+    #' @param custom_distr a list of functions that define the posterior hypothesis distribution.
+    #' @param custom_start a numeric value of the starting point if "custom_distr" is provided.
     #' 
     #' @return A new 'Zhu23ABS' object.
     #'
     #' @examples
     #' zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
     #' 
-    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_domain = NULL) {
-      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr, custom_domain)
+    initialize = function(width, n_chains, nd_time, s_nd_time, lambda, distr_name = NULL, distr_params = NULL, custom_distr = NULL, custom_start = NULL) {
+      super$initialize(n_chains, nd_time, s_nd_time, distr_name, distr_params, custom_distr, custom_start)
       
       stopifnot('Argument "lambda" should be a single numeric value.'=(is.numeric(lambda) && length(lambda) == 1))
       stopifnot('Argument "width" should be a single numeric value.'=(is.numeric(width) && length(width) == 1))
@@ -281,26 +281,28 @@ Zhu23ABS <- R6::R6Class(
       }
       
       # Prepare for the custom distributions
+      n_trial <- length(trial_stim)
       if (is.null(self$custom_distr)){
         distr_name <- self$distr_name
-        custom_distr <- function(x){}
-        custom_domain <- c(1)
+        # place holders for custom distribution
+        custom_distr <- replicate(n_trial, function(x){}, simplify = FALSE)
+        custom_start <- 1
         use_custom <- FALSE
         
         # Check the inputs of `distr_params`
         if (length(self$distr_params) == 1){
-          distr_add_params <- rep(self$distr_params, length(trial_stim))
+          distr_add_params <- rep(self$distr_params, n_trial)
         } else {
-          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
+          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == n_trial))
           distr_add_params <- self$distr_params
         }
         
       } else {
         distr_name <- ""
-        distr_add_params <- 1
+        distr_add_params <- rep(1, n_trial)
         use_custom <- TRUE
         custom_distr <- self$custom_distr
-        custom_domain <- self$custom_domain
+        custom_start <- self$custom_start
       }
       
       # Start the simulation
@@ -310,7 +312,7 @@ Zhu23ABS <- R6::R6Class(
         distr_name = distr_name,
         distr_add_params = distr_add_params,
         custom_func = custom_distr,
-        custom_domain = custom_domain,
+        custom_start = custom_start,
         useCustom = use_custom,
         proposal_width = self$width,
         n_chains = self$n_chains,
@@ -350,26 +352,28 @@ Zhu23ABS <- R6::R6Class(
       }
       
       # Prepare for the custom distributions
+      n_trial <- length(trial_stim)
       if (is.null(self$custom_distr)){
         distr_name <- self$distr_name
-        custom_distr <- function(x){}
-        custom_domain <- 1
+        # place holders for custom distributions
+        custom_distr <- replicate(n_trial, function(x){}, simplify = FALSE)
+        custom_start <- 1
         use_custom <- FALSE
         
         # Check the inputs of `distr_params`
         if (length(self$distr_params) == 1){
-          distr_add_params <- rep(self$distr_params, length(trial_stim))
+          distr_add_params <- rep(self$distr_params, n_trial)
         } else {
-          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == length(trial_stim)))
+          stopifnot('The length of "distr_params" should equal to either 1 or the length of "trial_stim".' = (length(self$distr_params) == n_trial))
           distr_add_params <- self$distr_params
         }
         
       } else {
         distr_name <- ""
-        distr_add_params <- 1
+        distr_add_params <- rep(1, n_trial)
         use_custom <- TRUE
         custom_distr <- self$custom_distr
-        custom_domain <- self$custom_domain
+        custom_start <- self$custom_start
       }
       
       trial_stim_num <- as.numeric(trial_stim)
@@ -384,7 +388,7 @@ Zhu23ABS <- R6::R6Class(
         distr_name = distr_name,
         distr_add_params = distr_add_params,
         custom_func = custom_distr,
-        custom_domain = custom_domain,
+        custom_start = custom_start,
         useCustom = use_custom,
         proposal_width = self$width,
         n_chains = self$n_chains,
