@@ -42,14 +42,14 @@ sampler_mc3(
 \item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
 }
 \value{
-A list containing
+A named list containing
 \enumerate{
-\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-\item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-\item{The set of temperatures used in each chain}
-\item{the history of chain swaps}
-\item{The ratio of swap acceptances}
-\item{The ratio of proposal acceptances for each chain}
+\item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+\item{Proposals: the history of proposed places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+\item{Beta Values: The set of temperatures used in each chain}
+\item{Swap History: the history of chain swaps}
+\item{Swap Acceptance Ratio: The ratio of swap acceptances}
 }
 }
 \description{
@@ -61,10 +61,11 @@ This algorithm has been used to model human data in \insertCite{castillo2024Expl
 \examples{
 
 # Sample from a normal distribution
-mc_3 <- sampler_mc3(
+result <- sampler_mc3(
     distr_name = "norm", distr_params = c(0,1), 
     start = 1, sigma_prop = diag(1)
 )
+cold_chain <- result$Samples[,,1]
 }
 \references{
 \insertAllCited{}

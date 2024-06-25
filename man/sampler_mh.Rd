@@ -33,11 +33,11 @@ sampler_mh(
 \item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
 }
 \value{
-A list containing
+A named list containing
 \enumerate{
-\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-\item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-\item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
+\item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{Proposals: the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted.}
 }
 }
 \description{
@@ -51,17 +51,11 @@ This algorithm has been used to model human data in many places \insertCite{@e.g
 \examples{
 
 # Sample from a normal distribution
-metropolis_hastings <- sampler_mh(
-                       distr_name = "norm", distr_params = c(0,1),
-                       start = 1, sigma_prop = diag(1)
-                       )
-
-# Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-metropolis_hastings <- sampler_mh(
-    distr_name = "norm", distr_params = c(0,1), start = 1
-)
-
-
+result <- sampler_mh(
+         distr_name = "norm", distr_params = c(0,1),
+         start = 1, sigma_prop = diag(1)
+         )
+cold_chain <- result$Samples
 }
 \references{
 \insertAllCited{}

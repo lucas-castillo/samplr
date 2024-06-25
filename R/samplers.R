@@ -304,28 +304,22 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
 #' @references
 #'  \insertAllCited{}
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-#'  \item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
+#'  \item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{Proposals: the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted.}
 #' }
 #' @export
 #'
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' metropolis_hastings <- sampler_mh(
-#'                        distr_name = "norm", distr_params = c(0,1),
-#'                        start = 1, sigma_prop = diag(1)
-#'                        )
-#'
-#' # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-#' metropolis_hastings <- sampler_mh(
-#'     distr_name = "norm", distr_params = c(0,1), start = 1
-#' )
-#'
-#'
+#' result <- sampler_mh(
+#'          distr_name = "norm", distr_params = c(0,1),
+#'          start = 1, sigma_prop = diag(1)
+#'          )
+#' cold_chain <- result$Samples
 
 sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
@@ -344,7 +338,11 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
   res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom, alpha = alpha)
   res[[2]][1, ] <- NA
 
-  return (res)
+  return (list(
+    "Samples" = res[[1]],
+    "Proposals" = res[[2]],
+    "Acceptance Ratio" = sum(res[[3]]) / (iterations - 1)
+  ))
 }
 
 #' Metropolis-coupled MCMC sampler (MC3)
@@ -365,24 +363,25 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
 #' @references
 #'  \insertAllCited{}
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-#'  \item{The set of temperatures used in each chain}
-#'  \item{the history of chain swaps}
-#'  \item{The ratio of swap acceptances}
-#'  \item{The ratio of proposal acceptances for each chain}
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Proposals: the history of proposed places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
 #' }
 #' @export
 #'
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' mc_3 <- sampler_mc3(
+#' result <- sampler_mc3(
 #'     distr_name = "norm", distr_params = c(0,1), 
 #'     start = 1, sigma_prop = diag(1)
 #' )
+#' cold_chain <- result$Samples[,,1]
 sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
 
 
@@ -440,10 +439,10 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
   return(list(
     "Samples" = M,
     "Proposals" = P,
+    "Acceptance Ratio" = samplerResults[[6]] / (iterations - 1),
     "Beta Values" = samplerResults[[3]],
     "Swap History" = swap_hist,
-    "Swap Acceptance Ratio" = samplerResults[[5]][1] / samplerResults[[5]][2],
-    "Acceptance Ratios" = samplerResults[[6]]
+    "Swap Acceptance Ratio" = samplerResults[[5]][1] / samplerResults[[5]][2]
   ))
 
 }
@@ -464,20 +463,21 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of momentum values}
-#'  \item{acceptance ratio}
+#'  \item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted.}
 #' }
 #' @references 
 #'    \insertAllCited{}
 #' @export
 #' @examples
-#' HMC <- sampler_hmc(
+#' result <- sampler_hmc(
 #'     distr_name = "norm", distr_params = c(0,1), 
 #'     start = 1, epsilon = .01, L = 100
 #'     )
+#' cold_chain <- result$Samples
 sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, iterations=1024, weights = NULL, custom_density = NULL) {
 
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
@@ -531,25 +531,25 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of momentum values}
-#'  \item{the acceptance ratio of each chain}
-#'  \item{The set of temperatures used in each chain}
-#'  \item{The history of swaps made}
-#'  \item{The ratio of swap acceptances}
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
 #' }
 #' @references
 #'  \insertAllCited{}
 #' @export
 #' @examples
 #'
-#' MCHMC <- sampler_mchmc(
+#' result <- sampler_mchmc(
 #'     distr_name = "norm", distr_params = c(0,1), 
 #'     start = 1, epsilon = .01, L = 100
 #' )
-
+#' cold_chain <- result$Samples[,,1]
 sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 
   # Check nChains is integer
@@ -629,7 +629,7 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
     list(
       "Samples" = M,
       "Momentums" = P,
-      "Acceptance Ratios" = res$acceptances / (iterations - 1),
+      "Acceptance Ratio" = res$acceptances / (iterations - 1),
       "Beta Values" = res$beta,
       "Swap History" = swap_hist,
       "Swap Acceptance Ratio" = res$swap_accepts_attempts[1] / res$swap_accepts_attempts[2]
@@ -658,21 +658,22 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of momentum values}
-#'  \item{acceptance ratio}
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
 #' }
 #' @export
 #' @references
 #'  \insertAllCited{}
 #' @examples
 #'
-#' REC <- sampler_rec(
+#' result <- sampler_rec(
 #'     distr_name = "norm", distr_params = c(0,1), 
 #'     start = 1, epsilon = .01, L = 100
 #' )
+#' cold_chain <- result$Samples
 
 sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -715,7 +716,7 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
     list(
       "Samples" = res$chain,
       "Momentums" = res$momentums,
-      "Acceptance Ratio" = res$acceptances / iterations
+      "Acceptance Ratio" = res$acceptances / (iterations - 1)
     )
   )
 }
@@ -741,24 +742,25 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
-#' @return A list containing
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of momentum values}
-#'  \item{the acceptance ratio of each chain}
-#'  \item{The set of temperatures used in each chain}
-#'  \item{The history of swaps made}
-#'  \item{The ratio of swap acceptances}
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
 #' }
 #' @references
 #'  \insertAllCited{}
 #' @export
 #' @examples
 #'
-#' MCREC <- sampler_mcrec(
+#' result <- sampler_mcrec(
 #'     distr_name = "norm", distr_params = c(0,1), 
 #'     start = 1, epsilon = .01, L = 100
 #' )
+#' cold_chain <- result$Samples[,,1]
 
 sampler_mcrec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -839,7 +841,7 @@ sampler_mcrec <- function(start, distr_name = NULL, distr_params = NULL, epsilon
     list(
       "Samples" = M,
       "Momentums" = P,
-      "Acceptance Ratios" = res$acceptances / (iterations - 1),
+      "Acceptance Ratio" = res$acceptances / (iterations - 1),
       "Beta Values" = res$beta,
       "Swap History" = swap_hist,
       "Swap Acceptance Ratio" = res$swap_accepts_attempts[1] / res$swap_accepts_attempts[2]
