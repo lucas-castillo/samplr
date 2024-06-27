@@ -91,3 +91,130 @@ test_that("the fixed stopping rule", {
 })
 
 
+test_that("The custom starting point with fixed stopping rule",{
+  trial_stim <- sample(20:25, 2, replace=TRUE)
+  custom_post_func <- function(x){
+    if (x >= 19 & x < 22){
+      return(0.3)
+    } else if (x >= 22 & x < 24) {
+      return(0.6)
+    } else if (x >= 24 & x < 26) {
+      return(0.1)
+    } else {
+      return(0)
+    }
+  }
+  
+  custom_func_list <- replicate(length(trial_stim), custom_post_func, simplify = FALSE)
+  custom_start <- runif(1, 20, 25)
+  
+  abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10,
+                            custom_distr = custom_func_list, custom_start = custom_start)
+  abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_stim)
+  expect_equal(abs_model$sim_results$samples[[1]][1], custom_start)
+})
+
+
+test_that("The custom starting point with relative stopping rule",{
+  trial_stim <- factor(sample(c('left', 'right'), 2, TRUE))
+  custom_post_left <- function(x){
+    if (x >= -3 & x < -1){
+      return(0.25 * x + 0.75)
+    } else if (x >= -1 & x < 0) {
+      return(-0.25 * x + 0.25)
+    } else {
+      return (0)
+    }
+  }
+  
+  custom_post_right <- function(x){
+    if (x >= -1 & x < 1){
+      return(0.25 * x + 0.25)
+    } else if (x >= 1 & x < 3) {
+      return(-0.25 * x + 0.75)
+    } else {
+      return (0)
+    }
+  }
+  
+  custom_func_list <- lapply(trial_stim, function(stim) ifelse(stim=='left', custom_post_left, custom_post_right))
+  
+  custom_start <- runif(1, -3, 3)
+  
+  abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10,
+                             custom_distr = custom_func_list, custom_start = custom_start)
+  abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+  expect_equal(abs_model2$sim_results$samples[[1]][1], custom_start)
+})
+
+
+test_that("starting points overwrites custom_start with fixed stopping rule", {
+  trial_stim <- sample(20:25, 2, replace=TRUE)
+  custom_post_func <- function(x){
+    if (x >= 19 & x < 22){
+      return(0.3)
+    } else if (x >= 22 & x < 24) {
+      return(0.6)
+    } else if (x >= 24 & x < 26) {
+      return(0.1)
+    } else {
+      return(0)
+    }
+  }
+  
+  custom_func_list <- replicate(length(trial_stim), custom_post_func, simplify = FALSE)
+  custom_start <- runif(1, 20, 25)
+  
+  while (TRUE) {
+    start_point <- runif(length(trial_stim), 20, 25)
+    if (start_point[1] != custom_start){
+      break
+    }
+  }
+  
+  abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10,
+                            custom_distr = custom_func_list, custom_start = custom_start)
+  abs_model$simulate(stopping_rule = 'fixed', start_point = start_point, n_sample = 5, trial_stim = trial_stim)
+  first_sample <- sapply(abs_model$sim_results$samples, function(samples) samples[1])
+  expect_equal(first_sample, start_point)
+})
+
+
+test_that("starting points overwrites custom_start with fixed stopping rule",{
+  trial_stim <- factor(sample(c('left', 'right'), 2, TRUE))
+  custom_post_left <- function(x){
+    if (x >= -3 & x < -1){
+      return(0.25 * x + 0.75)
+    } else if (x >= -1 & x < 0) {
+      return(-0.25 * x + 0.25)
+    } else {
+      return (0)
+    }
+  }
+  
+  custom_post_right <- function(x){
+    if (x >= -1 & x < 1){
+      return(0.25 * x + 0.25)
+    } else if (x >= 1 & x < 3) {
+      return(-0.25 * x + 0.75)
+    } else {
+      return (0)
+    }
+  }
+  
+  custom_func_list <- lapply(trial_stim, function(stim) ifelse(stim=='left', custom_post_left, custom_post_right))
+  custom_start <- runif(1, -3, 3)
+  
+  while (TRUE) {
+    start_point <- runif(length(trial_stim), 20, 25)
+    if (start_point[1] != custom_start){
+      break
+    }
+  }
+  
+  abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10,
+                             custom_distr = custom_func_list, custom_start = custom_start)
+  abs_model2$simulate(stopping_rule = 'relative', start_point = start_point, delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+  first_sample <- sapply(abs_model2$sim_results$samples, function(samples) samples[1])
+  expect_equal(first_sample, start_point)
+})
