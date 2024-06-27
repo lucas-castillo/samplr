@@ -18,9 +18,10 @@ knitr::opts_chunk$set(
 
 This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhuAutocorrelatedBayesian2023) and the `R` scripts for running simulations of ABS using `samplr` package.
 
-ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs. These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice (2AFC) tasks. Notably, ABS employs different stopping rules depending on the type of tasks. In this vignette, we will outline the process of simulating ABS under both stopping rules.
+ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs, which is called "posterior of hypotheses". These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice (2AFC) tasks. Notably, ABS employs different stopping rules depending on the type of tasks. In this vignette, we will outline the process of simulating ABS under both stopping rules. In addition, although ABS assume a normal distribution for the posterior of hypotheses, our package allows users to use custom distributions, which will also illustrated in this vignette.
 
 ## Fixed stopping rule
+### A normal distribution for posterior of hypothesis
 
 The fixed stopping rule means that a fixed number of samples are drawn to complete the tasks such as estimations and confidence intervals. This rule applies to tasks such as estimation tasks.
 
@@ -36,7 +37,7 @@ trial_stim <- sample(20:25, 10, replace=TRUE)
 print(trial_stim)
 ```
 
-ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus we need to construct a new object before running simulations. In the initialising step, we need to provide the values of five parameters:
+ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus we need to construct a new object before running simulations. In the initialising step, we need to provide the values of the following arguments:
 
 -  the proposal width of the MC3 sampler, `width`;
 -  the number of chains of the MC3 sampler, `n_chains`;
@@ -44,13 +45,15 @@ ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus
 -  the variability of the non-decision time, `s_nd_time`;
 -  the rate parameter of the Erlang distribution for the response time, `lambda`.
 
+In this section, we employ the normal posterior distribution, which requires specifying the values of `distr_name` and `distr_params`. The `distr_name` argument should be set to "norm" to indicate the normal distribution. The `distr_params` argument specifies the standard deviation of the normal distribution. This can be either a single numeric value, indicating a fixed standard deviation across all trials, or a numeric vector of the same length as the stimuli, specifying the standard deviation for each trial. It is important to note that ABS assumes the stimulus value is the mean of the normal distribution, thus there is no need to specify the mean separately.
+
 ```{r}
-abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
+abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
 ```
 
 The simulation process is conducted using the `simulate` function, which requires two arguments: `stopping_rule` and `start_point`. Based on the assumptions of ABS, individuals employ a fixed stopping rule for the estimation task, meaning a predetermined number of samples are drawn. Therefore, `stopping_rule` is set to `'fixed'`.
 
-The `start_point` argument is set to `NA` by default, indicating that the starting point of the first trial for each MC3 chain is randomly selected from the posterior of hypotheses, and the starting points of subsequent trials for each chain are set to the last sample of the same chain in the previous trial. Alternatively, users have the option to specify starting points for each trial, ensuring that the length of starting points matches the length of `trial_stim`. It is worth noting that in each trial, all chains share the same starting point in this condition.
+The `start_point` argument is set to `NA` by default, indicating that the starting point of the first trial for each MC3 chain is randomly selected from the posterior of hypotheses, and the starting points of subsequent trials for each chain are set to the last sample of the same chain in the previous trial. Alternatively, users have the option to specify starting points for each trial, ensuring that the length of starting points matches the length of `trial_stim`. It is important to note that when specified, all chains share the same starting point in each trial, and it will break the dependency of samples between adjacent trials.
 
 To demonstrate the usage of `start_point`, we will run the simulation twice: once with the default settings and again with specified starting points.
 
@@ -112,11 +115,47 @@ abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_sti
 knitr::kable(abs_model$sim_results)
 ```
 
+### A custom posterior of hypotheses
+
+In this section, we will illustrate how to employ custom distributions to ABS with a fixed stopping rule, using the same experimental scenario and the same stimuli. First, we specify our custom posterior function.
+
+```{r}
+ custom_post_func <- function(x){
+  if (x >= 19 & x < 22){
+    return(0.3)
+  } else if (x >= 22 & x < 24) {
+    return(0.6)
+  } else if (x >= 24 & x < 26) {
+    return(0.1)
+  } else {
+    return(0)
+  }
+}
+```
+
+To employ a custom posterior of hypotheses, two special arguments are required in the initialisation step: `custom_distr` and `custom_start`. The `custom_distr` argument accepts a list of custom posterior functions, one for each trial, matching the length of the stimuli. The `custom_start` argument specifies **the first starting point** of the Zhu23ABS sampler, i.e., the initial sample of the entire simulation.
+
+It is important to distinguish `custom_start` from `start_point` in the `simulate()` function. `custom_start` is only necessary when providing a custom posterior of hypotheses, whereas `start_point` can be used for both Gaussian and custom posteriors. `custom_start` initializes the `Zhu23ABS` sampler without breaking the dependency of samples between trials. In contrast, `start_point` sets the starting point for each trial, thus breaking the dependency between samples of adjacent trials.  Additionally, if users provide a vector of `start_point`, a value for `custom_start` is still required as a placeholder and will be overwritten by `start_point`.
+
+```{r}
+custom_func_list <- replicate(length(trial_stim), custom_post_func, simplify = FALSE)
+abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, custom_distr = custom_func_list, custom_start = 23)
+abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_stim)
+```
+
+The following table shows the simulation results with a custom posterior. We notice that the first sample of the first trial equals to the value of `custom_start`.
+
+```{r}
+knitr::kable(abs_model$sim_results)
+```
+
+
 ## Relative stopping rule
+### A normal distribution for posterior of hypothesis
 
-The relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as two-alternative force choice tasks (2AFC).
+The relative stopping rule means that the model counts the difference in evidence between the two hypotheses, and terminates the sampling process whenever the accumulated difference exceeds a threshold. This rule applies to tasks such as 2AFC.
 
-2AFC is a cognitive task that asks participants to make judgments between two alternatives. For instance, in the random dot motion task (RDM), participants are presented with a screen where most dots move coherently in either the left or right direction, and they're asked to perceive the correct direction.
+2AFC is a cognitive task that asks participants to make judgments between two alternatives. For instance, in the random dot motion (RDM) task, participants are presented with a screen where most dots move coherently in either the left or right direction, and they're asked to perceive the correct direction.
 
 ABS is able to describe and simulate this cognitive process. Similarly, we will begin by randomly generating 10 directions from the set `c('left', 'right')` to represent the stimuli in the RDM task.
 
@@ -126,7 +165,7 @@ trial_stim <- factor(sample(c('left', 'right'), 10, TRUE))
 
 In 2AFC, ABS employs a sampling process and converts the samples into "evidence" supporting either the left or right responses. Specifically, if the sample falls below the decision boundary, it supports the first level in `trial_stim`, which in our example is "left"; otherwise, the sample will support the second level, which is "right". According to the assumptions of ABS, it employs a 'relative' stopping rule: It counts the difference in evidence between the two responses, and terminates the sampling process whenever the accumulated difference exceeds a threshold.
 
-To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use the `simulate` method with `stopping_rule = 'relative'`. The following arguments are also required:
+To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use the `simulate` method with `stopping_rule = 'relative'`. The posterior of hypotheses will be normal distribution. The following arguments are required:
 
 - the threshold of the accumulated difference, `delta`;
 - the decision boundary that split the posterior of hypotheses, `dec_bdry`;
@@ -139,8 +178,8 @@ To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use 
 To demonstrate the usage of these arguments, we will also run the simulation twice: once with the default settings and again with some of the settings modified.
 
 ```{r, results=FALSE}
-abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10)
-abs_model2$simulate(stopping_rule = 'relative', delta = 3, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
+abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
 ```
 
 The table below presents the simulation results, including the simulated response, response time, and confidence. It is important to note that in the simulation of 2AFC, the length of the sample sequences may vary due to ABS utilizing a relative stopping rule. To illustrate its mechanism, let us examine the sequences in the first two trials as an example.
@@ -149,11 +188,11 @@ The table below presents the simulation results, including the simulated respons
 knitr::kable(abs_model2$sim_results)
 ```
 
-The prior on responses, set to `c(1, 1)`, corresponds to an unbiased Beta distribution `Beta(1, 1)`. Let us consider the first trial: the initial sample, 0.70711610, falls above the decision boundary of 0, supporting "right". Consequently, the posterior on responses shifts to `Beta(1, 2)`. With a relative difference of 1 between the amounts of evidence supporting both stimuli, which is lower than the relative stopping rule, the sampling process continues. Subsequent samples are analysed similarly: the posterior adjusts according to the samples until the relative difference meets the stopping rule. In this case, the last sample supporting "right" results in a posterior of `Beta(1, 4)`, satisfying the stopping rule and prompting ABS to return a "right" response.
+The prior on responses, set to `c(1, 1)`, corresponds to an unbiased Beta distribution `Beta(1, 1)`. Let us consider the first trial: the initial sample, 0.4275131, falls above the decision boundary of 0, supporting "right". Consequently, the posterior on responses shifts to `Beta(1, 2)`. With a relative difference of 1 between the amounts of evidence supporting both stimuli, which is lower than the relative stopping rule, the sampling process continues. Subsequent samples are analysed similarly: the posterior adjusts according to the samples until the relative difference meets the stopping rule. In this case, the last sample supporting "right" results in a posterior of `Beta(1, 5)`, satisfying the stopping rule and prompting ABS to return a "right" response.
 
-With the `prior_depend=TRUE` argument, the prior on responses for the second trial depends on the stimulus of the first trial. Given that "left" was the correct response in the first trial, the prior on responses for the second trial is `Beta(2, 1)`. Since no starting points are provided, ABS begins from 0.43261621, the last sample of the first trial, but this sample is excluded from the samples and from the calculation of the posterior on responses. The process then proceeds similarly to the first trial. In this instance, after six samples in total, the posterior reaches `Beta(6, 3)`, satisfying the stopping rule and resulting in a "left" response.
+With the `prior_depend=TRUE` argument, the prior on responses for the second trial depends on the stimulus of the first trial. Given that "right" was the correct response in the first trial, the prior on responses for the second trial is `Beta(1, 2)`. Since no starting points are provided, ABS began with 0.2739435, the last sample of the first trial, but this sample is excluded from the samples and from the calculation of the posterior on responses. The process then proceeds similarly to the first trial. In this instance, after eight samples in total, the posterior reaches `Beta(6, 2)`, satisfying the stopping rule and resulting in a "left" response.
 
-It is important to clarify two points. Firstly, the prior on responses is not accumulated when `prior_depend=TRUE`. In the example above, the prior on responses for the third trial is `Beta(1, 2)` rather than `Beta(2, 2)`. Secondly, it's crucial to distinguish the starting points of ABS from those in the drift diffusion model (DDM; @ratcliffTheoryMemory1978, @ratcliffDiffusionDecision2008). The bias of the starting points in ABS is independent from the bias of the responses, which is captured by the prior on responses.
+It is important to clarify two points. Firstly, the prior on responses is not accumulated when `prior_depend=TRUE`. In the example above, the prior on responses for the third trial is `Beta(2, 1)` rather than `Beta(2, 2)`. Secondly, it's crucial to distinguish the starting points of ABS from those in the drift diffusion model (DDM; @ratcliffTheoryMemory1978, @ratcliffDiffusionDecision2008). The bias of the starting points in ABS is independent from the bias of the responses, which is captured by the prior on responses.
 
 In the upcoming simulations, we will run the simulation again with two arguments changed: `start_point` and `prior_depend`. To proceed, let us generate some starting points for the simulation.
 
@@ -166,7 +205,49 @@ Next, we will put these starting points into the ABS model and rerun the simulat
 
 ```{r}
 abs_model2$reset_sim_results()
-abs_model2$simulate(stopping_rule = 'relative', delta = 3, dec_bdry = 0, discrim = 1, trial_stim = trial_stim, start_point = start_point, prior_depend = FALSE)
+abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim, start_point = start_point, prior_depend = FALSE)
 knitr::kable(abs_model2$sim_results)
 ```
 
+### A custom posterior of hypotheses
+
+In this section, we will illustrate how to employ custom distributions to ABS with a relative stopping rule, using the RDM task with the same stimuli. First, we specify two custom posterior functions for the "left" and "right" stimuli, and create a list of the custom posterior function according to the stimuli.
+
+```{r}
+custom_post_left <- function(x){
+  if (x >= -3 & x < -1){
+    return(0.25 * x + 0.75)
+  } else if (x >= -1 & x < 0) {
+    return(-0.25 * x + 0.25)
+  } else {
+    return (0)
+  }
+}
+
+custom_post_right <- function(x){
+  if (x >= -1 & x < 1){
+    return(0.25 * x + 0.25)
+  } else if (x >= 1 & x < 3) {
+    return(-0.25 * x + 0.75)
+  } else {
+    return (0)
+  }
+}
+
+custom_func_list <- lapply(trial_stim, function(stim) ifelse(stim=='left', custom_post_left, custom_post_right))
+```
+
+Then, we initialise a `Zhu23ABS` object with a list of `custom_func_list` and a value of `custom_start`.
+
+```{r}
+abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, custom_distr = custom_func_list, custom_start = -0.1)
+abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+```
+
+The following table shows the simulation results with a custom posterior. We notice that the first sample of the first trial equals to the value of `custom_start`.
+
+```{r}
+knitr::kable(abs_model2$sim_results)
+```
+
+## References

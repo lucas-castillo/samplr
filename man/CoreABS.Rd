@@ -16,11 +16,26 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 
 \item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decision time (in seconds).}
 
 \item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution.}
 
+\item{\code{distr_params}}{a numeric vector of the additional parameters for the posterior hypothesis distribution.}
+
+\item{\code{custom_distr}}{a list of functions that define the posterior hypothesis distribution.}
+
+\item{\code{custom_start}}{a numeric value of the starting point if "custom_distr" is provided.}
+
 \item{\code{sim_results}}{a data frame for saving the simulation results.}
+
+\item{\code{stopping_rule}}{a string character to save the information of the stopping rule.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{stopping_rule}}{a string character to save the information of the stopping rule.}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,7 +52,15 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \subsection{Method \code{new()}}{
 Create a new 'CoreABS' object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(n_chains, nd_time, s_nd_time, distr_name = "norm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CoreABS$new(
+  n_chains,
+  nd_time,
+  s_nd_time,
+  distr_name = NULL,
+  distr_params = NULL,
+  custom_distr = NULL,
+  custom_start = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -47,9 +70,15 @@ Create a new 'CoreABS' object.
 
 \item{\code{nd_time}}{a numeric value of the non-decision time (in seconds).}
 
-\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decition time (in seconds).}
+\item{\code{s_nd_time}}{a numeric value of the inter-trial-variability of the non-decision time (in seconds).}
 
-\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution. The package currently only support \code{norm}, which represents normal distribution.}
+\item{\code{distr_name}}{a character string indicating the type of the posterior hypothesis distribution. The package currently only supports \code{norm}, which represents normal distribution.}
+
+\item{\code{distr_params}}{a numeric vector of the additional parameters for the posterior hypothesis distribution.}
+
+\item{\code{custom_distr}}{a list of functions that define the posterior hypothesis distribution.}
+
+\item{\code{custom_start}}{a numeric value of the starting point if "custom_distr" is provided.}
 }
 \if{html}{\out{</div>}}
 }

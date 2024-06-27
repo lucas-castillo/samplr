@@ -8,6 +8,7 @@
 #include <R.h>
 #include "mc3.h"
 #include "mcrec.h"
+#include "rdistr_manage.h"
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
@@ -38,14 +39,6 @@ NumericMatrix double_to_matrix(double x, int n_rep){
   return(m);
 }
 
-// A function that returns one random value with a given distribution and related parameters
-double rDistr(StringVector distr_name, List distr_params) {
-  if (distr_name(0) == "norm") {
-    return R::rnorm(distr_params(0), distr_params(1));
-  } else {
-    stop("Distribution not supported.");
-  }
-}
 
 // A function for getting the last sample from the chain
 NumericMatrix mc3_last_sample(NumericMatrix chain, int stop_position, int nChains, int total_iterations){
@@ -82,7 +75,6 @@ List sampler_mc3_rltv_stop_cpp(
   // init the vars of mc3 ------------------------------------------------
   NumericVector acceptances(nChains);
   double alpha=0;
-  int swap_attempts = 0;
   int swap_accepts= 0;
   NumericMatrix swaps(iterations*nChains, 3);
   int n_dim = start.ncol();
@@ -187,7 +179,6 @@ List sampler_mc3_rltv_stop_cpp(
         
         // swap nSwaps times (depending on swap_all)
         for (int k = 0; k < nSwaps; k++){
-          swap_attempts++;
           int m = v[k*2];
           int n = v[k*2 + 1];
           // chains are swapped with probability alpha, which is the ratio between:
@@ -278,10 +269,13 @@ List sampler_mc3_rltv_stop_cpp(
 
 //[[Rcpp::export]]
 List Zhu23ABS_cpp(
-    int task_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
+    int stop_rule_id, // 1 represent the fixed stopping rule, 2 represent the relative stopping rule
     NumericVector trial_stim,
     StringVector distr_name,
     NumericVector distr_add_params,
+    List custom_func,
+    double custom_start,
+    bool useCustom,
     double proposal_width,
     int n_chains,
     NumericVector provided_start_point,
@@ -320,16 +314,16 @@ List Zhu23ABS_cpp(
     double conf;
     int first_sample_idx; // either 0 or 1, 0 means the start point is the first sample,
     
-    switch (task_id){
+    switch (stop_rule_id){
     case 1:  // fixed stopping rule -----------------------------------------------------------------------------------
       
+      // The posterior distributions could be different across trials
       distr_params = List::create(trial_stim(i), distr_add_params(i));
       
       // set the start point
-      
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params);
+          start_point = rDistr(distr_name, distr_params, custom_func[i], custom_start, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -353,8 +347,8 @@ List Zhu23ABS_cpp(
         false, // discreteValues
         false, // isMix
         1, // weights
-        f, // custom_func
-        false // useCustom
+        custom_func[i], // custom_func
+        useCustom // useCustom
       );
       
       trialSamples = subset_range(sampler_results["chain"], first_sample_idx, stop_rule + first_sample_idx - 1); // cold chain
@@ -388,7 +382,7 @@ List Zhu23ABS_cpp(
       // set the start point
       if (all(is_na(provided_start_point))){ // if users did not provide any start points
         if (i == 0){
-          start_point = rDistr(distr_name, distr_params);
+          start_point = rDistr(distr_name, distr_params, custom_func[i], custom_start, useCustom);
           start_point_m = double_to_matrix(start_point, n_chains); // convert start_point to a matrix
           first_sample_idx = 0;
         } else {
@@ -412,8 +406,8 @@ List Zhu23ABS_cpp(
         false, // bool discreteValues,
         false, // bool isMix,
         1, // NumericVector weights,
-        f, // Function custom_func,
-        false, // bool useCustom,
+        custom_func[i], // Function custom_func,
+        useCustom, // bool useCustom,
         stop_rule, // int stop_rule, // these three parameters are for the ABS
         first_sample_idx, // int save_first_sample
         acc_evid, // NumericVector acc_evid,
