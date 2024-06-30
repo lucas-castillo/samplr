@@ -1,24 +1,53 @@
 ## R CMD check results
 0 errors ✔ | 0 warnings ✔ | 2 notes ✖
 
+── R CMD check results ──────────────────────────────────────────── samplr 0.0.0.9000 ────
+Duration: 2m 34s
 
-❯ checking CRAN incoming feasibility ... [47s] NOTE
-  Maintainer: 'Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>'
+❯ checking examples ... ERROR
+  Running examples in 'samplr-Ex.R' failed
+  The error most likely occurred in:
   
-  New submission
+  > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+  > ### Name: Mean_Variance
+  > ### Title: Mean Variance Estimates
+  > ### Aliases: Mean_Variance
+  > 
+  > ### ** Examples
+  > 
+  > library(dplyr)
   
-  Version contains large components (0.0.0.9000)
+  Attaching package: 'dplyr'
   
-  Unknown, possibly misspelled, fields in DESCRIPTION:
-    'Remotes'
+  The following objects are masked from 'package:stats':
   
-  Suggests or Enhances not in mainstream repositories:
-    samplrData
+      filter, lag
   
-  The Title field should be in title case. Current version is:
-  'Tools To Compare Human Performance To Sampling Algorithms'
-  In title case that is:
-  'Tools to Compare Human Performance to Sampling Algorithms'
+  The following objects are masked from 'package:base':
+  
+      intersect, setdiff, setequal, union
+  
+  > library(tidyr)
+  > library(magrittr)
+  
+  Attaching package: 'magrittr'
+  
+  The following object is masked from 'package:tidyr':
+  
+      extract
+  
+  > library(samplrData)
+  > data <- sundh2023e3 %>%
+  +   group_by(ID, querydetail) %>% 
+  +   mutate(iteration = LETTERS[1:n()]) %>% 
+  +   pivot_wider(id_cols = c(ID, querydetail), 
+  +       values_from = estimate, names_from = iteration) %>% 
+  +   mutate(across(where(is.numeric), \(x){x/100})) %>% 
+  +   ungroup %>% 
+  +   select(-querydetail)
+  Error: object 'sundh2023e3' not found
+  Execution halted
 
 ❯ checking C++ specification ... NOTE
     Specified C++11: please drop specification unless essential
+
