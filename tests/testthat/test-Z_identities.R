@@ -162,7 +162,19 @@ test_that("Bayesian Sampler", {
     N = c(200, 200), N2 = c(200, 5)
   )
   expect_true(sd(res$a) == 0 && sd(res$a_and_b) != 0)
-  
-  
-  
+})
+test_that("Mean Variance", {
+  suppressMessages(library(dplyr))
+  suppressMessages(library(tidyr))
+  suppressMessages(library(magrittr))
+  suppressMessages(library(samplrData))
+  data <- sundh2023.meanvariance.e3 %>%
+    group_by(ID, querydetail) %>% 
+    mutate(iteration = LETTERS[1:n()]) %>% 
+    pivot_wider(id_cols = c(ID, querydetail), 
+                values_from = estimate, names_from = iteration) %>% 
+    mutate(across(where(is.numeric), \(x){x/100})) %>% 
+    ungroup %>% 
+    select(-querydetail)
+  expect_true(is.data.frame(Mean_Variance(data, "ID")))
 })
