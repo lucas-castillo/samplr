@@ -4,7 +4,7 @@
 \name{samplr-package}
 \alias{samplr}
 \alias{samplr-package}
-\title{samplr: Tools To Compare Human Performance To Sampling Algorithms}
+\title{samplr: Tools to Compare Human Performance to Sampling Algorithms}
 \description{
 A set of tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
 }
