@@ -4,7 +4,7 @@
 \alias{CoreABS}
 \title{CoreABS Object}
 \description{
-This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
+This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhu2024AutocorrelatedBayesianSampler}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 }
 \references{
 \insertAllCited{}

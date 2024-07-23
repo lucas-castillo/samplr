@@ -4,7 +4,7 @@
 \alias{Zhu23ABS}
 \title{Auto-correlated Bayesian Sampler by Zhu (2023)}
 \description{
-This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr} is developed by Zhu.
+This Auto-correlated Bayesian Sampler model \insertCite{@ABS, @zhu2024AutocorrelatedBayesianSampler}{samplr} is developed by Zhu.
 }
 \examples{
 

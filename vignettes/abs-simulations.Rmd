@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhuAutocorrelatedBayesian2023) and the `R` scripts for running simulations of ABS using `samplr` package.
+This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhu2024AutocorrelatedBayesianSampler) and the `R` scripts for running simulations of ABS using `samplr` package.
 
 ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs, which is called "posterior of hypotheses". These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice (2AFC) tasks. Notably, ABS employs different stopping rules depending on the type of tasks. In this vignette, we will outline the process of simulating ABS under both stopping rules. In addition, although ABS assume a normal distribution for the posterior of hypotheses, our package allows users to use custom distributions, which will also illustrated in this vignette.
 
