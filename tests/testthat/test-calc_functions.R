@@ -50,6 +50,8 @@ test_that("Levy Flights", {
   # Test that it works with mv sequences
   res3 <- calc_levy(matrix(rep(sequence, 2), ncol=2), F)
   expect_equal(res3[["coef"]], c(-0.4249660, 0.68771756))
+  
+  vdiffr::expect_doppelganger("Levy Plot", \(){calc_levy(sequence, T)})
 })
 
 test_that("PSD", {
@@ -65,6 +67,7 @@ test_that("PSD", {
 
   # Check results
   expect_equal(res[["polyfit"]], c(0.5096142, 2.4102135))
+  vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, T)})
 })
 
 test_that("Sigma Scaling", {
@@ -79,19 +82,33 @@ test_that("Sigma Scaling", {
 
   # Check results
   expect_equal(res$sds, c(16.40681, 20.13771, 19.16075, 17.64051, 15.55798, 17.40862), tolerance = .00001)
+  
+  vdiffr::expect_doppelganger("sig scaling", \(){calc_sigma_scaling(sequence, T)})
 })
 
 test_that("QQ Plotter", {
   ## Error if bad input
   expect_error(calc_qqplot(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  vdiffr::expect_doppelganger("qq Plot", \(){calc_qqplot(sequence, plot=T)})
+  vdiffr::expect_doppelganger("qq change Plot", \(){calc_qqplot(sequence, change=F, plot=T)})
 })
 
 test_that("Autocorr Plotter", {
   ## Error if bad input
   expect_error(calc_autocorr(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  vdiffr::expect_doppelganger("change autocorrelation Plot", \(){calc_autocorr(sequence, plot=T)})
+  vdiffr::expect_doppelganger("sequence autocorrelation Plot", \(){calc_autocorr(sequence, change=F, plot=T)})
+  
 })
 
 test_that("Series Plotter", {
   ## Error if bad input
   expect_error(plot_series(matrix(sequence, ncol = 3)), "Please input a one-dimensional vector")
+  
+  vdiffr::expect_doppelganger("series plot", \(){plot_series(sequence)})
+  vdiffr::expect_doppelganger("change plot", \(){plot_series(sequence, change = T)})
+})
+
+test_that("calc all", {
+  vdiffr::expect_doppelganger("all plot", \(){calc_all(sequence, plot = T)})
 })
