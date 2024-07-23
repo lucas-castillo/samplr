@@ -9,6 +9,7 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \references{
 \insertAllCited{}
 }
+\keyword{internal}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
