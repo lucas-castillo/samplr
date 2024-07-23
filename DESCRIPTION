@@ -1,6 +1,6 @@
 Package: samplr
 Type: Package
-Title: Tools To Compare Human Performance To Sampling Algorithms
+Title: Tools to Compare Human Performance to Sampling Algorithms
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Lucas",
