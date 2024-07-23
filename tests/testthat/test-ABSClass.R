@@ -4,12 +4,34 @@ test_that("bad inputs in initialising",{
   expect_error(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = '0.3', s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1))
   expect_error(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = c(0.5, 0.7), lambda = 10, distr_name = 'norm', distr_params = 1))
   expect_error(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, distr_name = 'norm', distr_params = 1))
+  expect_error(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5))
+  
+  custom_post <- function(x){
+    if (x >= -3 & x < -1){
+      return(0.25 * x + 0.75)
+    } else if (x >= -1 & x < 0) {
+      return(-0.25 * x + 0.25)
+    } else {
+      return (0)
+    }
+  }
+  expect_message(Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 5, distr_name = 'norm',
+                              distr_params = 1, custom_distr = custom_post, custom_start = 0))
+  
   
   zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = c(10, 11))
   trial_stim <- round(runif(5, 10, 50))
   expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim), 'The length of "distr_params" should equal to either 1 or the length of "trial_stim".')
 })
 
+
+test_that("run simulation twice", {
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
+  trial_stim <- round(runif(5, 10, 50))
+  zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim)
+  trial_stim <- round(runif(5, 5, 10))
+  expect_error(zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim))
+})
 
 test_that("bad inputs in simulations with the fixed stopping rule", {
   zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0.5, lambda = 10, distr_name = 'norm', distr_params = 1)
@@ -48,6 +70,10 @@ test_that("bad inputs in simulations with the relative stopping rule",{
   trial_stim <- c('left', 'left', 'right', 'right', 'right')
   expect_error(zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim), 'Argument "trial_stim" should be a factor.')
   
+  start_point <- runif(4, -3, 3)
+  start_point[5] <- NA
+  trial_stim <- factor(c('left', 'left', 'right', 'right', 'right'))
+  expect_error(zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim, start_point = start_point))
 })
 
 
@@ -64,7 +90,7 @@ test_that("bad inputs in the confidence interval function",{
 
 test_that("starting points",{
   # the fixed stopping rule
-  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10, distr_name = 'norm', distr_params = 1)
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10, distr_name = 'norm', distr_params = rep(1, 5))
   trial_stim <- round(runif(5, 10, 50))
   start_point <- runif(5, 10, 50)
   zhuabs$simulate(stopping_rule='fixed', n_sample = 5, trial_stim = trial_stim, start_point = start_point)
@@ -72,7 +98,7 @@ test_that("starting points",{
   expect_equal(first_sample, start_point)
   
   # the relative stopping rule
-  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10, distr_name = 'norm', distr_params = 1)
+  zhuabs <- Zhu23ABS$new(width = 1, n_chains = 5, nd_time = 0.3, s_nd_time = 0, lambda = 10, distr_name = 'norm', distr_params = rep(1, 5))
   trial_stim <- factor(sample(c('left', 'right'), 5, TRUE))
   start_point <- runif(5, -3, 3)
   zhuabs$simulate(stopping_rule='relative', delta = 4, dec_bdry = 0, discrim = 3, trial_stim = trial_stim, start_point = start_point)
