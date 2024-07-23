@@ -41,6 +41,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    vdiffr,
     bench,
     dplyr,
     tidyr,
