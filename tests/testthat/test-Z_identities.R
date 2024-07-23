@@ -1,3 +1,4 @@
+
 # Z Identities ------------------------------------------------------------
 test_that("Z Identities", {
   a=.1
@@ -38,3 +39,14 @@ test_that("Z Identities", {
   )
 })
 
+test_that("get_true_probabilities ", {
+  expect_equal(
+      sum(
+        unlist(
+          get_true_probabilities(
+            .5, .2, .1, .3
+            )
+          )[1:4]
+        )
+  , 1)
+})
