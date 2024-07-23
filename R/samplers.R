@@ -1,11 +1,54 @@
+.checkMVInputs <- function(distr_name, distr_params){
+  if (distr_name == "mvnorm"){
+    checks <- c(is.vector(distr_params[[1]]), is.matrix(distr_params[[2]]))
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvnorm distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the mean should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the covariance should be a matrix")
+      }
+      stop(error_msg)
+    }
+  } else if (distr_name == "mvt"){
+    checks <- c(
+      is.vector(distr_params[[1]]), 
+      is.matrix(distr_params[[2]]), 
+      is.numeric(distr_params[[3]]) & 
+          !is.matrix(distr_params[[3]]) & 
+          length(distr_params[[3]]) == 1
+      )
+    if (!all(checks)){
+      error_msg <- "Distribution parameters are not specified properly. For the mvt distribution,\n"
+      if (!checks[1]){
+        error_msg <- paste(error_msg, "- the location should be a vector\n")
+      }
+      if (!checks[2]){
+        error_msg <- paste(error_msg, "- the scale should be a matrix\n")
+      }
+      if (!checks[3]){
+        error_msg <- paste(error_msg, "- the df should be a number")
+      }
+      stop(error_msg)
+    }
+  }
+}
+
 .checkNamesMatchParams <- function(distr_name, distr_params){
 
-  names_cont <- c("unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
-                  "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular")
+  names_cont <- c(
+    "unif", "norm","lnorm", "gamma", "beta", "nbeta", "chisq", "nchisq", 
+    "t", "nt", "f", "nf", "cauchy", "exp", "logis", "weibull",
+    "4beta", "lst", "truncnorm", "trunct", "trunclst", "triangular"
+  )
 
   names_cont_mv <- c("mvnorm", "mvt")
 
-  names_discr <- c("binom", "nbinom", "nbinom_mu", "pois", "geom", "hyper", "wilcox", "signrank")
+  names_discr <- c(
+    "binom", "nbinom", "nbinom_mu", 
+    "pois", "geom", "hyper", "wilcox", "signrank"
+  )
 
   # possible distr parameters
   parameters_cont <- c(2, 2, 2, 2, 2, 3, 1, 2, 1, 2, 2, 3, 2, 1, 2, 2,
@@ -25,23 +68,16 @@
   if (c_uv){
     isValidParameters = parameters_cont[match(distr_name, names_cont)] == length(distr_params)
   } else if(c_mv){
-    isValidParameters = parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && is.list(distr_params)
+    isValidParameters = 
+      parameters_cont_mv[match(distr_name, names_cont_mv)] == length(distr_params) && 
+      is.list(distr_params)
   } else if (d_uv){
     isValidParameters = parameters_discr[match(distr_name, names_discr)] == length(distr_params)
   } else{
     stop(paste("Distribution", distr_name, "is not supported"))
   }
-
-
-
-  if(isValidParameters){
-    # if (length(start) == 1 && substr(returnString, 3, 4) == "mv"){
-    #   stop("Start is length 1 but distribution is multivariate")
-    # } else if (length(start) != 1 && substr(returnString, 3,4) == "uv"){
-    #   stop("Distribution is univariate but start is not length 1")
-    # }
-    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)
-  } else{
+  
+  if(!isValidParameters){
     if (c_mv){
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_cont_mv[match(distr_name, names_cont_mv)], "parameters are expected in a list"))
     } else if (!d_uv){
@@ -49,8 +85,11 @@
     } else{
       stop(paste("Parameters given do not match distribution name given. For the", distr_name, "distribution,", parameters_discr[match(distr_name, names_discr)], "parameters are expected in a vector"))
     }
+  } else{
+    if (c_mv) .checkMVInputs(distr_name, distr_params)
+    
+    return(c(d_uv, c_mv)) ## logical vector c(isDiscrete, isMultivariate)    
   }
-
 }
 
 .checkStart <- function(info, start_dim){
@@ -94,9 +133,22 @@
     # give it the arbitrary value of the identity matrix
     return(diag(n_dim))
   } else{
+    # If the user gave a number for a univariate distribution we convert it to a 1x1 matrix
     if (!is.matrix(sigma_prop) && length(sigma_prop) == 1 && n_dim == 1){
       return(matrix(sigma_prop))
+    # Otherwise we check for several possible errors
+    } else if (!is.matrix(sigma_prop) || (nrow(sigma_prop) != ncol(sigma_prop))){
+      stop("Please provide a square matrix for the sigma_prop parameter.")
+    } else if (n_dim > 1){
+      if (nrow(sigma_prop) != n_dim){
+        stop(paste(
+          "The dimensions of the sigma_prop parameter must correspond to the size of the target distribution.\n",
+          "At the moment the sigma_prop matrix is ", nrow(sigma_prop)," by ", nrow(sigma_prop),
+          ", but the distribution is ", n_dim,"-dimensional.", sep=""
+        ))
+      }
     }
+    
     return(sigma_prop)
   }
 }
@@ -156,8 +208,6 @@
     }
     return(list(FALSE, FALSE, 1, sigma_prop))
   }
-
-
 }
 
 #' Density Plotter
@@ -222,7 +272,7 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 
 
   df <- data.frame(x = xxRange, y = yyRange, density = density)
-
+  x <- y <- density <- NULL # declare variables to avoid cran note
   if (plot){
     map <- ggplot2::ggplot(df) +
       ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = density)) +
@@ -238,10 +288,11 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 
 #' Metropolis-Hastings (MH) Sampler
 #'
-#'
 #' This sampler navigates the proposal distribution following a random walk. At each step, it generates a new proposal from a proposal distribution (in this case a Gaussian centered at the current position) and chooses to accept it or reject it following the Metropolis-Hastings rule: it accepts it if the density of the posterior distribution at the proposed point is higher than at the current point. If the current position is denser, it still may accept the proposal with probability `proposal_density / current_density`.
 #'
-#' As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the `sigma_prop` parameter, which defaults to the identity matrix if not specified.
+#' As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the `sigma_prop` parameter, which defaults to the identity matrix if not specified. 
+#' 
+#' This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -250,29 +301,27 @@ plot_2d_density <- function(start, size, cellsPerRow = 50, names = NULL, params 
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param iterations Number of iterations of the sampler.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
-#'
-#' @return A list containing
+#' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
+#' @references
+#'  \insertAllCited{}
+#' @return A named list containing
 #' \enumerate{
-#'  \item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-#'  \item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-#'  \item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
+#'  \item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{Proposals: the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted.}
 #' }
 #' @export
 #'
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' metropolis_hastings <- sampler_mh(
-#'                        distr_name = "norm", distr_params = c(0,1),
-#'                        start = 1, sigma_prop = diag(1)
-#'                        )
-#'
-#' # Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-#' metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
-#'
-#'
+#' result <- sampler_mh(
+#'          distr_name = "norm", distr_params = c(0,1),
+#'          start = 1, sigma_prop = diag(1)
+#'          )
+#' cold_chain <- result$Samples
 
-sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL){
+sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "mh", custom_density, sigma_prop)
   isDiscrete = distrInfo[[1]]
   isMix = distrInfo[[2]]
@@ -286,17 +335,21 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
     distr_params = c(0,1)
     use_custom = TRUE
   }
-  res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
+  res <- sampler_mh_cpp(start, sigma_prop, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom, alpha = alpha)
   res[[2]][1, ] <- NA
 
-  return (res)
+  return (list(
+    "Samples" = res[[1]],
+    "Proposals" = res[[2]],
+    "Acceptance Ratio" = sum(res[[3]]) / (iterations - 1)
+  ))
 }
 
 #' Metropolis-coupled MCMC sampler (MC3)
 #'
 #' This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 #'
-#'
+#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}, \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} and \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} among others.
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
 #' @param start Either a vector or a matrix. If it is a vector, it will be the starting point of all the chains (with length = number of dimensions). If it's a matrix, every row will be the starting point of one chain (and so it must have as many rows as nChains, and as many columns as number of dimensions in the space).
@@ -307,13 +360,29 @@ sampler_mh<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop 
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @param alpha autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals
+#' @references
+#'  \insertAllCited{}
+#' @return A named list containing
+#' \enumerate{
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Proposals: the history of proposed places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
+#' }
 #' @export
 #'
 #' @examples
 #'
 #' # Sample from a normal distribution
-#' mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
-sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
+#' result <- sampler_mc3(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, sigma_prop = diag(1)
+#' )
+#' cold_chain <- result$Samples[,,1]
+sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop = NULL, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL, alpha=0){
 
 
   # Check nChains is integer
@@ -345,7 +414,7 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
     use_custom = TRUE
   }
 
-  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
+  samplerResults <- sampler_mc3_cpp(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues = isDiscrete, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom, alpha = alpha)
 
   M <- array(0, dim = (c(iterations, start_dim, nChains)))
   P <- array(0, dim = (c(iterations, start_dim, nChains)))
@@ -370,20 +439,21 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
   return(list(
     "Samples" = M,
     "Proposals" = P,
+    "Acceptance Ratio" = samplerResults[[6]] / (iterations - 1),
     "Beta Values" = samplerResults[[3]],
     "Swap History" = swap_hist,
-    "Swap Acceptance Ratio" = samplerResults[[5]][1] / samplerResults[[5]][2],
-    "Acceptance Ratios" = samplerResults[[6]]
+    "Swap Acceptance Ratio" = samplerResults[[5]][1] / samplerResults[[5]][2]
   ))
 
 }
 
 #' Hamiltonian Monte-Carlo Sampler (HMC)
 #'
-#' Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read [here](http://arxiv.org/abs/1701.02434)
+#' Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read in \insertCite{betancourt2018ConceptualIntroductionHamiltonian;textual}{samplr}.
 #'
-#'
-#' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions.
+#' This implementations assumes that the momentum is drawn from a normal distribution with mean 0 and identity covariance matrix (p ~ N (0, I)). Hamiltonian Monte Carlo does not support discrete distributions. 
+#' 
+#' This algorithm has been used to model human data in \insertCite{aitchison2016HamiltonianBrainEfficient;textual}{samplr}, \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -393,10 +463,21 @@ sampler_mc3<- function(start, distr_name = NULL, distr_params = NULL, sigma_prop
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @return A named list containing
+#' \enumerate{
+#'  \item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+#'  \item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted.}
+#' }
+#' @references 
+#'    \insertAllCited{}
 #' @export
 #' @examples
-#'
-#' HMC <- sampler_hmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' result <- sampler_hmc(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#'     )
+#' cold_chain <- result$Samples
 sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, iterations=1024, weights = NULL, custom_density = NULL) {
 
   distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "hmc", custom_density)
@@ -436,7 +517,9 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #'
 #' Metropolis-Coupled version of HMC, i.e. running multiple chains at different temperatures which stochastically swap positions.
 #'
-#' Metropolis-Coupled HMC does not support discrete distributions.
+#' Metropolis-Coupled HMC does not support discrete distributions. 
+#' 
+#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
 #' @param start Vector. Starting position of the sampler.
@@ -448,13 +531,25 @@ sampler_hmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
-
-
+#' @return A named list containing
+#' \enumerate{
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
+#' }
+#' @references
+#'  \insertAllCited{}
 #' @export
 #' @examples
 #'
-#' MCHMC <- sampler_mchmc(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
-
+#' result <- sampler_mchmc(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
+#' cold_chain <- result$Samples[,,1]
 sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 
   # Check nChains is integer
@@ -534,7 +629,7 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
     list(
       "Samples" = M,
       "Momentums" = P,
-      "Acceptance Ratios" = res$acceptances / (iterations - 1),
+      "Acceptance Ratio" = res$acceptances / (iterations - 1),
       "Beta Values" = res$beta,
       "Swap History" = swap_hist,
       "Swap Acceptance Ratio" = res$swap_accepts_attempts[1] / res$swap_accepts_attempts[2]
@@ -550,8 +645,9 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
 #'
 #' While in HMC the momentum in each iteration is an independent draw,, here the momentum of the last utterance \eqn{p^{n-1}} is also involved. In each iteration, the momentum \eqn{p} is obtained as follows \deqn{p \gets \alpha \times p^{n-1} + (1 - \alpha^2)^{\frac{1}{2}} \times v}; where \eqn{v \sim N(0, I)}.
 #'
-#'
 #' Recycled-Momentum HMC does not support discrete distributions.
+#' 
+#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -562,10 +658,22 @@ sampler_mchmc <- function(start, distr_name = NULL, distr_params = NULL, epsilon
 #' @param iterations Number of iterations of the sampler.
 #' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
 #' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
+#' @return A named list containing
+#' \enumerate{
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#' }
 #' @export
+#' @references
+#'  \insertAllCited{}
 #' @examples
 #'
-#' REC <- sampler_rec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' result <- sampler_rec(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
+#' cold_chain <- result$Samples
 
 sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -606,9 +714,9 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 
   return (
     list(
-      "Samples" = res$chain[,1],
-      "Momentums" = res$momentums[,1],
-      "Acceptance Ratio" = res$acceptances / iterations
+      "Samples" = res$chain,
+      "Momentums" = res$momentums,
+      "Acceptance Ratio" = res$acceptances / (iterations - 1)
     )
   )
 }
@@ -618,7 +726,9 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #'
 #' Metropolis-Coupled version of Recycled-Momentum HMC, i.e. running multiple chains at different temperatures which stochastically swap positions.
 #'
-#' Metropolis-Coupled Recycled-Momentum HMC does not support discrete distributions.
+#' Metropolis-Coupled Recycled-Momentum HMC does not support discrete distributions. 
+#' 
+#' This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}.
 #'
 #' @param distr_name Name of the distribution from which to sample from.
 #' @param distr_params Distribution parameters.
@@ -632,12 +742,25 @@ sampler_rec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.
 #' @param nChains Number of chains to run.
 #' @param delta_T numeric, >1. Temperature increment parameter. The bigger this number, the steeper the increase in temperature between the cold chain and the next chain
 #' @param swap_all Boolean. If true, every iteration attempts floor(nChains / 2) swaps. If false, only one swap per iteration.
-
-
+#' @return A named list containing
+#' \enumerate{
+#'  \item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+#'  \item{Momentums: the history of momentum values (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+#'  \item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+#'  \item{Beta Values: The set of temperatures used in each chain}
+#'  \item{Swap History: the history of chain swaps}
+#'  \item{Swap Acceptance Ratio: The ratio of swap acceptances}
+#' }
+#' @references
+#'  \insertAllCited{}
 #' @export
 #' @examples
 #'
-#' MCREC <- sampler_mcrec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+#' result <- sampler_mcrec(
+#'     distr_name = "norm", distr_params = c(0,1), 
+#'     start = 1, epsilon = .01, L = 100
+#' )
+#' cold_chain <- result$Samples[,,1]
 
 sampler_mcrec <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, L=10, alpha=.1, nChains = 6, delta_T = 4, swap_all = TRUE, iterations = 1024L, weights = NULL, custom_density = NULL){
 
@@ -718,55 +841,10 @@ sampler_mcrec <- function(start, distr_name = NULL, distr_params = NULL, epsilon
     list(
       "Samples" = M,
       "Momentums" = P,
-      "Acceptance Ratios" = res$acceptances / (iterations - 1),
+      "Acceptance Ratio" = res$acceptances / (iterations - 1),
       "Beta Values" = res$beta,
       "Swap History" = swap_hist,
       "Swap Acceptance Ratio" = res$swap_accepts_attempts[1] / res$swap_accepts_attempts[2]
-    )
-  )
-}
-
-#' No U-Turn Sampler (NUTS)
-#'
-#' Adapted from Hoffman and Gelman (2014). The No U-Turn Sampler (NUTS) aims to eliminate the need to set a number of steps L that is present in Hamiltonian Monte Carlo, which may lead to undesirable behaviour in HMC if not set correctly.NUTS does so by recursively building a set of candidate points that span the target distribution, and stopping when it starts to double back (hence its name). More information can be found [here](https://arxiv.org/abs/1111.4246)
-#'
-#' Like Hamiltonian MonteCarlo, it does not support discrete distributions.
-#'
-#' @param distr_name Name of the distribution from which to sample from.
-#' @param distr_params Distribution parameters.
-#' @param start Vector. Starting position of the sampler.
-#' @param epsilon Size of the leapfrog step
-#' @param delta_max Measure of the required accuracy of the simulation. The authors recommend a large value (1000)
-#' @param iterations Number of iterations of the sampler.
-#' @param weights If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.
-#' @param custom_density Instead of providing names, params and weights, the user may prefer to provide a custom density function.
-#' @export
-#'
-#' @examples
-#' NUTS <- sampler_nuts(distr_name = "norm", distr_params = c(0,1), start = 1)
-#'
-sampler_nuts <- function(start, distr_name = NULL, distr_params = NULL, epsilon=.5, delta_max=1000, iterations=1024, weights = NULL, custom_density = NULL) {
-  distrInfo = .checkGivenInfo(distr_name, distr_params, start, weights, "nuts", custom_density)
-  isDiscrete = distrInfo[[1]]
-  isMix = distrInfo[[2]]
-  weights = distrInfo[[3]]
-  if (is.null(custom_density)){
-    custom_density <- function(x){}
-    use_custom = FALSE
-  } else{
-    distr_name = ""
-    distr_params = c(0,1)
-    use_custom = TRUE
-  }
-
-  if (isDiscrete){
-    stop("NUTS is not supported with discrete distributions")
-  }
-  samplerResults <- sampler_nuts_cpp(start, distr_name, distr_params, epsilon, iterations, delta_max, isMix = isMix, weights = weights, custom_func = custom_density, useCustom = use_custom)
-
-  return(
-    list(
-      "Samples" = samplerResults[[1]]
     )
   )
 }

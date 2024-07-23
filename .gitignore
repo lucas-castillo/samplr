@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
 src/*.o
 src/*.so
 src/*.dll
@@ -10,3 +11,8 @@ doc
 Meta
 debugSpace.R
 *.Rproj
+docs
+cache
+figure
+/doc/
+/Meta/

@@ -6,6 +6,11 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lucas-castillo/samplr/workflows/R-CMD-check/badge.svg)](https://github.com/lucas-castillo/samplr/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/lucas-castillo/samplr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/lucas-castillo/samplr?branch=main)
+[![License: CC BY
+4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![R-CMD-check](https://github.com/lucas-castillo/samplr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lucas-castillo/samplr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of samplr is to provide tools to understand human performance
@@ -17,24 +22,28 @@ overview and other resources can be found at
 
 ## Installation
 
-You can install the released version of samplr from
+You can install samplr from CRAN:
+
+    install.packages("samplr")
+
+or install the development version from
 [Github](https://github.com/lucas-castillo/samplr) with:
 
     devtools::install_github("lucas-castillo/samplr")
 
-or alternatively use the `remotes` package
+or alternatively using the `remotes` package
 
     remotes::install_github("lucas-castillo/samplr")
 
-### Installing on MacOS
+### Installing development version on MacOS
 
-If installing on MacOS, you will need the following prior to
-installation:
+If you are installing the development version on MacOS, you will need
+the following prior to installation:
 
 1.  Apple’s ‘Command Line Tools’: these can be (re-)installed by running
     `xcode-select --install` in a terminal. You may also check if those
-    are already installed by running `pkgbuild::check_build_tools()`
-    in R.
+    are already installed by running `pkgbuild::check_build_tools()` in
+    R.
 2.  A Fortran compiler. Installers for gfortran are available
     [here](https://github.com/fxcoudert/gfortran-for-macOS/releases/).
     This installs into `/usr/local/gfortran`.
@@ -43,33 +52,34 @@ Read more about it on the [macOS Prerequisites section in the R
 Installation and Administration
 Manual](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites).
 
+### Installing development version on Windows
+
+If you are installing the development version on Windows, you will need
+to have RTools installed, which you can find
+[here](https://cran.r-project.org/bin/windows/Rtools/). Please make sure
+you install the version corresponding to your R version (i.e. for R
+4.3.3, you’d need RTools 4.3).
+
 ## Example
 
-samplr provides tools to generate samples following particular
-algorithms
+The samplr package provides tools to generate samples following
+particular algorithms
 
 ``` r
 library(samplr)
 set.seed(1)
 chain <- sampler_mh(start = 1, distr_name = "norm", distr_params = c(0,1), sigma_prop = diag(1) * .5, iterations = 2048)
-print(chain[[1]][1:20])
-#>  [1]  1.00000000  0.55703026  0.68688570  0.68688570  0.91988288  0.26328684
-#>  [7]  0.05488801  0.05081000  0.05081000  0.05081000 -0.76070605 -0.76070605
-#> [13] -1.05168815 -1.06313640 -0.75506178 -0.75506178 -0.10524665  0.44780723
-#> [19]  1.01645509  1.45473808
+r <- plot_series(chain[[1]], change = FALSE)
 ```
+
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
 As well as tools to diagnose the patterns both from samplers and
 participants:
 
 ``` r
-plot_qqplot(chain[[1]], change = TRUE)
+v <- calc_all(chain[[1]][1:200])
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
-
-``` r
-plot_series(chain[[1]])
-```
-
-![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
+<!-- TODO: add plot_series(chain[[1]]) again -->

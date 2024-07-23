@@ -35,6 +35,14 @@ sampler_rec(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A named list containing
+\enumerate{
+\item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+\item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+}
+}
 \description{
 Recycled-Momentum HMC is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike in standard HMC, proposals are autocorrelated, as the momentum of the current trajectory is not independent of the last trajectory, but is instead updated by a parameter alpha (see Details).
 }
@@ -42,8 +50,17 @@ Recycled-Momentum HMC is a sampling algorithm that uses Hamiltonian Dynamics to 
 While in HMC the momentum in each iteration is an independent draw,, here the momentum of the last utterance \eqn{p^{n-1}} is also involved. In each iteration, the momentum \eqn{p} is obtained as follows \deqn{p \gets \alpha \times p^{n-1} + (1 - \alpha^2)^{\frac{1}{2}} \times v}; where \eqn{v \sim N(0, I)}.
 
 Recycled-Momentum HMC does not support discrete distributions.
+
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}
 }
 \examples{
 
-REC <- sampler_rec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+result <- sampler_rec(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, epsilon = .01, L = 100
+)
+cold_chain <- result$Samples
+}
+\references{
+\insertAllCited{}
 }

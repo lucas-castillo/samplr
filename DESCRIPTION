@@ -1,32 +1,66 @@
 Package: samplr
 Type: Package
-Title: Tools To Compare Human Performance To Sampling Algorithms
-Version: 0.0.0.9000
-Authors@R: 
+Title: Tools to Compare Human Performance to Sampling Algorithms
+Version: 1.0.0
+Authors@R: c(
     person(given = "Lucas",
            family = "Castillo",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "lucas.castillo-marti@warwick.ac.uk",
-           comment = c(ORCID = "0000-0003-0274-0777"))
-Date: 2022-12-19
+           comment = c(ORCID = "0000-0003-0274-0777")),
+    person(given = "Yun-Xiao",
+           family = "Li",
+           role = c("aut", "cph"),
+           email = "yunxiao.li@warwick.ac.uk",
+           comment = c(ORCID = "0000-0002-3509-6618")),
+    person(given = "Adam N",
+           family = "Sanborn",
+           role = c("aut", "cph"),
+           email = "a.n.sanborn@warwick.ac.uk",
+           comment = c(ORCID = "0000-0003-0442-4372")),
+    person("European Research Council (ERC)",
+           role = c("fnd"))
+   )
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
-Description: The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
-License: MIT + file LICENSE
+Description: A set of tools to understand human performance from the perspective of sampling, 
+    both looking at how people generate samples and 
+    how people use the samples they have generated. A longer overview and other 
+    resources can be found at sampling.warwick.ac.uk.
+License: CC BY 4.0
 Imports: 
-  Rcpp (>= 1.0.6),
-  ggplot2, gridExtra, latex2exp, pracma, stats
+    Rcpp (>= 1.0.6),
+    ggplot2,
+    latex2exp,
+    pracma,
+    stats,
+    lme4,
+    Rdpack,
+    R6,
+    graphics
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    bench, mvtnorm
+    vdiffr,
+    bench,
+    dplyr,
+    tidyr,
+    magrittr,
+    mvtnorm,
+    xml2,
+    samplrData
 LinkingTo: 
   Rcpp, 
   RcppArmadillo, 
   RcppDist,
+  testthat,
+RdMacros: Rdpack
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://lucas-castillo.github.io/samplr
+URL: https://github.com/lucas-castillo/samplr
+BugReports: https://github.com/lucas-castillo/samplr/issues
+Depends: 
+    R (>= 2.10)

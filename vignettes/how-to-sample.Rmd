@@ -1,5 +1,5 @@
 ---
-title: "Getting Started: How to Sample From a Distribution"
+title: "How to Sample From a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{how-to-sample}
@@ -49,8 +49,6 @@ Notice that the same approach is used for all other samplers:
 MC3_samples <- sampler_mc3(start, name, params, proposal_variance)
 
 HMC_samples <- sampler_hmc(start, name, params)
-
-NUTS_samples <- sampler_nuts(start, name, params)
 ```
 
 ### Mixture Distributions

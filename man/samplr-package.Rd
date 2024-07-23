@@ -4,19 +4,31 @@
 \name{samplr-package}
 \alias{samplr}
 \alias{samplr-package}
-\title{samplr: Tools To Compare Human Performance To Sampling Algorithms}
+\title{samplr: Tools to Compare Human Performance to Sampling Algorithms}
 \description{
-The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
+A set of tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://lucas-castillo.github.io/samplr}
+  \item \url{https://github.com/lucas-castillo/samplr}
+  \item Report bugs at \url{https://github.com/lucas-castillo/samplr/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID})
+\strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID}) [copyright holder]
+
+Authors:
+\itemize{
+  \item Yun-Xiao Li \email{yunxiao.li@warwick.ac.uk} (\href{https://orcid.org/0000-0002-3509-6618}{ORCID}) [copyright holder]
+  \item Adam N Sanborn \email{a.n.sanborn@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0442-4372}{ORCID}) [copyright holder]
+}
+
+Other contributors:
+\itemize{
+  \item European Research Council (ERC) [funder]
+}
 
 }
 \keyword{internal}

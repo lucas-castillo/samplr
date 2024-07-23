@@ -26,8 +26,10 @@ X <- bench::mark(
     "Metropolis-Hastings" = {samplr::sampler_mh(1, "norm", c(0,1), sigma_prop=1)},
     "MC3" = {samplr::sampler_mc3(1, "norm", c(0,1), sigma_prop=1)},
     "Hamiltonian Monte-Carlo" = {samplr::sampler_hmc(1, "norm", c(0,1))},
-    "NUTS" = {samplr::sampler_nuts(1, "norm", c(0,1))},
-    check = FALSE,
+    "REC" = {samplr::sampler_rec(1, "norm", c(0,1))},
+    "MCHMC" = {samplr::sampler_mchmc(1, "norm", c(0,1), )},
+    "MCREC" = {samplr::sampler_mcrec(1, "norm", c(0,1))},
+    check = FALSE, iterations = 50
 )
 knitr::kable(as.data.frame(X[,c("expression", "min", "median")]))
 ```
@@ -40,16 +42,3 @@ timeit <- c("6.22ms", "55.13ms")
 X <- data.frame(tests, timeit)
 knitr::kable(X)
 ```
-
-<!-- ## C++ -->
-<!-- ```{r bench.all_columns = TRUE} -->
-<!-- options(width = 300) -->
-<!-- X <- bench::mark( -->
-<!--     samplr::sampler_mh("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), -->
-<!--     samplr::sampler_mc3("mvnorm", list(c(0,1), diag(2)), c(0,0), sigma_prop=diag(2)), -->
-<!--     samplr::sampler_hmc("mvnorm", list(c(0,1), diag(2)), c(0,0)), -->
-<!--     # samplr::sampler_nuts("mvnorm", list(c(0,1), diag(2)), c(0,0)), -->
-<!--     check = FALSE, -->
-<!-- ) -->
-<!-- print(X[,c("expression", "min", "median")]) -->
-<!-- ``` -->

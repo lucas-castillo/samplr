@@ -14,7 +14,8 @@ sampler_mc3(
   swap_all = TRUE,
   iterations = 1024L,
   weights = NULL,
-  custom_density = NULL
+  custom_density = NULL,
+  alpha = 0
 )
 }
 \arguments{
@@ -37,12 +38,35 @@ sampler_mc3(
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
+
+\item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
+}
+\value{
+A named list containing
+\enumerate{
+\item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+\item{Proposals: the history of proposed places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+\item{Beta Values: The set of temperatures used in each chain}
+\item{Swap History: the history of chain swaps}
+\item{Swap Acceptance Ratio: The ratio of swap acceptances}
+}
 }
 \description{
 This sampler is a variant of MH in which multiple parallel chains are run at different temperatures. The chains stochastically swap positions which allows the coldest chain to visit regions far from its starting point (unlike in MH). Because of this, an MC3 sampler can explore far-off regions, whereas an MH sampler may become stuck in a particular point of high density.
 }
+\details{
+This algorithm has been used to model human data in \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr}, \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} and \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} among others.
+}
 \examples{
 
 # Sample from a normal distribution
-mc_3 <- sampler_mc3(distr_name = "norm", distr_params = c(0,1), start = 1, sigma_prop = diag(1))
+result <- sampler_mc3(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, sigma_prop = diag(1)
+)
+cold_chain <- result$Samples[,,1]
+}
+\references{
+\insertAllCited{}
 }

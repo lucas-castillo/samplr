@@ -11,7 +11,8 @@ sampler_mh(
   sigma_prop = NULL,
   iterations = 1024L,
   weights = NULL,
-  custom_density = NULL
+  custom_density = NULL,
+  alpha = 0
 )
 }
 \arguments{
@@ -28,13 +29,15 @@ sampler_mh(
 \item{weights}{If using a mixture distribution, the weights given to each constituent distribution. If none given, it defaults to equal weights for all distributions.}
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
+
+\item{alpha}{autocorrelation of proposals parameter, from -1 to 1, with 0 being independent proposals}
 }
 \value{
-A list containing
+A named list containing
 \enumerate{
-\item{the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
-\item{the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
-\item{acceptance history - A logical vector where each item represents whether the proposal was accepted for that iteration or not. The first value is always FALSE, as the first iteration is the start point.}
+\item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{Proposals: the history of proposed places (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted.}
 }
 }
 \description{
@@ -42,17 +45,18 @@ This sampler navigates the proposal distribution following a random walk. At eac
 }
 \details{
 As mentioned, the proposal distribution is a Normal distribution. Its mean is the current position, and its variance is equal to the \code{sigma_prop} parameter, which defaults to the identity matrix if not specified.
+
+This algorithm has been used to model human data in many places \insertCite{@e.g. @castillo2024ExplainingFlawsHuman; @dasgupta2017WhereHypothesesCome; @lieder2018AnchoringBiasReflects; @zhu2022UnderstandingStructureCognitive}{samplr}.
 }
 \examples{
 
 # Sample from a normal distribution
-metropolis_hastings <- sampler_mh(
-                       distr_name = "norm", distr_params = c(0,1),
-                       start = 1, sigma_prop = diag(1)
-                       )
-
-# Not giving a sigma_prop issues a warning, but the sampler runs anyway with a default value
-metropolis_hastings <- sampler_mh(distr_name = "norm", distr_params = c(0,1), start = 1)
-
-
+result <- sampler_mh(
+         distr_name = "norm", distr_params = c(0,1),
+         start = 1, sigma_prop = diag(1)
+         )
+cold_chain <- result$Samples
+}
+\references{
+\insertAllCited{}
 }
