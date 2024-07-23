@@ -234,3 +234,37 @@ test_that("sampler_mcrec", {
     sampler_mcrec(0, "binom", c(0,1))
   )
 })
+
+test_that("2d density", {
+  set.seed(1)
+  # Create a matrix with the means of 15 different Gaussians
+  names <- rep("mvnorm", 15)
+  parameters <- list()
+  for (i in 1:15){
+    parameters[[i]] <- list(runif(2) * 18 - 9, diag(2))
+  }
+  weights <- runif(15)
+  weights <- weights / rep(sum(weights), 15)
+  vdiffr::expect_doppelganger("2d density", \(){
+    plot_2d_density(
+      start = c(-10,-10), size = 20, 
+      cellsPerRow = 150, names, parameters, weights
+    )
+  })
+  expect_true(is.data.frame(plot_2d_density(
+    start = c(-10,-10), size = 20, 
+    cellsPerRow = 150, names, parameters, weights, plot = F
+  )))
+  customDensity_r <- function(x){
+    if (x[1] > 0 && x[1] < 3 && x[2] < 0 && x[2] > -3){
+      return (1)
+    } else {
+      return (0)                    }
+  }
+  vdiffr::expect_doppelganger("2d density custom", \(){  
+    plot_2d_density(
+    start = c(-10,-10), size = 20, 
+    cellsPerRow = 150, customDensity = customDensity_r, plot = T
+  )})
+  
+})
