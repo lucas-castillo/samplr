@@ -366,7 +366,7 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
   }
   atc <- as.vector(a$acf)[-1]
   if (plot){
-    plot(1:lag.max, atc, 
+    plot(1:(min(lag.max, length(atc))), atc, 
          ylim=c(-1, 1), 
          xlab="Lag", ylab = "ACF", 
          main = paste("Autocorrelation of", ifelse(change, "Changes", "Values") )
