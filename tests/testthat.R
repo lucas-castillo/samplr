@@ -5,7 +5,7 @@
 # Learn more about the roles of various files in:
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
-Sys.setenv("R_TESTS" = "")
+
 library(testthat)
 library(samplr)
 
