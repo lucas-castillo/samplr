@@ -21,14 +21,6 @@ double get_rDistr(
 // const bool &log=false
 );
 
-
-// Random Generation for custom distributions using rejection method
-double custom_rDistr(
-    const Function &f,
-    const NumericVector &x_domains
-);
-
-
 double rDistr(
     const StringVector &distr_name,
     const List &distr_params,

@@ -31,42 +31,6 @@ double get_rDistr(
   return sample_distr;
 }
 
-
-// Random Generation for custom distributions using rejection method
-double custom_rDistr(
-    const Function &f,
-    const NumericVector &x_domains
-){
-  double sample_distr; // the sample from the distribution that will be returned
-  NumericVector density(x_domains.length());
-  bool reject = true;
-  
-  
-  for (int i = 0; i < x_domains.length(); i++){
-    try{
-      density(i) = as<double>(f(x_domains(i)));
-    } catch (const std::exception &exc){
-      stop("\"x_domains\" contains values that are not defined in the distribution.");
-    }
-  }
-  
-  double max_dens = density(which_max(density));
-  
-  while(reject){
-    int idx = floor(R::runif(0, x_domains.length()));
-    double u = R::runif(0, 1);
-    
-    double density_value = as<double>(f(x_domains(idx)));
-    if (!NumericVector::is_na(density_value) && density_value > 0 && u < density_value / max_dens) {
-      sample_distr = x_domains(idx);
-      reject = false;
-    }
-  }
-
-  return sample_distr;
-}
-
-
 //[[Rcpp::export]]
 double rDistr(
     const StringVector &distr_name,
