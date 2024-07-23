@@ -10,6 +10,7 @@
 coverage](https://codecov.io/gh/lucas-castillo/samplr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/lucas-castillo/samplr?branch=main)
 [![License: CC BY
 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![R-CMD-check](https://github.com/lucas-castillo/samplr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lucas-castillo/samplr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of samplr is to provide tools to understand human performance
