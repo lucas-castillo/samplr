@@ -32,6 +32,14 @@ sampler_hmc(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A named list containing
+\enumerate{
+\item{Samples: the history of visited places (an n x d matrix, n = iterations; d = dimensions)}
+\item{Momentums: the history of momentum values (an n x d matrix, n = iterations; d = dimensions). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted.}
+}
+}
 \description{
 Hamiltonian Monte-Carlo, also called Hybrid Monte Carlo, is a sampling algorithm that uses Hamiltonian Dynamics to approximate a posterior distribution. Unlike MH and MC3, HMC uses not only the current position, but also a sense of momentum, to draw future samples. An introduction to HMC can be read in \insertCite{betancourt2018ConceptualIntroductionHamiltonian;textual}{samplr}.
 }
@@ -41,10 +49,11 @@ This implementations assumes that the momentum is drawn from a normal distributi
 This algorithm has been used to model human data in \insertCite{aitchison2016HamiltonianBrainEfficient;textual}{samplr}, \insertCite{castillo2024ExplainingFlawsHuman;textual}{samplr} and \insertCite{zhu2022UnderstandingStructureCognitive;textual}{samplr} among others.
 }
 \examples{
-HMC <- sampler_hmc(
+result <- sampler_hmc(
     distr_name = "norm", distr_params = c(0,1), 
     start = 1, epsilon = .01, L = 100
     )
+cold_chain <- result$Samples
 }
 \references{
 \insertAllCited{}

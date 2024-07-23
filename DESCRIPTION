@@ -1,7 +1,7 @@
 Package: samplr
 Type: Package
-Title: Tools To Compare Human Performance To Sampling Algorithms
-Version: 0.0.0.9000
+Title: Tools to Compare Human Performance to Sampling Algorithms
+Version: 1.0.0
 Authors@R: c(
     person(given = "Lucas",
            family = "Castillo",
@@ -22,27 +22,30 @@ Authors@R: c(
            role = c("fnd"))
    )
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
-Description: The goal of samplr is to provide tools to understand human performance from the perspective of sampling, both looking at how people generate samples and how people use the samples they have generated. A longer overview and other resources can be found at sampling.warwick.ac.uk.
+Description: A set of tools to understand human performance from the perspective of sampling, 
+    both looking at how people generate samples and 
+    how people use the samples they have generated. A longer overview and other 
+    resources can be found at sampling.warwick.ac.uk.
 License: CC BY 4.0
 Imports: 
     Rcpp (>= 1.0.6),
     ggplot2,
-    gridExtra,
     latex2exp,
     pracma,
     stats,
-    magrittr,
-    tibble,
-    tidyr,
     lme4,
     Rdpack,
-    R6
+    R6,
+    graphics
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    vdiffr,
     bench,
     dplyr,
+    tidyr,
+    magrittr,
     mvtnorm,
     xml2,
     samplrData
@@ -61,6 +64,3 @@ URL: https://github.com/lucas-castillo/samplr
 BugReports: https://github.com/lucas-castillo/samplr/issues
 Depends: 
     R (>= 2.10)
-LazyData: true
-Remotes:
-  lucas-castillo/samplrData

@@ -22,7 +22,7 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 library(samplrData)
-data <- sundh2023e3 \%>\%
+data <- sundh2023.meanvariance.e3 \%>\%
   group_by(ID, querydetail) \%>\% 
   mutate(iteration = LETTERS[1:n()]) \%>\% 
   pivot_wider(id_cols = c(ID, querydetail), 

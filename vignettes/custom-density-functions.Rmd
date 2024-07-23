@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include = FALSE}
 library(samplr)
 ```
 
@@ -41,7 +41,7 @@ plot(x,y, xlim = c(-5,5), ylim = c(-5,5))
 
 #### On Timing
 
-Using a custom function, rather than sampling from a supported distribution, will considerably increase the running time (as the C++ code under the hood has to constantly switch between C++ and R). Creating a density function with `Rcpp::cppFunction` doesn't change this much. 
+Using a custom function, rather than sampling from a supported distribution, will considerably increase the running time (as the C++ code under the hood has to constantly switch between C++ and R). Creating a density function with `Rcpp::cppFunction` doesn't change this much (it's actually probably worse). 
 
 ```{r}
 Rcpp::cppFunction("double customDensity_cpp(NumericVector x){
@@ -52,9 +52,25 @@ Rcpp::cppFunction("double customDensity_cpp(NumericVector x){
                     }
                   }")
 X <- bench::mark(
-  "CPP Density" = {samplr::sampler_mh(start = c(0,0), custom_density = customDensity_cpp, sigma_prop = diag(2))},
-  "R Density" = {samplr::sampler_mh(start = c(0,0), custom_density = customDensity_r, sigma_prop = diag(2))},
-  "Supported Density" = {samplr::sampler_mh(start = c(0,0), distr_name = "mvnorm", distr_params = list(c(0,1), diag(2)), sigma_prop = diag(2))},
+  "CPP Density" = {
+    samplr::sampler_mh(
+      start = c(0,0), 
+      custom_density = customDensity_cpp, 
+      sigma_prop = diag(2))
+  },
+  "R Density" = {
+    samplr::sampler_mh(
+      start = c(0,0), 
+      custom_density = customDensity_r, 
+      sigma_prop = diag(2))
+  },
+  "Supported Density" = {
+    samplr::sampler_mh(
+      start = c(0,0), 
+      distr_name = "mvnorm", 
+      distr_params = list(c(0,1), diag(2)), 
+      sigma_prop = diag(2))
+  },
   check = FALSE,
 )
 knitr::kable(as.data.frame(X[,c("expression", "min", "median")]))
@@ -86,12 +102,16 @@ bespoke_mh <- function(pdf, start, iterations=1024, sigma_prop){
       ratio <- prob_prop / prob_curr
       if (ratio >= 1){
         accept <- TRUE
-      # The beta parameter (temperature), beta <= 1, increases the value of the ratio making hotter chains more likely to accept proposals
+      # The beta parameter (temperature), beta <= 1, 
+      # increases the value of the ratio making hotter 
+      # chains more likely to accept proposals
       } else if (stats::runif(1) < ratio){
         accept <- TRUE
       }
     } else {
-    # in case the current probability is 0 (in which case the ratio cannot be calculated), the step is accepted if the probability of the proposal is not 0
+    # in case the current probability is 0 
+    # (in which case the ratio cannot be calculated), 
+    # the step is accepted if the probability of the proposal is not 0
         if (prob_prop > 0) {
           accept <- TRUE
         }
@@ -114,7 +134,14 @@ bespoke_mh <- function(pdf, start, iterations=1024, sigma_prop){
 }
 
 X <- bench::mark(
-  "Bespoke MH" = {bespoke_mh(customDensity_r, c(0,0), iterations = 1024, sigma_prop = diag(2))}
+  "Bespoke MH" = {
+    bespoke_mh(
+      customDensity_r, 
+      c(0,0), 
+      iterations = 1024, 
+      sigma_prop = diag(2)
+    )
+  }
 )
 knitr::kable(as.data.frame(X[,c("expression", "min", "median")]))
 ```

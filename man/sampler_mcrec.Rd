@@ -44,6 +44,17 @@ sampler_mcrec(
 
 \item{custom_density}{Instead of providing names, params and weights, the user may prefer to provide a custom density function.}
 }
+\value{
+A named list containing
+\enumerate{
+\item{Samples: the history of visited places (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain')}
+\item{Momentums: the history of momentum values (an n x d x c array, n = iterations; d = dimensions; c = chain index, with c==1 being the 'cold chain'). Nothing is proposed in the first iteration (the first iteration is the start value) and so the first row is NA}
+\item{Acceptance Ratio: The proportion of proposals that were accepted (for each chain).}
+\item{Beta Values: The set of temperatures used in each chain}
+\item{Swap History: the history of chain swaps}
+\item{Swap Acceptance Ratio: The ratio of swap acceptances}
+}
+}
 \description{
 Metropolis-Coupled version of Recycled-Momentum HMC, i.e. running multiple chains at different temperatures which stochastically swap positions.
 }
@@ -54,7 +65,11 @@ This algorithm has been used to model human data in \insertCite{castillo2024Expl
 }
 \examples{
 
-MCREC <- sampler_mcrec(distr_name = "norm", distr_params = c(0,1), start = 1, epsilon = .01, L = 100)
+result <- sampler_mcrec(
+    distr_name = "norm", distr_params = c(0,1), 
+    start = 1, epsilon = .01, L = 100
+)
+cold_chain <- result$Samples[,,1]
 }
 \references{
 \insertAllCited{}

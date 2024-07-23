@@ -19,7 +19,6 @@ reference:
 - title: "ABS"
   desc: "Functions related to the Autocorrelated Bayesian Sampler"
 - contents:
-  - CoreABS
   - Zhu23ABS
   
 - title: "Diagnostic Tools"
@@ -28,10 +27,6 @@ reference:
   - starts_with("calc")
   - starts_with("plot")
 
-- title: "Data"
-- contents:
-  - sundh2023e3
-  
 figures:
   fig.width: 8
 

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhuAutocorrelatedBayesian2023) and the `R` scripts for running simulations of ABS using `samplr` package.
+This vignette provides a brief introduction of the Autocorrelated Bayesian Sampler (ABS; @zhu2024AutocorrelatedBayesianSampler) and the `R` scripts for running simulations of ABS using `samplr` package.
 
 ABS is a sequential sampling model that assumes individuals draw autocorrelated samples from their memory of hypotheses based on their posterior beliefs, which is called "posterior of hypotheses". These samples are subsequently integrated to perform various tasks: ABS is capable of generating estimates, confidence intervals, and response times for estimation tasks, as well as choices, confidence judgments, and response times for two-alternative force choice (2AFC) tasks. Notably, ABS employs different stopping rules depending on the type of tasks. In this vignette, we will outline the process of simulating ABS under both stopping rules. In addition, although ABS assume a normal distribution for the posterior of hypotheses, our package allows users to use custom distributions, which will also illustrated in this vignette.
 
@@ -48,7 +48,10 @@ ABS employs the [R6][R6::R6Class] object-oriented programming (OOP) system. Thus
 In this section, we employ the normal posterior distribution, which requires specifying the values of `distr_name` and `distr_params`. The `distr_name` argument should be set to "norm" to indicate the normal distribution. The `distr_params` argument specifies the standard deviation of the normal distribution. This can be either a single numeric value, indicating a fixed standard deviation across all trials, or a numeric vector of the same length as the stimuli, specifying the standard deviation for each trial. It is important to note that ABS assumes the stimulus value is the mean of the normal distribution, thus there is no need to specify the mean separately.
 
 ```{r}
-abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
+abs_model <- Zhu23ABS$new(
+  width = 1, n_chains = 3, nd_time = 0.3, 
+  s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1
+)
 ```
 
 The simulation process is conducted using the `simulate` function, which requires two arguments: `stopping_rule` and `start_point`. Based on the assumptions of ABS, individuals employ a fixed stopping rule for the estimation task, meaning a predetermined number of samples are drawn. Therefore, `stopping_rule` is set to `'fixed'`.
@@ -64,7 +67,8 @@ Additionally, when `stopping_rule = 'fixed'`, two further arguments are required
 
 
 ```{r, results = FALSE}
-abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_stim)
+abs_model$simulate(stopping_rule = 'fixed', 
+                   n_sample = 5, trial_stim = trial_stim)
 ```
 
 The results of the `simulate` method save in the field `sim_results`. Users can get access to the results by running `abs_model$sim_results`. It is important to note that ABS assumes the response time for each trial follows an Erlang distribution, with the shape parameter equal to the length of the samples that is determined by `n_sample` and the rate parameter `lambda` has been specified above. The response time value provided in the table is a random number drawn from the Erlang distribution.
@@ -86,7 +90,10 @@ It is worth noticing that before rerunning the simulation, users should either c
 
 ```{r}
 abs_model$reset_sim_results()
-abs_model$simulate(stopping_rule = 'fixed', start_point = start_point, n_sample = 5, trial_stim = trial_stim)
+abs_model$simulate(stopping_rule = 'fixed', 
+                   start_point = start_point, 
+                   n_sample = 5, 
+                   trial_stim = trial_stim)
 ```
 
 The following table shows the simulation results with specified starting points. We notice that the first sample of each trial follows the order of `start_point` and is included in the samples of ABS.
@@ -111,7 +118,11 @@ An advantage of R6 is that it allows method chaining, which means that we can si
 
 ```{r}
 abs_model$reset_sim_results()
-abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_stim, start_point=start_point)$confidence_interval(0.5)
+abs_model$simulate(
+  stopping_rule = 'fixed', 
+  n_sample = 5, 
+  trial_stim = trial_stim, 
+  start_point=start_point)$confidence_interval(0.5)
 knitr::kable(abs_model$sim_results)
 ```
 
@@ -138,9 +149,19 @@ To employ a custom posterior of hypotheses, two special arguments are required i
 It is important to distinguish `custom_start` from `start_point` in the `simulate()` function. `custom_start` is only necessary when providing a custom posterior of hypotheses, whereas `start_point` can be used for both Gaussian and custom posteriors. `custom_start` initializes the `Zhu23ABS` sampler without breaking the dependency of samples between trials. In contrast, `start_point` sets the starting point for each trial, thus breaking the dependency between samples of adjacent trials.  Additionally, if users provide a vector of `start_point`, a value for `custom_start` is still required as a placeholder and will be overwritten by `start_point`.
 
 ```{r}
-custom_func_list <- replicate(length(trial_stim), custom_post_func, simplify = FALSE)
-abs_model <- Zhu23ABS$new(width = 1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, custom_distr = custom_func_list, custom_start = 23)
-abs_model$simulate(stopping_rule = 'fixed', n_sample = 5, trial_stim = trial_stim)
+custom_func_list <- replicate(
+  length(trial_stim), custom_post_func, simplify = FALSE
+)
+abs_model <- Zhu23ABS$new(
+  width = 1, n_chains = 3, nd_time = 0.3, 
+  s_nd_time = 0.2, lambda = 10, 
+  custom_distr = custom_func_list, custom_start = 23
+)
+abs_model$simulate(
+  stopping_rule = 'fixed', 
+  n_sample = 5, 
+  trial_stim = trial_stim
+)
 ```
 
 The following table shows the simulation results with a custom posterior. We notice that the first sample of the first trial equals to the value of `custom_start`.
@@ -178,8 +199,14 @@ To simulate the 2AFC of ABS, we need to initialize a new ABS model and then use 
 To demonstrate the usage of these arguments, we will also run the simulation twice: once with the default settings and again with some of the settings modified.
 
 ```{r, results=FALSE}
-abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, distr_name = 'norm', distr_params = 1)
-abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+abs_model2 <- Zhu23ABS$new(
+  width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, 
+  lambda = 10, distr_name = 'norm', distr_params = 1
+)
+abs_model2$simulate(
+  stopping_rule = 'relative', delta = 4, dec_bdry = 0, 
+  discrim = 1, trial_stim = trial_stim
+)
 ```
 
 The table below presents the simulation results, including the simulated response, response time, and confidence. It is important to note that in the simulation of 2AFC, the length of the sample sequences may vary due to ABS utilizing a relative stopping rule. To illustrate its mechanism, let us examine the sequences in the first two trials as an example.
@@ -205,7 +232,11 @@ Next, we will put these starting points into the ABS model and rerun the simulat
 
 ```{r}
 abs_model2$reset_sim_results()
-abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim, start_point = start_point, prior_depend = FALSE)
+abs_model2$simulate(
+  stopping_rule = 'relative', delta = 4, dec_bdry = 0, 
+  discrim = 1, trial_stim = trial_stim, start_point = start_point, 
+  prior_depend = FALSE
+)
 knitr::kable(abs_model2$sim_results)
 ```
 
@@ -240,8 +271,14 @@ custom_func_list <- lapply(trial_stim, function(stim) ifelse(stim=='left', custo
 Then, we initialise a `Zhu23ABS` object with a list of `custom_func_list` and a value of `custom_start`.
 
 ```{r}
-abs_model2 <- Zhu23ABS$new(width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, lambda = 10, custom_distr = custom_func_list, custom_start = -0.1)
-abs_model2$simulate(stopping_rule = 'relative', delta = 4, dec_bdry = 0, discrim = 1, trial_stim = trial_stim)
+abs_model2 <- Zhu23ABS$new(
+  width=1, n_chains = 3, nd_time = 0.3, s_nd_time = 0.2, 
+  lambda = 10, custom_distr = custom_func_list, custom_start = -0.1
+)
+abs_model2$simulate(
+  stopping_rule = 'relative', delta = 4, dec_bdry = 0, 
+  discrim = 1, trial_stim = trial_stim
+)
 ```
 
 The following table shows the simulation results with a custom posterior. We notice that the first sample of the first trial equals to the value of `custom_start`.

@@ -366,7 +366,7 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
   }
   atc <- as.vector(a$acf)[-1]
   if (plot){
-    plot(1:lag.max, atc, 
+    plot(1:(min(lag.max, length(atc))), atc, 
          ylim=c(-1, 1), 
          xlab="Lag", ylab = "ACF", 
          main = paste("Autocorrelation of", ifelse(change, "Changes", "Values") )
@@ -400,6 +400,9 @@ calc_autocorr <- function(chain, change = TRUE, alpha = .05, lag.max = 100, plot
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' plot_series(chain1[[1]])
 plot_series <- function(chain, change=FALSE){
+  if (is.matrix(chain) && ncol(chain)>1){
+    stop("Please input a one-dimensional vector")
+  }
   if (change){
     y <- c(NA, diff(chain))
   } else{

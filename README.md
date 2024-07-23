@@ -21,7 +21,11 @@ overview and other resources can be found at
 
 ## Installation
 
-You can install the released version of samplr from
+You can install samplr from CRAN:
+
+    install.packages("samplr")
+
+or install the development version from
 [Github](https://github.com/lucas-castillo/samplr) with:
 
     devtools::install_github("lucas-castillo/samplr")
@@ -30,10 +34,10 @@ or alternatively using the `remotes` package
 
     remotes::install_github("lucas-castillo/samplr")
 
-### Installing on MacOS
+### Installing development version on MacOS
 
-If installing on MacOS, you will need the following prior to
-installation:
+If you are installing the development version on MacOS, you will need
+the following prior to installation:
 
 1.  Apple’s ‘Command Line Tools’: these can be (re-)installed by running
     `xcode-select --install` in a terminal. You may also check if those
@@ -47,9 +51,10 @@ Read more about it on the [macOS Prerequisites section in the R
 Installation and Administration
 Manual](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Prerequisites).
 
-### Installing on Windows
+### Installing development version on Windows
 
-You will need to have RTools installed, which you can find
+If you are installing the development version on Windows, you will need
+to have RTools installed, which you can find
 [here](https://cran.r-project.org/bin/windows/Rtools/). Please make sure
 you install the version corresponding to your R version (i.e. for R
 4.3.3, you’d need RTools 4.3).

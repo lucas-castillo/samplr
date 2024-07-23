@@ -1,0 +1,40 @@
+---
+title: "The samplr package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{samplr-package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: REFERENCES.bib
+citation_package: biblatex
+biblio-style: "apa"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+```{r setup, include=FALSE}
+library(samplr)
+```
+
+## Package Overview
+A common explanation of many human behaviours is that people internally generate a small number of examples (i.e., samples) which they use to make judgments, estimates, etc. Behaviours, then, should depend both on how those samples are acquired and on how they are used. The [SAMPLING project](https://sampling.warwick.ac.uk) investigated whether people the way in which people generate samples can be described by one of a family of local sampling algorithms called Markov Chain Monte Carlo (MCMC). An initial model, the Bayesian Sampler [ABS, @zhu2020BayesianSamplerGeneric], uses iid samples for probability judgments and a later model, the Autocorrelated Bayesian Sampler [ABS, @zhu2024AutocorrelatedBayesianSampler] used MCMC samples to explain probability judgments as well as choices, confidence judgments, response times, estimates, and confidence intervals.
+
+The `samplr` package includes the BS and ABS models, so that they can easily be applied to new data. It also provides provide functions that produce samples using a variety of MCMC algorithms, as well as diagnostic tools to compare human data to the performance of these sampling algorithms.
+
+### Sampling Algorithms
+We provide six MCMC algorithms that have previously been compared to human data [@castillo2024ExplainingFlawsHuman; @spicer2022HowPeoplePredict; @spicer2022PerceptualCognitiveJudgments; @zhu2022UnderstandingStructureCognitive]. For an introduction on how to use these see the [How to Sample vignette](how-to-sample.html), which covers most use cases. If you want to use them in multivariate mixture distributions or with custom functions, see the [Multivariate Mixtures](multivariate-mixtures.html) and [Custom Density Functions](custom-density-functions.html) vignettes respectively. 
+
+### Diagnostic Tools
+We provide several diagnostic tools to compare human data to MCMC algorithms (listed in the [Reference section](../reference/index.html)). 
+
+### Models
+* **[Bayesian Sampler](../reference/Bayesian_Sampler.html)**: The Bayesian Sampler combines iid samples with a prior [see @zhu2020BayesianSamplerGeneric]. 
+* **[Autocorrelated Bayesian Sampler](../reference/Zhu23ABS.html)**: In ABS samples originate from an MCMC algorithm [see @zhu2024AutocorrelatedBayesianSampler]. See the [Simulations of the Autocorrelated Bayesian Sampler](Simulations-of-the-Autocorrelated-Bayesian-Sampler.html) vignette.
+
+## References

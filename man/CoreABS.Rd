@@ -4,11 +4,12 @@
 \alias{CoreABS}
 \title{CoreABS Object}
 \description{
-This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhuAutocorrelatedBayesian2023}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
+This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian Sampler \insertCite{@ABS, @zhu2024AutocorrelatedBayesianSampler}{samplr}. It is a sequential sampling model assuming people draw autocorrelated samples from memory or beliefs, i.e., posterior of hypotheses.
 }
 \references{
 \insertAllCited{}
 }
+\keyword{internal}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -27,15 +28,6 @@ This is the parent \link[R6:R6Class]{R6} class of the Auto-correlated Bayesian S
 \item{\code{custom_start}}{a numeric value of the starting point if "custom_distr" is provided.}
 
 \item{\code{sim_results}}{a data frame for saving the simulation results.}
-
-\item{\code{stopping_rule}}{a string character to save the information of the stopping rule.}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{stopping_rule}}{a string character to save the information of the stopping rule.}
 }
 \if{html}{\out{</div>}}
 }
