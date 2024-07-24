@@ -13,9 +13,16 @@
 using namespace Rcpp;
 typedef std::function<double(NumericVector)> dfunc;
 
+double abs_d(double x){
+  if (x < 0){
+    return x * -1;
+  } else{
+    return x;
+  }
+}
 bool isClose(double a, double b, double tol=0.0001){
   double diff = a - b;
-  return abs(diff) < tol;
+  return abs_d(diff) < tol;
 }
 
 dfunc getPDF(

@@ -368,7 +368,7 @@ List Zhu23ABS_cpp(
       
     case 2: // relative stopping rule ----------------------------------------------------------------------------------
       
-      if (abs(acc_evid(0) - acc_evid(1)) >= stop_rule) {
+      if (abs_d(acc_evid(0) - acc_evid(1)) >= stop_rule) {
         stop("The relative difference in the prior on responses should be smaller than the relative stopping rule before the sampling process. Please adjust \"delta\" or \"prior_on_resp\".");
       }
       

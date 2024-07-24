@@ -15,6 +15,8 @@
 // [[Rcpp::plugins("cpp11")]]
 typedef std::function<double(Rcpp::NumericVector)> dfunc;
 
+double abs_d(double x);
+
 bool isClose(double a, double b, double tol=0.0001);
 
 dfunc getPDF(
