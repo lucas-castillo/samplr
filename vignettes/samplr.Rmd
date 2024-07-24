@@ -35,6 +35,6 @@ We provide several diagnostic tools to compare human data to MCMC algorithms (li
 
 ### Models
 * **[Bayesian Sampler](../reference/Bayesian_Sampler.html)**: The Bayesian Sampler combines iid samples with a prior [see @zhu2020BayesianSamplerGeneric]. 
-* **[Autocorrelated Bayesian Sampler](../reference/Zhu23ABS.html)**: In ABS samples originate from an MCMC algorithm [see @zhu2024AutocorrelatedBayesianSampler]. See the [Simulations of the Autocorrelated Bayesian Sampler](Simulations-of-the-Autocorrelated-Bayesian-Sampler.html) vignette.
+* **[Autocorrelated Bayesian Sampler](../reference/Zhu23ABS.html)**: In ABS samples originate from an MCMC algorithm [see @zhu2024AutocorrelatedBayesianSampler]. See the [Simulations of the Autocorrelated Bayesian Sampler](abs-simulations.html) vignette.
 
 ## References
