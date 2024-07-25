@@ -16,8 +16,7 @@ The goal of samplr is to provide tools to understand human performance
 from the perspective of sampling, both looking at how people generate
 samples and how people use the samples they have generated. A longer
 overview and other resources can be found at
-[sampling.warwick.ac.uk](https://sampling.warwick.ac.uk). Get started
-[here](vignettes/how-to-sample.html).
+[sampling.warwick.ac.uk](https://sampling.warwick.ac.uk).
 
 ## Installation
 
