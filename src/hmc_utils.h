@@ -14,8 +14,6 @@
 
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
-// Enable C++11 via this plugin (Rcpp 0.10.3 or later)
-// [[Rcpp::plugins("cpp11")]]
 
 Rcpp::NumericVector gradient(dfunc &func, const Rcpp::NumericVector &x, double Temp = 1);
 double dotProduct(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y);

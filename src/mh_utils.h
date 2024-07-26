@@ -14,8 +14,6 @@
 
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
-// Enable C++11 via this plugin (Rcpp 0.10.3 or later)
-// [[Rcpp::plugins("cpp11")]]
 Rcpp::NumericVector alpha_trick(
     Rcpp::NumericVector random_jump,
     Rcpp::NumericVector last_jump,

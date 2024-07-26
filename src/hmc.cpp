@@ -9,8 +9,6 @@
 
 // [[Rcpp::depends(RcppArmadillo, RcppDist)]]
 
-// Enable C++11 via this plugin (Rcpp 0.10.3 or later)
-// [[Rcpp::plugins("cpp11")]]
 
 #include "hmc_utils.h"
 #include "pdf_manage.h"
