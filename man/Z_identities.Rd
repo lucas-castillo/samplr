@@ -46,9 +46,10 @@ Z_identities(
  a_and_not_b=.45,
  b_and_not_a=.05,
  )
-\dontrun{
 #Get identities for a set of participants
-library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(tidyr)
 data.frame(
  ID = LETTERS[1:20],
  a=runif(20),
@@ -81,5 +82,4 @@ data.frame(
      .$not_b
    )
  )
- }
 }
