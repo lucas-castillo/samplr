@@ -24,7 +24,7 @@ Authors@R: c(
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
 Description: Understand human performance from the perspective of sampling, both
 looking at how people generate samples and how people use the samples they have generated.
-A longer overview and other resources can be found at sampling.warwick.ac.uk.
+A longer overview and other resources can be found at <https://sampling.warwick.ac.uk>.
 License: CC BY 4.0
 Imports: 
     Rcpp (>= 1.0.6),

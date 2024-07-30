@@ -28,6 +28,8 @@ of your DESCRIPTION file in the form
 with angle brackets for auto-linking and no space after 'http:' and
 'https:'.
 
+> Done. 
+
 It seems like you have too many spaces in your description field.
 Probably because linebreaks count as spaces too.
 Please remove unecassary ones.
