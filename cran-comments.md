@@ -22,6 +22,8 @@ with no space after 'doi:', 'https:' and angle brackets for
 auto-linking. (If you want to add a title as well please put it in
 quotes: "Title")
 
+> Thank you. No single reference exists describing all the methods in the package, although writing one in future is definitely in our plans. For the time being we choose to link individual methods to individual references in the function documentation, and to point users to the project website for a general overview.
+
 Please provide a link to the used webservices to the description field
 of your DESCRIPTION file in the form
 <http:...> or <[https:...]https:...>
