@@ -32,6 +32,8 @@ It seems like you have too many spaces in your description field.
 Probably because linebreaks count as spaces too.
 Please remove unecassary ones.
 
+> Done. 
+
 \dontrun{} should only be used if the example really cannot be executed
 (e.g. because of missing additional software, missing API keys, ...) by
 the user. That's why wrapping examples in \dontrun{} adds the comment
