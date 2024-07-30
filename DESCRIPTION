@@ -1,6 +1,6 @@
 Package: samplr
 Type: Package
-Title: Tools to Compare Human Performance to Sampling Algorithms
+Title: Compare Human Performance to Sampling Algorithms
 Version: 1.0.0
 Authors@R: c(
     person(given = "Lucas",
@@ -22,7 +22,7 @@ Authors@R: c(
            role = c("fnd"))
    )
 Maintainer: Lucas Castillo <lucas.castillo-marti@warwick.ac.uk>
-Description: A set of tools to understand human performance from the perspective of sampling, 
+Description: Understand human performance from the perspective of sampling, 
     both looking at how people generate samples and 
     how people use the samples they have generated. A longer overview and other 
     resources can be found at sampling.warwick.ac.uk.

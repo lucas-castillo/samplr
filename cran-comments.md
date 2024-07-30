@@ -11,6 +11,8 @@ Thank you for reviewing this submission.
 Please omit the redundant "Tools for"/"A set of tools" at the estart of
 your title and description.
 
+> Done.
+
 If there are references describing the methods in your package, please
 add these in the description field of your DESCRIPTION file in the form
 authors (year) <doi:...>
