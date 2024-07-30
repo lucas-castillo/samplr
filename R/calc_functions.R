@@ -430,6 +430,9 @@ plot_series <- function(chain, change=FALSE){
 #' diagnostics <- calc_all(chain1[[1]])
 #' names(diagnostics)
 calc_all <- function(chain, plot=TRUE, acf.alpha=.05, acf.lag.max=100){
+  # restore user parameters on function exit
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   if (plot){
     par(mfrow=c(3,3), mai=c(2,0.22,1.3,0.12), mar=c(5,3,3,2)+.1)
     plot_series(chain, change=FALSE)

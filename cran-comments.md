@@ -65,3 +65,6 @@ function makes it possible to restore options before exiting a function
 even if the function breaks. Therefore it needs to be called immediately
 after the option change within a function.
 -> R/calc_functions.R
+
+> Thank you, that example was very useful. We've added restoring user pars on exit to the relevant functions.
+
