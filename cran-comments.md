@@ -45,6 +45,8 @@ Please replace \dontrun with \donttest.
 Please unwrap the examples if they are executable in < 5 sec, or replace
 dontrun{} with \donttest{}.
 
+> Thank you. These examples run in less than 5s so we've removed the \dontrun{} wrapper completely. 
+
 Please make sure that you do not change the user's options, par or
 working directory. If you really have to do so within functions, please
 ensure with an *immediate* call of on.exit() that the settings are reset

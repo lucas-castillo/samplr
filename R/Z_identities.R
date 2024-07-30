@@ -24,7 +24,6 @@
 #'  a_and_not_b=.45,
 #'  b_and_not_a=.05,
 #'  )
-#'\dontrun{
 #'#Get identities for a set of participants
 #'library(magrittr)
 #'library(dplyr)
@@ -61,7 +60,6 @@
 #'      .$not_b
 #'    )
 #'  )
-#'  }
 Z_identities <- function(
     a=NULL, 
     b=NULL, 
