@@ -244,7 +244,7 @@ Bayesian_Sampler <- function(
                          a_and_not_b,
                          not_a_and_not_b), ncol = 4), 1, sum)
   
-  if(any(sapply(sums, \(x){!identical(x,1)}))){stop("Probabilities must add up to 1")}
+  if(!all.equal(sums, rep(1, length(sums)))){stop("Probabilities must add up to 1")}
   
   true_probabilities <- get_true_probabilities(
     a_and_b, 
