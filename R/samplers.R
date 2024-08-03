@@ -108,7 +108,7 @@
     } else{
       if (distr_num != length(weights)){
         stop("The vector of distribution names and the vector list of distribution parameters must be of equal length")
-      } else if (sum(weights) != 1){
+      } else if (!all.equal(sum(weights), 1)){
         stop("The sum of the weights must equal 1")
       }
     }
