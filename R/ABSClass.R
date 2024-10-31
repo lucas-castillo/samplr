@@ -171,7 +171,7 @@ Zhu23ABS <- R6::R6Class(
     #'  \item{point_est: The response of point estimation;}
     #'  }
     #' 
-    #' On the other hand, if the stopping rule is "relative", `sim_results` will be a data frame with seven columns:
+    #' On the other hand, if the stopping rule is "relative", `sim_results` will be a data frame with eight columns:
     #' \enumerate{
     #'  \item{trial: The index of trials;}
     #'  \item{samples: The samples of ABS sampler for the trial;}
@@ -179,7 +179,8 @@ Zhu23ABS <- R6::R6Class(
     #'  \item{stimulus: The stimuli of the experiment;}
     #'  \item{accuracy: Whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
     #'  \item{rt: The response time, including both the non-decision and the decision time;}
-    #'  \item{confidence: The confidence of the response.}
+    #'  \item{confidence: The confidence of the response;}
+    #'  \item{point_est: The response of point estimation.}
     #' }
     #' 
     #' @examples
@@ -415,6 +416,7 @@ Zhu23ABS <- R6::R6Class(
       self$sim_results$response <- stim_levels[as.numeric(self$sim_results$response)]
       self$sim_results$accuracy <- as.numeric(self$sim_results$accuracy)
       self$sim_results$rt <- as.numeric(self$sim_results$rt)
+      self$sim_results$point_est <- sapply(self$sim_results$samples, function(samples) samples[length(samples)])
       self$sim_results$confidence <- as.numeric(self$sim_results$confidence)
       invisible(self)
     }
