@@ -175,7 +175,7 @@ No values will be return after running this method, but the field \code{sim_resu
 \item{point_est: The response of point estimation;}
 }
 
-On the other hand, if the stopping rule is "relative", \code{sim_results} will be a data frame with seven columns:
+On the other hand, if the stopping rule is "relative", \code{sim_results} will be a data frame with eight columns:
 \enumerate{
 \item{trial: The index of trials;}
 \item{samples: The samples of ABS sampler for the trial;}
@@ -183,7 +183,8 @@ On the other hand, if the stopping rule is "relative", \code{sim_results} will b
 \item{stimulus: The stimuli of the experiment;}
 \item{accuracy: Whether the response is the same as the feedback. 0 represents error, and 1 represents correct;}
 \item{rt: The response time, including both the non-decision and the decision time;}
-\item{confidence: The confidence of the response.}
+\item{confidence: The confidence of the response;}
+\item{point_est: The response of point estimation.}
 }
 }
 

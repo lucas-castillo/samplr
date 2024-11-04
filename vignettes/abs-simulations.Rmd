@@ -209,7 +209,7 @@ abs_model2$simulate(
 )
 ```
 
-The table below presents the simulation results, including the simulated response, response time, and confidence. It is important to note that in the simulation of 2AFC, the length of the sample sequences may vary due to ABS utilizing a relative stopping rule. To illustrate its mechanism, let us examine the sequences in the first two trials as an example.
+The table below presents the simulation results, including the simulated response, response time, confidence, and point estimates. It is important to note that in the simulation of 2AFC, the length of the sample sequences may vary due to ABS utilizing a relative stopping rule. To illustrate its mechanism, let us examine the sequences in the first two trials as an example.
 
 ```{r}
 knitr::kable(abs_model2$sim_results)
