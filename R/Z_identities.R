@@ -222,7 +222,9 @@ Bayesian_Sampler <- function(
     a_and_not_b,
     not_a_and_not_b,
     beta, N, N2=NULL, 
-    return="mean"){
+    return="mean", 
+    n_simulations = 1e3
+  ){
   
   if (sd(
     lengths(
@@ -260,7 +262,18 @@ Bayesian_Sampler <- function(
   get_v <- function(p, N, beta){
     (N * p * (1-p)) / ((N + 2 * beta)**2)
   }
-  f <- if (return == "mean") get_mean else if (return == "variance") get_v
+  simulate <- function(p, N, beta){
+    (rbinom(n = n_simulations, size = N, prob = p) + beta) / (N + 2 * beta)
+  }
+  f <- if (return == "mean") {
+    get_mean
+  } else if (return == "variance") {
+    get_v
+  } else if (return == "simulation") {
+    simulate
+  } else {
+    stop("return parameter should be one of 'mean', 'variance' or 'simulation'.")
+  }
   return_list <- list()
   for (name in names(true_probabilities)){
       if (name %in% c( # treat conjunctions differently
