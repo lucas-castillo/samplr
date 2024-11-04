@@ -74,7 +74,20 @@ test_that("Bayesian Sampler", {
     unlist(res1, use.names = F), 
     c(unlist(probs, use.names = F)*20/(20+2*2)+2/(20+2*2))
   )
-  
+  # Test Variance
+  expect_equal(
+    unlist(
+      Bayesian_Sampler(
+        a_and_b=probs$a_and_b,
+        b_and_not_a = probs$b_and_not_a, 
+        a_and_not_b = probs$a_and_not_b, 
+        not_a_and_not_b = probs$not_a_and_not_b,
+        beta = 2, 
+        N = 20, 
+      return="variance"
+    ), use.names = F),
+    (20 * unlist(probs, use.names=F) * (1-unlist(probs, use.names=F))) / ((20 + 2 * 2)**2)
+  )
   # more samples = closer to true -- 
   expect_true(  abs(sum(unlist(res1[1:4])) - 1) > abs(sum(unlist(res2[1:4])) - 1))
   
