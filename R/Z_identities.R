@@ -200,7 +200,8 @@ get_true_probabilities <- function(
 #' @param beta Prior parameter.
 #' @param N Number of samples drawn
 #' @param N2 Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N. 
-#' @param return Optional. Either "mean", "variance" or "simulation". 
+#' @param return Optional. Either "mean", "variance" or "simulation". Defaults to "mean".
+#' @param n_simulations Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.
 
 #' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. 
 #' @export
