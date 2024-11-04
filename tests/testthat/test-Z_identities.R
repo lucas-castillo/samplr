@@ -101,7 +101,7 @@ test_that("Bayesian Sampler", {
   expect_equal(
     res4$a,
     withr::with_seed(123, lapply(probs, \(x){
-      (rbinom(n = 100, size = 20, prob = x) + 2) / (20 + 2 * 2)}
+      (stats::rbinom(n = 100, size = 20, prob = x) + 2) / (20 + 2 * 2)}
       )$a)
   )
   # more samples = closer to true -- 
