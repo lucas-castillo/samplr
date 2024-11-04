@@ -175,7 +175,17 @@ test_that("Bayesian Sampler", {
       N = 200
     )
   )
-  
+  # return is not correct
+  expect_error(
+    Bayesian_Sampler(
+      a_and_b=probs$a_and_b,
+      b_and_not_a = probs$b_and_not_a, 
+      a_and_not_b = probs$a_and_not_b, 
+      not_a_and_not_b = probs$not_a_and_not_b,
+      beta = 2, 
+      N = 200, return = "alksdj"
+    )
+  )
   # You can do multiple trials in one call
   res <- matrix(unlist(  Bayesian_Sampler(
     a_and_b=rep(probs$a_and_b, 2),
