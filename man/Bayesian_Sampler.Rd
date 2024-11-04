@@ -11,7 +11,9 @@ Bayesian_Sampler(
   not_a_and_not_b,
   beta,
   N,
-  N2 = NULL
+  N2 = NULL,
+  return = "mean",
+  n_simulations = 1000
 )
 }
 \arguments{
@@ -22,9 +24,13 @@ Bayesian_Sampler(
 \item{N}{Number of samples drawn}
 
 \item{N2}{Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N.}
+
+\item{return}{Optional. Either "mean", "variance" or "simulation". Defaults to "mean".}
+
+\item{n_simulations}{Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.}
 }
 \value{
-Named list with predicted probabilities for every possible combination of A and B.
+If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead.
 }
 \description{
 As described in \insertCite{zhu2020BayesianSamplerGeneric}{samplr}. Vectors can be provided for each parameter, allowing multiple estimates at once.
