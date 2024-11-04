@@ -69,6 +69,12 @@ test_that("Bayesian Sampler", {
     beta = 2, 
     N = 200
   )
+  # Test Values
+  expect_equal(
+    unlist(res1, use.names = F), 
+    c(unlist(probs, use.names = F)*20/(20+2*2)+2/(20+2*2))
+  )
+  
   # more samples = closer to true -- 
   expect_true(  abs(sum(unlist(res1[1:4])) - 1) > abs(sum(unlist(res2[1:4])) - 1))
   
