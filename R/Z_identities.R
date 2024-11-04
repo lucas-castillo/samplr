@@ -200,8 +200,9 @@ get_true_probabilities <- function(
 #' @param beta Prior parameter.
 #' @param N Number of samples drawn
 #' @param N2 Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N. 
-#'
-#' @return Named list with predicted probabilities for every possible combination of A and B. 
+#' @param return Optional. Either "mean", "variance" or "simulation". 
+
+#' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. 
 #' @export
 #'
 #' @examples
@@ -220,7 +221,8 @@ Bayesian_Sampler <- function(
     b_and_not_a,
     a_and_not_b,
     not_a_and_not_b,
-    beta, N, N2=NULL){
+    beta, N, N2=NULL, 
+    return="mean"){
   
   if (sd(
     lengths(
