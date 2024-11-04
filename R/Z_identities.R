@@ -257,14 +257,18 @@ Bayesian_Sampler <- function(
   get_mean <- function(p, N, beta){
     p*N/(N+2*beta)+beta/(N+2*beta)
   }
+  get_v <- function(p, N, beta){
+    (N * p * (1-p)) / ((N + 2 * beta)**2)
+  }
+  f <- if (return == "mean") get_mean else if (return == "variance") get_v
   predicted_means <- list()
   for (name in names(true_probabilities)){
       if (name %in% c( # treat conjunctions differently
         "b_or_not_a", "not_a_or_not_b", "a_or_b", "a_or_not_b", 
         "a_and_b", "b_and_not_a", "a_and_not_b", "not_a_and_not_b")){
-        predicted_means[[name]] <- get_mean(true_probabilities[[name]], N2, beta)
+        predicted_means[[name]] <- f(true_probabilities[[name]], N2, beta)
       } else{
-        predicted_means[[name]] <- get_mean(true_probabilities[[name]], N, beta)
+        predicted_means[[name]] <- f(true_probabilities[[name]], N, beta)
       }
   }
   return(predicted_means)
