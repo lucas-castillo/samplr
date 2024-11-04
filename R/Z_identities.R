@@ -200,8 +200,10 @@ get_true_probabilities <- function(
 #' @param beta Prior parameter.
 #' @param N Number of samples drawn
 #' @param N2 Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N. 
-#'
-#' @return Named list with predicted probabilities for every possible combination of A and B. 
+#' @param return Optional. Either "mean", "variance" or "simulation". Defaults to "mean".
+#' @param n_simulations Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.
+
+#' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. 
 #' @export
 #'
 #' @examples
@@ -220,7 +222,10 @@ Bayesian_Sampler <- function(
     b_and_not_a,
     a_and_not_b,
     not_a_and_not_b,
-    beta, N, N2=NULL){
+    beta, N, N2=NULL, 
+    return="mean", 
+    n_simulations = 1e3
+  ){
   
   if (sd(
     lengths(
@@ -252,17 +257,35 @@ Bayesian_Sampler <- function(
     a_and_not_b, 
     not_a_and_not_b
   )
-  predicted_means <- list()
+  get_mean <- function(p, N, beta){
+    p*N/(N+2*beta)+beta/(N+2*beta)
+  }
+  get_v <- function(p, N, beta){
+    (N * p * (1-p)) / ((N + 2 * beta)**2)
+  }
+  simulate <- function(p, N, beta){
+    (stats::rbinom(n = n_simulations, size = N, prob = p) + beta) / (N + 2 * beta)
+  }
+  f <- if (return == "mean") {
+    get_mean
+  } else if (return == "variance") {
+    get_v
+  } else if (return == "simulation") {
+    simulate
+  } else {
+    stop("return parameter should be one of 'mean', 'variance' or 'simulation'.")
+  }
+  return_list <- list()
   for (name in names(true_probabilities)){
       if (name %in% c( # treat conjunctions differently
         "b_or_not_a", "not_a_or_not_b", "a_or_b", "a_or_not_b", 
         "a_and_b", "b_and_not_a", "a_and_not_b", "not_a_and_not_b")){
-        predicted_means[[name]] <- true_probabilities[[name]]*N2/(N2+2*beta)+beta/(N2+2*beta)
+        return_list[[name]] <- f(true_probabilities[[name]], N2, beta)
       } else{
-        predicted_means[[name]] <- true_probabilities[[name]]*N/(N+2*beta)+beta/(N+2*beta)
+        return_list[[name]] <- f(true_probabilities[[name]], N, beta)
       }
   }
-  return(predicted_means)
+  return(return_list)
 }
 
 #' Mean Variance Estimates
