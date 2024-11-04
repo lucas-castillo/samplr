@@ -88,7 +88,9 @@
 <span>  <span class="va">not_a_and_not_b</span>,</span>
 <span>  <span class="va">beta</span>,</span>
 <span>  <span class="va">N</span>,</span>
-<span>  N2 <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  N2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  n_simulations <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,10 +113,18 @@
 <dt id="arg-n-">N2<a class="anchor" aria-label="anchor" href="#arg-n-"></a></dt>
 <dd><p>Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N.</p></dd>
 
+
+<dt id="arg-return">return<a class="anchor" aria-label="anchor" href="#arg-return"></a></dt>
+<dd><p>Optional. Either "mean", "variance" or "simulation". Defaults to "mean".</p></dd>
+
+
+<dt id="arg-n-simulations">n_simulations<a class="anchor" aria-label="anchor" href="#arg-n-simulations"></a></dt>
+<dd><p>Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Named list with predicted probabilities for every possible combination of A and B.</p>
+    <p>If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead.</p>
     </div>
 
     <div id="ref-examples">
