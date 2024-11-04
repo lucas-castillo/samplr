@@ -45,6 +45,7 @@ Suggests:
     magrittr,
     mvtnorm,
     xml2,
+    withr,
     samplrData
 LinkingTo: 
   Rcpp, 

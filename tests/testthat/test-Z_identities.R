@@ -79,6 +79,14 @@ test_that("Bayesian Sampler", {
     return="variance"
   )
   res4 <- withr::with_seed(123, Bayesian_Sampler(
+    a_and_b=probs$a_and_b,
+    b_and_not_a = probs$b_and_not_a, 
+    a_and_not_b = probs$a_and_not_b, 
+    not_a_and_not_b = probs$not_a_and_not_b,
+    beta = 2, 
+    N = 20, 
+    return="simulation", n_simulations = 100
+  ))
   # Test Values
   expect_equal(
     unlist(res1, use.names = F), 
@@ -88,6 +96,13 @@ test_that("Bayesian Sampler", {
   expect_equal(
     unlist(res3, use.names = F),
     (20 * unlist(probs, use.names=F) * (1-unlist(probs, use.names=F))) / ((20 + 2 * 2)**2)
+  )
+  # Test Simulation 
+  expect_equal(
+    res4$a,
+    withr::with_seed(123, lapply(probs, \(x){
+      (rbinom(n = 100, size = 20, prob = x) + 2) / (20 + 2 * 2)}
+      )$a)
   )
   # more samples = closer to true -- 
   expect_true(  abs(sum(unlist(res1[1:4])) - 1) > abs(sum(unlist(res2[1:4])) - 1))
