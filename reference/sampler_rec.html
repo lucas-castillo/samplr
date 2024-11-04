@@ -72,7 +72,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Recycled-Momentum HMC Sampler (REC)</h1>
-    <small class="dont-index">Source: <a href="https://github.com/lucas-castillo/samplr/blob/v1.0.1/R/samplers.R" class="external-link"><code>R/samplers.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/lucas-castillo/samplr/blob/main/R/samplers.R" class="external-link"><code>R/samplers.R</code></a></small>
     <div class="hidden name"><code>sampler_rec.Rd</code></div>
     </div>
 
@@ -144,15 +144,11 @@
     <h2>Details</h2>
     <p>While in HMC the momentum in each iteration is an independent draw,, here the momentum of the last utterance \(p^{n-1}\) is also involved. In each iteration, the momentum \(p\) is obtained as follows $$p \gets \alpha \times p^{n-1} + (1 - \alpha^2)^{\frac{1}{2}} \times v$$; where \(v \sim N(0, I)\).</p>
 <p>Recycled-Momentum HMC does not support discrete distributions.</p>
-<p>This algorithm has been used to model human data in Castillo et al. (2024)</p>
+<p>This algorithm has been used to model human data in castillo2024ExplainingFlawsHuman;textualsamplr</p>
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Castillo L, León-Villagrá P, Chater N, Sanborn A (2024).
-“Explaining the Flaws in Human Random Generation as Local Sampling with Momentum.”
-<em>PLOS Computational Biology</em>, <b>20</b>(1), 1–24.
-<a href="https://doi.org/10.1371/journal.pcbi.1011739" class="external-link">doi:10.1371/journal.pcbi.1011739</a>
-.</p>
+    <p></p>
     </div>
 
     <div id="ref-examples">
@@ -177,7 +173,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Developed by Lucas Castillo, Yun-Xiao Li, Adam N Sanborn. <br> Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Developed by Lucas Castillo, Yun-Xiao Li, Adam N Sanborn. <br> Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
