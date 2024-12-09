@@ -264,7 +264,12 @@ Bayesian_Sampler <- function(
     (N * p * (1-p)) / ((N + 2 * beta)**2)
   }
   simulate <- function(p, N, beta){
-    (stats::rbinom(n = n_simulations, size = N, prob = p) + beta) / (N + 2 * beta)
+    res <- (stats::rbinom(n = n_simulations, size = N, prob = p) + beta) / (N + 2 * beta)
+    if (length(p) == 1){
+      return(res)
+    } else{
+      return(matrix(res, ncol=length(p), byrow = T))
+    }
   }
   f <- if (return == "mean") {
     get_mean
