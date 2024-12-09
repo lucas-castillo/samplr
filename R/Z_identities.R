@@ -203,7 +203,7 @@ get_true_probabilities <- function(
 #' @param return Optional. Either "mean", "variance" or "simulation". Defaults to "mean".
 #' @param n_simulations Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.
 
-#' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. 
+#' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. Note that if return="simulation", the named list will contain vectors if the length of the true probabilities is 1; otherwise a matrix where each column is a queried probability and each row a simulation
 #' @export
 #'
 #' @examples
@@ -216,6 +216,16 @@ get_true_probabilities <- function(
 #'     N <- c(10, 12),
 #'     N2 <- c(10, 10)
 #' )
+# Simulations return matrices--
+#' Bayesian_Sampler(
+#'    a_and_b = c(0.05, .85),
+#'    b_and_not_a = c(.85,  0.05),
+#'    a_and_not_b = c(.05, 0.05),
+#'    not_a_and_not_b = c(0.05, 0.05),
+#'    beta = 1,
+#'    N = 5,
+#'    return="simulation"
+#')$a
 
 Bayesian_Sampler <- function(
     a_and_b,
@@ -264,7 +274,12 @@ Bayesian_Sampler <- function(
     (N * p * (1-p)) / ((N + 2 * beta)**2)
   }
   simulate <- function(p, N, beta){
-    (stats::rbinom(n = n_simulations, size = N, prob = p) + beta) / (N + 2 * beta)
+    res <- (stats::rbinom(n = n_simulations * length(p), size = N, prob = p) + beta) / (N + 2 * beta)
+    if (length(p) == 1){
+      return(res)
+    } else{
+      return(matrix(res, ncol=length(p), byrow = T))
+    }
   }
   f <- if (return == "mean") {
     get_mean

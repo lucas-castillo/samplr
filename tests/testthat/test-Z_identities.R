@@ -87,6 +87,15 @@ test_that("Bayesian Sampler", {
     N = 20, 
     return="simulation", n_simulations = 100
   ))
+  res5 <- withr::with_seed(123, Bayesian_Sampler(
+    a_and_b=rep(probs$a_and_b, 2),
+    b_and_not_a = rep(probs$b_and_not_a, 2),
+    a_and_not_b = rep(probs$a_and_not_b, 2),
+    not_a_and_not_b = rep(probs$not_a_and_not_b, 2),
+    beta = 2, 
+    N = 20, 
+    return="simulation", n_simulations = 100
+  ))
   # Test Values
   expect_equal(
     unlist(res1, use.names = F), 
@@ -104,6 +113,8 @@ test_that("Bayesian Sampler", {
       (stats::rbinom(n = 100, size = 20, prob = x) + 2) / (20 + 2 * 2)}
       )$a)
   )
+  # simulation is matrix if length(probs) > 1
+  expect_true(is.matrix(res4$a))
   # more samples = closer to true -- 
   expect_true(  abs(sum(unlist(res1[1:4])) - 1) > abs(sum(unlist(res2[1:4])) - 1))
   
