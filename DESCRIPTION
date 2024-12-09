@@ -1,7 +1,7 @@
 Package: samplr
 Type: Package
 Title: Compare Human Performance to Sampling Algorithms
-Version: 1.0.1
+Version: 1.0.1.9000
 Authors@R: c(
     person(given = "Lucas",
            family = "Castillo",
