@@ -30,7 +30,7 @@ Bayesian_Sampler(
 \item{n_simulations}{Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.}
 }
 \value{
-If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead.
+If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. Note that if return="simulation", the named list will contain vectors if the length of the true probabilities is 1; otherwise a matrix where each column is a queried probability and each row a simulation
 }
 \description{
 As described in \insertCite{zhu2020BayesianSamplerGeneric}{samplr}. Vectors can be provided for each parameter, allowing multiple estimates at once.
@@ -45,4 +45,13 @@ Bayesian_Sampler(
     N <- c(10, 12),
     N2 <- c(10, 10)
 )
+Bayesian_Sampler(
+   a_and_b = c(0.05, .85),
+   b_and_not_a = c(.85,  0.05),
+   a_and_not_b = c(.05, 0.05),
+   not_a_and_not_b = c(0.05, 0.05),
+   beta = 1,
+   N = 5,
+   return="simulation"
+)$a
 }
