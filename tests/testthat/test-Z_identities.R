@@ -114,7 +114,7 @@ test_that("Bayesian Sampler", {
       )$a)
   )
   # simulation is matrix if length(probs) > 1
-  expect_true(is.matrix(res4$a))
+  expect_true(is.matrix(res5$a))
   # more samples = closer to true -- 
   expect_true(  abs(sum(unlist(res1[1:4])) - 1) > abs(sum(unlist(res2[1:4])) - 1))
   
