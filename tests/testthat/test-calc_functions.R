@@ -66,7 +66,7 @@ test_that("PSD", {
   expect_equal(names(res), c("log_freq", "log_psd", "polyfit"))
 
   # Check results
-  expect_equal(res[["polyfit"]], c(0.5096142, 2.4102135))
+  expect_equal(res[["polyfit"]], c("slope"=0.5096142, "intercept"=2.4102135))
   vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, T)})
 })
 
