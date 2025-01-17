@@ -218,6 +218,7 @@ calc_PSD <- function(chain, plot = FALSE){
          main="Power Spectral Density", xlab=x_lbl, ylab=y_lbl,sub=caption)
     abline(Fit[2], Fit[1], col="blue", lwd=2)
   } 
+  names(Fit) <- c("slope", "intercept")
   return(list(
     log_freq = lf,
     log_psd = lpsd,
