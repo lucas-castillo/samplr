@@ -146,7 +146,7 @@ change this much (it’s actually probably worse).</p>
 <span><span class="st">                      return 0;</span></span>
 <span><span class="st">                    }</span></span>
 <span><span class="st">                  }"</span><span class="op">)</span></span>
-<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  <span class="st">"CPP Density"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>    <span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span></span>
 <span>      start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, </span>
@@ -178,18 +178,18 @@ change this much (it’s actually probably worse).</p>
 <tbody>
 <tr class="odd">
 <td align="left">CPP Density</td>
-<td align="right">2.64ms</td>
-<td align="right">2.69ms</td>
+<td align="right">2.66ms</td>
+<td align="right">2.71ms</td>
 </tr>
 <tr class="even">
 <td align="left">R Density</td>
-<td align="right">2.33ms</td>
-<td align="right">2.38ms</td>
+<td align="right">2.39ms</td>
+<td align="right">2.44ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Supported Density</td>
-<td align="right">1.78ms</td>
 <td align="right">1.81ms</td>
+<td align="right">1.85ms</td>
 </tr>
 </tbody>
 </table>
@@ -251,7 +251,7 @@ in R.</p>
 <span>    acceptance_ratio <span class="op">=</span> <span class="va">acceptances</span><span class="op">/</span><span class="op">(</span><span class="va">iterations</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Bespoke MH"</span> <span class="op">=</span> <span class="op">{</span></span>
 <span>    <span class="fu">bespoke_mh</span><span class="op">(</span></span>
 <span>      <span class="va">customDensity_r</span>, </span>
@@ -272,8 +272,8 @@ in R.</p>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">Bespoke MH</td>
-<td align="right">167ms</td>
-<td align="right">169ms</td>
+<td align="right">173ms</td>
+<td align="right">174ms</td>
 </tr></tbody>
 </table>
 </div>

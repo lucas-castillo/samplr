@@ -329,17 +329,17 @@
 <span class="r-in"><span><span class="va">zhuabs</span><span class="op">$</span><span class="fu">simulate</span><span class="op">(</span>stopping_rule<span class="op">=</span><span class="st">'fixed'</span>, n_sample <span class="op">=</span> <span class="fl">5</span>, trial_stim <span class="op">=</span> <span class="va">trial_stim</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">zhuabs</span><span class="op">$</span><span class="va">sim_results</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   trial                                          samples stimulus        rt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 49.46205, 50.15568, 50.13782, 49.49812, 48.70987       49  1.323156</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2 46.37790, 46.37790, 46.37790, 46.10574, 44.83523       11  0.981617</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     3 43.83680, 42.27428, 41.99898, 41.99898, 41.84585       37  1.264902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4 39.38179, 38.99805, 38.99805, 38.99805, 38.87522       25 0.9102649</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5 47.69700, 47.69700, 47.69700, 46.86499, 46.39406       47  1.050115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 10.71436, 11.32342, 10.08027, 10.08027, 10.44311       11 0.9647324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2 11.75203, 16.40006, 16.40006, 16.40006, 15.62573       18  1.173725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     3 17.06807, 18.64487, 18.79188, 18.79188, 18.79188       27  1.206355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4 18.79188, 19.96179, 20.35343, 20.35343, 20.35343       46 0.8200252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5 20.35343, 20.35343, 21.36663, 22.29673, 22.40992       38 0.9717995</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   point_est</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  48.70987</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  44.83523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  41.84585</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  38.87522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  46.39406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  10.44311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  15.62573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  18.79188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  20.35343</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  22.40992</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">zhuabs</span><span class="op">$</span><span class="fu">reset_sim_results</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">trial_stim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'left'</span>, <span class="st">'right'</span><span class="op">)</span>, <span class="fl">5</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -354,18 +354,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                samples</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                   -1.55761552, -1.55761552, -0.92738114, -0.05299664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                -0.90371355, -0.06320349, -0.69308594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                            0.1998162, -0.2475284, -1.4510945, -1.8265552, -2.3712877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                   -1.0035810, -1.2238617, -0.2688994</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -0.09982374, 0.31810194, 1.38978580, 1.35273434, -0.08451240, 0.76244935, 0.76244935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   response stimulus accuracy       rt confidence   point_est</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     left     left        1 1.201335  0.8333333 -0.05299664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     left     left        1 1.004604  0.8333333 -0.69308594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     left     left        1 1.230430  0.7500000 -2.37128765</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     left    right        0 1.413864  0.8333333 -0.26889939</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    right    right        1 1.140226  0.7000000  0.76244935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                                                                                                                                             samples</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                                                                                                                                                                                         0.49587356, -0.05342608, -0.11812319, 1.73693281, -0.18590657, 0.71409772, 0.71409772, 0.49479997, 0.30665854, 0.30665854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                                                                                                                                                                                                                                                                                   0.3066585, 0.4708692, 1.0550188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                                                                                                                                                                                                                                                                   0.9777936, 0.2758314, 0.7338352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                                                                                                     -1.02347985, 0.73383516, 0.46384031, 0.29990926, -0.39044486, 0.09480057, -0.69683374, 0.22463493, 0.66416985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.13688097, -0.34021143, -0.51120341, 0.55400757, 0.11315945, -2.19737611, -0.31693912, -0.06473229, 1.89186917, 0.54105431, 0.54105431, 0.09133600, -1.50403937, -0.05243803, -0.77445774, 0.20864032, -0.28063515, 0.46396545, 0.46396545, -0.37811108, 0.08968652, 1.40999070, -1.41699856, -1.84695250, -0.57880217, -1.15428973, -0.39916389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   response stimulus accuracy       rt confidence  point_est</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    right    right        1 1.436181  0.6666667  0.3066585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    right    right        1 1.339545  0.8333333  1.0550188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    right    right        1 1.112490  0.8333333  0.7338352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    right     left        0 1.426315  0.6666667  0.6641698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     left    right        0 2.731341  0.5666667 -0.3991639</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>

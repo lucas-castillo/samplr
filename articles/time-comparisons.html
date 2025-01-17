@@ -110,7 +110,7 @@
 <h2 id="c">C++<a class="anchor" aria-label="anchor" href="#c"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Metropolis-Hastings"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mh.html">sampler_mh</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,</span>
 <span>    <span class="st">"MC3"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, sigma_prop<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span>,</span>
 <span>    <span class="st">"Hamiltonian Monte-Carlo"</span> <span class="op">=</span> <span class="op">{</span><span class="fu">samplr</span><span class="fu">::</span><span class="fu"><a href="../reference/sampler_hmc.html">sampler_hmc</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"norm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,</span>
@@ -131,33 +131,33 @@
 <tbody>
 <tr class="odd">
 <td align="left">Metropolis-Hastings</td>
-<td align="right">1.48ms</td>
-<td align="right">1.52ms</td>
+<td align="right">1.47ms</td>
+<td align="right">1.53ms</td>
 </tr>
 <tr class="even">
 <td align="left">MC3</td>
-<td align="right">13.96ms</td>
-<td align="right">14.29ms</td>
+<td align="right">14.21ms</td>
+<td align="right">14.62ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Hamiltonian Monte-Carlo</td>
-<td align="right">11.04ms</td>
-<td align="right">11.32ms</td>
+<td align="right">10.73ms</td>
+<td align="right">11.02ms</td>
 </tr>
 <tr class="even">
 <td align="left">REC</td>
-<td align="right">11.38ms</td>
-<td align="right">11.74ms</td>
+<td align="right">11.08ms</td>
+<td align="right">11.41ms</td>
 </tr>
 <tr class="odd">
 <td align="left">MCHMC</td>
-<td align="right">77.43ms</td>
-<td align="right">81.46ms</td>
+<td align="right">76.78ms</td>
+<td align="right">80.4ms</td>
 </tr>
 <tr class="even">
 <td align="left">MCREC</td>
-<td align="right">77.69ms</td>
-<td align="right">81.73ms</td>
+<td align="right">76.16ms</td>
+<td align="right">80.51ms</td>
 </tr>
 </tbody>
 </table>
