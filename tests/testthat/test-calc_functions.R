@@ -58,7 +58,7 @@ test_that("PSD", {
   ## Error if bad input
   expect_error(calc_PSD(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
 
-  res <- calc_PSD(sequence, F)
+  res <- calc_PSD(sequence, plot=F)
 
   # It's a list of length 3 with named outputs
   expect_type(res, "list")
@@ -67,7 +67,7 @@ test_that("PSD", {
 
   # Check results
   expect_equal(res[["polyfit"]], c("slope"=0.5096142, "intercept"=2.4102135))
-  vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, T)})
+  vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, plot=T)})
 })
 
 test_that("Sigma Scaling", {
