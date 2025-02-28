@@ -190,9 +190,12 @@ calc_levy <- function(chain, plot=FALSE){
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' calc_PSD(chain1[[1]], plot= TRUE)
 calc_PSD <- function(chain, max_freq = 0.1, filter_freq = FALSE, plot = FALSE){
+  # input check
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
+  stopifnot('Argument "max_freq" should be a single numeric value.'=is.numeric(max_freq))
+  
   pd <- stats::spectrum(chain, plot = FALSE)
   if (filter_freq){
     lf <- log(pd$freq[pd$freq != 0 & pd$freq < max_freq], base = 10)

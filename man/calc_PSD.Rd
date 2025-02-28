@@ -4,10 +4,14 @@
 \alias{calc_PSD}
 \title{Power Spectral Density Calculator}
 \usage{
-calc_PSD(chain, plot = FALSE)
+calc_PSD(chain, max_freq = 0.1, filter_freq = FALSE, plot = FALSE)
 }
 \arguments{
 \item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions sequence}
+
+\item{max_freq}{The maximum frequency to be considered in PSD if \code{freq_filter = TRUE}.}
+
+\item{filter_freq}{Boolean. Whether PSD only considers the frequencies between 0 and \code{max_freq}.}
 
 \item{plot}{Boolean. Whether to return a plot or the elements used to make it.}
 }
