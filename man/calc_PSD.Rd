@@ -9,9 +9,9 @@ calc_PSD(chain, max_freq = 0.1, filter_freq = FALSE, plot = FALSE)
 \arguments{
 \item{chain}{Matrix of n x d dimensions, n = iterations, d = dimensions sequence}
 
-\item{max_freq}{The maximum frequency to be considered in PSD if \code{freq_filter = TRUE}.}
+\item{max_freq}{The maximum frequency to be considered in PSD if \code{filter_freq = TRUE}. See also \code{Details}.}
 
-\item{filter_freq}{Boolean. Whether PSD only considers the frequencies between 0 and \code{max_freq}.}
+\item{filter_freq}{Boolean. Whether PSD only considers the frequencies between 0 and \code{max_freq}. See also \code{Details}.}
 
 \item{plot}{Boolean. Whether to return a plot or the elements used to make it.}
 }
@@ -23,6 +23,8 @@ This function estimates the log power spectral density against the log frequency
 }
 \details{
 A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See See \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
+
+The default frequency range in PSD analysis extends from 0 to the Nyquist frequency. However, the logarithmic spectral power density tends to flatten beyond a frequency of 0.1. As a result, some researchers (e.g., \insertCite{gildenNoiseHuman1995;nobrackets}{samplr}; \insertCite{zhu2022UnderstandingStructureCognitive;nobrackets}{samplr}) estimate the value of \eqn{\alpha} using only frequencies below 0.1.
 }
 \examples{
 set.seed(1)

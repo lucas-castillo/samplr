@@ -172,7 +172,8 @@ calc_levy <- function(chain, plot=FALSE){
 #' This function estimates the log power spectral density against the log frequency, and calculates a slope \eqn{\alpha}.
 #'
 #' A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See See \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
-#'
+#' 
+#' The default frequency range in PSD analysis extends from 0 to the Nyquist frequency. However, the logarithmic spectral power density tends to flatten beyond a frequency of 0.1. As a result, some researchers (e.g., \insertCite{gildenNoiseHuman1995;nobrackets}{samplr}; \insertCite{zhu2022UnderstandingStructureCognitive;nobrackets}{samplr}) estimate the value of \eqn{\alpha} using only frequencies below 0.1.
 #'
 #' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions sequence
 #' @param max_freq The maximum frequency to be considered in PSD if `filter_freq = TRUE`. See also `Details`.
