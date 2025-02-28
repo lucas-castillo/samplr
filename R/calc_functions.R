@@ -175,6 +175,8 @@ calc_levy <- function(chain, plot=FALSE){
 #'
 #'
 #' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions sequence
+#' @param max_freq The maximum frequency to be considered in PSD if `filter_freq = TRUE`. See also `Details`.
+#' @param filter_freq Boolean. Whether PSD only considers the frequencies between 0 and `max_freq`. See also `Details`.
 #' @param plot Boolean. Whether to return a plot or the elements used to make it.
 #' @references 
 #'  \insertAllCited{}
@@ -187,13 +189,19 @@ calc_levy <- function(chain, plot=FALSE){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' calc_PSD(chain1[[1]], plot= TRUE)
-calc_PSD <- function(chain, plot = FALSE){
+calc_PSD <- function(chain, max_freq = 0.1, filter_freq = FALSE, plot = FALSE){
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
   }
   pd <- stats::spectrum(chain, plot = FALSE)
-  lf <- log(pd$freq[pd$freq != 0], base = 10)
-  lpsd <- log(pd$spec[pd$spec != 0], base = 10)
+  if (filter_freq){
+    lf <- log(pd$freq[pd$freq != 0 & pd$freq < max_freq], base = 10)
+    lpsd <- log(pd$spec[pd$freq != 0 & pd$freq < max_freq], base = 10)
+  } else {
+    lf <- log(pd$freq[pd$freq != 0], base = 10)
+    lpsd <- log(pd$spec[pd$spec != 0], base = 10)
+  }
+
   windows <- 9
   lf_range <- (max(lf) - min(lf))*2/(windows+1)
   y <- pracma::zeros(windows,1)
