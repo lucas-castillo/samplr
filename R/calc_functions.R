@@ -173,11 +173,11 @@ calc_levy <- function(chain, plot=FALSE){
 #'
 #' A number of studies have reported that cognitive activities contain a long-range slowly decaying autocorrelation. In the frequency domain, this is expressed as \eqn{S(f)} ~  \eqn{1/f^{-\alpha}}, with \eqn{f} being frequency, \eqn{S(f)} being spectral power, and \eqn{\alpha} \eqn{\epsilon} \eqn{[0.5,1.5]} is considered \eqn{1/f} scaling. See See \insertCite{zhu2018MentalSamplingMultimodal;textual}{samplr} for a comparison of Levy Flight and PSD measures for different samplers in multimodal representations.
 #' 
-#' The default frequency range in PSD analysis extends from 0 to the Nyquist frequency. However, the logarithmic spectral power density tends to flatten beyond a frequency of 0.1. As a result, some researchers (e.g., \insertCite{gildenNoiseHuman1995;nobrackets}{samplr}; \insertCite{zhu2022UnderstandingStructureCognitive;nobrackets}{samplr}) estimate the value of \eqn{\alpha} using only frequencies below 0.1.
+#' The default frequency range in PSD analysis extends from 0 to 0.1, which is specified by `max_freq`. It is because the logarithmic spectral power density tends to flatten beyond a frequency of 0.1. As a result, some researchers (e.g., \insertCite{gildenNoiseHuman1995;nobrackets}{samplr}; \insertCite{zhu2022UnderstandingStructureCognitive;nobrackets}{samplr}) estimate the value of \eqn{\alpha} using only frequencies below 0.1. When `filter_freq` is set to `FALSE`, the frequency range will be from 0 to the Nyquist frequency.
 #'
 #' @param chain Matrix of n x d dimensions, n = iterations, d = dimensions sequence
 #' @param max_freq The maximum frequency to be considered in PSD if `filter_freq = TRUE`. See also `Details`.
-#' @param filter_freq Boolean. Whether PSD only considers the frequencies between 0 and `max_freq`. See also `Details`.
+#' @param filter_freq Boolean. Whether PSD only considers the frequencies between 0 and `max_freq`. The default setting is `TRUE`. See also `Details`.
 #' @param plot Boolean. Whether to return a plot or the elements used to make it.
 #' @references 
 #'  \insertAllCited{}
@@ -190,7 +190,7 @@ calc_levy <- function(chain, plot=FALSE){
 #' set.seed(1)
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' calc_PSD(chain1[[1]], plot= TRUE)
-calc_PSD <- function(chain, max_freq = 0.1, filter_freq = FALSE, plot = FALSE){
+calc_PSD <- function(chain, max_freq = 0.1, filter_freq = TRUE, plot = FALSE){
   # input check
   if (is.matrix(chain) && ncol(chain)>1){
     stop("Please input a one-dimensional vector")
@@ -432,6 +432,7 @@ plot_series <- function(chain, change=FALSE){
 #'
 #' @param chain Vector of n length, where n is the number of trials or sampler iterations
 #' @param plot Boolean. Whether to additionally plot the diagnostics. 
+#' @param max_freq,filter_freq Additional parameters to \link[samplr]{calc_PSD}.
 #' @param acf.alpha,acf.lag.max Additional parameters to \link[samplr]{calc_autocorr}.
 #' @return
 #' A list with all diagnostic calculations (a list of lists); and optionally a grid of plots.
@@ -442,7 +443,7 @@ plot_series <- function(chain, change=FALSE){
 #' chain1 <- sampler_mh(1, "norm", c(0,1), diag(1))
 #' diagnostics <- calc_all(chain1[[1]])
 #' names(diagnostics)
-calc_all <- function(chain, plot=TRUE, acf.alpha=.05, acf.lag.max=100){
+calc_all <- function(chain, plot=TRUE, max_freq = 0.1, filter_freq = TRUE, acf.alpha=.05, acf.lag.max=100){
   # restore user parameters on function exit
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
@@ -462,7 +463,7 @@ calc_all <- function(chain, plot=TRUE, acf.alpha=.05, acf.lag.max=100){
                                    alpha = acf.alpha, lag.max = acf.lag.max)
   
   levy <- calc_levy(chain, plot = plot)
-  PSD <- calc_PSD(chain, plot = plot)
+  PSD <- calc_PSD(chain, max_freq = max_freq, filter_freq = filter_freq, plot = plot)
   sigma_scaling <- calc_sigma_scaling(chain, plot = plot)
   
   return(list(

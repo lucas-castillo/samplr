@@ -4,12 +4,21 @@
 \alias{calc_all}
 \title{Diagnostics Wrapper}
 \usage{
-calc_all(chain, plot = TRUE, acf.alpha = 0.05, acf.lag.max = 100)
+calc_all(
+  chain,
+  plot = TRUE,
+  max_freq = 0.1,
+  filter_freq = TRUE,
+  acf.alpha = 0.05,
+  acf.lag.max = 100
+)
 }
 \arguments{
 \item{chain}{Vector of n length, where n is the number of trials or sampler iterations}
 
 \item{plot}{Boolean. Whether to additionally plot the diagnostics.}
+
+\item{max_freq, filter_freq}{Additional parameters to \link[samplr]{calc_PSD}.}
 
 \item{acf.alpha, acf.lag.max}{Additional parameters to \link[samplr]{calc_autocorr}.}
 }
