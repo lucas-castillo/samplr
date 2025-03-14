@@ -56,9 +56,11 @@ test_that("Levy Flights", {
 
 test_that("PSD", {
   ## Error if bad input
-  expect_error(calc_PSD(matrix(sequence, ncol = 3), F), "Please input a one-dimensional vector")
+  expect_error(calc_PSD(matrix(sequence, ncol = 3), plot = F), "Please input a one-dimensional vector")
+  expect_error(calc_PSD(sequence, max_freq = '0.1'), 'Argument "max_freq" should be a single numeric value.')
 
-  res <- calc_PSD(sequence, F)
+  # Not filtered frequencies
+  res <- calc_PSD(sequence, filter_freq = F, plot=F)
 
   # It's a list of length 3 with named outputs
   expect_type(res, "list")
@@ -67,7 +69,11 @@ test_that("PSD", {
 
   # Check results
   expect_equal(res[["polyfit"]], c("slope"=0.5096142, "intercept"=2.4102135))
-  vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, T)})
+  vdiffr::expect_doppelganger("PSD Plot", \(){calc_PSD(sequence, filter_freq = F, plot=T)})
+  
+  # Filter the frequencies
+  res <- calc_PSD(sequence, max_freq = 0.2, plot=F)
+  expect_true( max(res$log_freq) <= log(0.2, base=10) )
 })
 
 test_that("Sigma Scaling", {
@@ -110,5 +116,5 @@ test_that("Series Plotter", {
 })
 
 test_that("calc all", {
-  vdiffr::expect_doppelganger("all plot", \(){calc_all(sequence, plot = T)})
+  vdiffr::expect_doppelganger("all plot", \(){calc_all(sequence, filter_freq=F, plot = T)})
 })
