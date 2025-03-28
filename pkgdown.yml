@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
-pkgdown_sha: ~
+pkgdown: 2.0.9
+pkgdown_sha: fa75d8343d9601e657069b1242ae955af25558ad
 articles:
   abs-simulations: abs-simulations.html
   custom-density-functions: custom-density-functions.html
@@ -9,7 +9,8 @@ articles:
   samplr: samplr.html
   supported-distributions: supported-distributions.html
   time-comparisons: time-comparisons.html
-last_built: 2025-03-28T17:11Z
+last_built: 2025-03-28T17:22Z
 urls:
   reference: https://lucas-castillo.github.io/samplr/reference
   article: https://lucas-castillo.github.io/samplr/articles
+
