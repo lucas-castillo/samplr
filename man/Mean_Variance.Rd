@@ -22,12 +22,13 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 library(samplrData)
+pct_to_prob <- function(x){x/100}
 data <- sundh2023.meanvariance.e3 \%>\%
   group_by(ID, querydetail) \%>\% 
   mutate(iteration = LETTERS[1:n()]) \%>\% 
   pivot_wider(id_cols = c(ID, querydetail), 
       values_from = estimate, names_from = iteration) \%>\% 
-  mutate(across(where(is.numeric), \(x){x/100})) \%>\% 
+  mutate(across(where(is.numeric), pct_to_prob)) \%>\% 
   ungroup \%>\% 
   select(-querydetail)
 head(data)
