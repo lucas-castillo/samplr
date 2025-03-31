@@ -55,3 +55,6 @@ Bayesian_Sampler(
    return="simulation"
 )$a
 }
+\references{
+\insertAllCited{}
+}
