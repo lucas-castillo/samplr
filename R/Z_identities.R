@@ -7,7 +7,8 @@
 #'
 #' @param a,b,a_and_b,a_or_b,a_given_b,b_given_a,a_given_not_b,b_given_not_a,a_and_not_b,b_and_not_a Probability estimates given by participants
 #' @param not_a,not_b Probability estimates given by participants. If not given, they'll default to 1-a and 1-b respectively
-#'
+#' @references
+#'    \insertAllCited{}
 #' @return Dataframe with identities Z1 to Z18 
 #' @export
 #'
@@ -202,7 +203,8 @@ get_true_probabilities <- function(
 #' @param N2 Optional. Number of samples drawn for conjunctions and disjunctions. (called N' in the paper). If not given, it will default to N2=N. Must be equal or smaller than N. 
 #' @param return Optional. Either "mean", "variance" or "simulation". Defaults to "mean".
 #' @param n_simulations Optional. if return="simulation", how many simulations per possible combination of A and B. Defaults to 1000.
-
+#' @references
+#'    \insertAllCited{}
 #' @return If return="mean" or return="variance", named list with predicted probabilities for every possible combination of A and B, or the expected variance of those predictions. If return="simulation", simulated predictions instead. Note that if return="simulation", the named list will contain vectors if the length of the true probabilities is 1; otherwise a matrix where each column is a queried probability and each row a simulation
 #' @export
 #'
@@ -309,7 +311,8 @@ Bayesian_Sampler <- function(
 #'
 #' @param rawData Dataframe with the following column variables for N repetitions of each unique query: participant ID ('id'), response query 1, response query 2, ... , response query N
 #' @param idCol Name of the 'ID' column.
-#'
+#' @references
+#'    \insertAllCited{}
 #' @return A dataframe with values for the intercept (b0) and slope (b1) of the estimated regression, as well as estimates for N, d, and beta (termed b in the paper) for each participant. 
 #' @export
 #'

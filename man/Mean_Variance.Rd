@@ -33,3 +33,6 @@ data <- sundh2023.meanvariance.e3 \%>\%
 head(data)
 head(Mean_Variance(data, "ID"))
 }
+\references{
+\insertAllCited{}
+}

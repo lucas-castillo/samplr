@@ -6,6 +6,8 @@
         * simulated predictions.
     * `calc_PSD()` now returns a named vector in `$polyfit`, so users know what's the intercept and what's the slope
     * `calc_PSD()` now filters frequencies within a range, as done in previous literature (Gilden, 1995; Zhu et al., 2022)
+* Minor:
+    * Fixes documentation of some functions not including the reference list.
 
 # samplr 1.0.1
 * Fixes float comparisons using `!=` and thus not passing tests in some OS.  
