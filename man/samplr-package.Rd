@@ -11,7 +11,7 @@ Understand human performance from the perspective of sampling, both looking at h
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/lucas-castillo/samplr}
+  \item \url{https://lucas-castillo.github.io/samplr}
   \item Report bugs at \url{https://github.com/lucas-castillo/samplr/issues}
 }
 
