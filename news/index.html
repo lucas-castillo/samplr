@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">samplr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.0</span>
       </span>
     </div>
 
@@ -75,6 +75,24 @@
       <small>Source: <a href="https://github.com/lucas-castillo/samplr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.0" id="samplr-110">samplr 1.1.0<a class="anchor" aria-label="anchor" href="#samplr-110"></a></h2>
+<ul><li>New features:
+<ul><li>
+<code><a href="../reference/Zhu23ABS.html">Zhu23ABS()</a></code> now can return estimates when using relative stopping rule.</li>
+<li>The <code><a href="../reference/Bayesian_Sampler.html">Bayesian_Sampler()</a></code> function can now be used to not only return expected predictions but also
+<ul><li>expected variance</li>
+<li>simulated predictions.</li>
+</ul></li>
+<li>
+<code><a href="../reference/calc_PSD.html">calc_PSD()</a></code> now returns a named vector in <code>$polyfit</code>, so users know what’s the intercept and what’s the slope</li>
+<li>
+<code><a href="../reference/calc_PSD.html">calc_PSD()</a></code> now filters frequencies within a range, as done in previous literature (Gilden, 1995; Zhu et al., 2022)</li>
+</ul></li>
+<li>Minor:
+<ul><li>Fixes documentation of some functions not including the reference list.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="samplr-101">samplr 1.0.1<small>2024-08-19</small><a class="anchor" aria-label="anchor" href="#samplr-101"></a></h2>
 <ul><li>Fixes float comparisons using <code>!=</code> and thus not passing tests in some OS.</li>
