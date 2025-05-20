@@ -1,3 +1,7 @@
+# Development Version
+* Minor:
+    * Adds citation information to README
+
 # samplr 1.1.0
 * New features:
     * `Zhu23ABS()` now can return estimates when using relative stopping rule.
