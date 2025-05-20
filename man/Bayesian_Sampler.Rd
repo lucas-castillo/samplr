@@ -17,7 +17,7 @@ Bayesian_Sampler(
 )
 }
 \arguments{
-\item{a_and_b, b_and_not_a, a_and_not_b, not_a_and_not_b}{True probabilites for the conjuctions and disjunctions of A and B. Must add to 1.}
+\item{a_and_b, b_and_not_a, a_and_not_b, not_a_and_not_b}{True probabilities for the conjunctions and disjunctions of A and B. Must add to 1.}
 
 \item{beta}{Prior parameter.}
 
