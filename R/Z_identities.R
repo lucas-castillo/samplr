@@ -348,8 +348,8 @@ Mean_Variance <- function(rawData, idCol){
   coefficients$N <- 1 / coefficients$b1
   coefficients$d <- (1 - sqrt(coefficients$N * coefficients$b0 * 4 + 1)) / 2
   coefficients$beta <- (coefficients$N * coefficients$d)  / (1 - 2 * coefficients$d)
-  rownames(coefficients) <- NULL
+  coefficients <- tibble::rownames_to_column(coefficients, idCol)
 
-  return(cbind(rawData[idCol], coefficients))                   
+  return(coefficients)                  
 }
   
