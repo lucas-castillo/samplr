@@ -329,8 +329,8 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
     
     plot(logN, logS,
          xlim=x_lims, ylim=y_lims,
-         xlab = latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024"),
-         ylab= latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta x))\u0024"),
+         xlab = expression(log[10]*"("*Delta*"t)"),
+         ylab= expression(log[10]*"("*sigma*"("*Delta*"x))"),
          main="Sigma Scaling", 
          sub = paste("slope =", round(slope, 3))
     )
