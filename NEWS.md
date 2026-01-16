@@ -1,4 +1,6 @@
 # Development Version
+* Bugfixes:
+    * `Mean_Variance()` function now returns as many rows as IDs (used to return too many)
 * Minor:
     * Adds citation information to README
 
