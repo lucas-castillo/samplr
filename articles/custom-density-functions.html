@@ -130,7 +130,7 @@ supported by Rcpp and RcppDist at the time of writing.</p>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="custom-density-functions_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
+<p><img src="custom-density-functions_files/figure-html/unnamed-chunk-2-1.png" alt="" width="768"></p>
 <div class="section level4">
 <h4 id="on-timing">On Timing<a class="anchor" aria-label="anchor" href="#on-timing"></a>
 </h4>
@@ -179,17 +179,17 @@ change this much (it’s actually probably worse).</p>
 <tbody>
 <tr class="odd">
 <td align="left">CPP Density</td>
-<td align="right">2.6ms</td>
-<td align="right">2.65ms</td>
+<td align="right">2.54ms</td>
+<td align="right">2.58ms</td>
 </tr>
 <tr class="even">
 <td align="left">R Density</td>
-<td align="right">2.33ms</td>
-<td align="right">2.37ms</td>
+<td align="right">2.31ms</td>
+<td align="right">2.35ms</td>
 </tr>
 <tr class="odd">
 <td align="left">Supported Density</td>
-<td align="right">1.76ms</td>
+<td align="right">1.77ms</td>
 <td align="right">1.8ms</td>
 </tr>
 </tbody>
@@ -273,8 +273,8 @@ in R.</p>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">Bespoke MH</td>
-<td align="right">175ms</td>
-<td align="right">175ms</td>
+<td align="right">177ms</td>
+<td align="right">180ms</td>
 </tr></tbody>
 </table>
 </div>

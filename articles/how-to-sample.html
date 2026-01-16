@@ -146,7 +146,7 @@ the proposal distribution, so we do that before sampling.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html" class="external-link">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="how-to-sample_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="how-to-sample_files/figure-html/unnamed-chunk-4-1.png" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>Notice that the same approach is used for all other samplers:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MC3_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sampler_mc3.html">sampler_mc3</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">name</span>, <span class="va">params</span>, <span class="va">proposal_variance</span><span class="op">)</span></span>
@@ -189,7 +189,7 @@ results (this is not necessary for the samplers to work)</p>
 <span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">MH_samples</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, freq<span class="op">=</span><span class="cn">FALSE</span>, breaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html" class="external-link">curve</a></span><span class="op">(</span><span class="fu">customDensity</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="how-to-sample_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="how-to-sample_files/figure-html/unnamed-chunk-8-1.png" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>See <a href="multivariate-mixtures.html">the Multivariate Mixtures
 Vignette</a> for examples on how to mix multivariate distributions, as
 well as a comparison between the performance of different samplers in a
