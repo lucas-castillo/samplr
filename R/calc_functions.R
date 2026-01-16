@@ -222,10 +222,9 @@ calc_PSD <- function(chain, max_freq = 0.1, filter_freq = TRUE, plot = FALSE){
   if (plot) {
     df <- data.frame(lf = lf, lpsd = lpsd)
 
-
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", round(-Fit[1], 3)))
-    x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
+    caption <- eval(parse(text=paste0("expression(hat(alpha)", "*' = ", round(-Fit[1], 3), "')")))
+    x_lbl <- expression(log[10]*"(Frequency)")
+    y_lbl <- expression(log[10]*"(PSD)")
     plot(df$lf, df$lpsd, type="l",
          main="Power Spectral Density", xlab=x_lbl, ylab=y_lbl,sub=caption)
     abline(Fit[2], Fit[1], col="blue", lwd=2)
