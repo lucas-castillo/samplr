@@ -58,25 +58,22 @@
 <polygon points='59.04,502.56 689.76,502.56 689.76,59.04 59.04,59.04 ' style='stroke-width: 0.75; fill: none;' />
 <text x='374.40' y='34.48' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: sans;' textLength='92.06px' lengthAdjust='spacingAndGlyphs'>Sigma Scaling</text>
 <text x='374.40' y='571.68' text-anchor='middle' style='font-size: 12.00px; font-family: sans;' textLength='76.40px' lengthAdjust='spacingAndGlyphs'>slope = -0.022</text>
-<text x='351.54' y='554.71' style='font-size: 12.00px; font-family: sans;' textLength='2.66px' lengthAdjust='spacingAndGlyphs'>l</text>
-<text x='354.21' y='554.71' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text x='360.88' y='554.71' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>g</text>
-<text x='367.56' y='556.94' style='font-size: 8.40px; font-family: sans;' textLength='9.34px' lengthAdjust='spacingAndGlyphs'>10</text>
-<text x='376.90' y='554.71' style='font-size: 15.00px; font-family: sans;' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text x='381.90' y='554.71' style='font-size: 12.00px; font-family: sans;' textLength='7.04px' lengthAdjust='spacingAndGlyphs'>Δ</text>
-<text x='388.94' y='554.71' style='font-size: 12.00px; font-family: sans;' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>t</text>
-<text x='392.27' y='554.71' style='font-size: 15.00px; font-family: sans;' textLength='4.99px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text transform='translate(10.40,313.17) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='2.66px' lengthAdjust='spacingAndGlyphs'>l</text>
-<text transform='translate(10.40,310.50) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text transform='translate(10.40,303.83) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>g</text>
-<text transform='translate(12.62,297.16) rotate(-90)' style='font-size: 8.40px; font-family: sans;' textLength='9.34px' lengthAdjust='spacingAndGlyphs'>10</text>
-<text transform='translate(10.40,287.81) rotate(-90)' style='font-size: 15.00px; font-family: sans;' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text transform='translate(10.40,282.82) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.37px' lengthAdjust='spacingAndGlyphs'>σ</text>
-<text transform='translate(10.40,276.44) rotate(-90)' style='font-size: 15.00px; font-family: sans;' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text transform='translate(10.40,271.45) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='7.04px' lengthAdjust='spacingAndGlyphs'>Δ</text>
-<text transform='translate(10.40,264.41) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>x</text>
-<text transform='translate(10.40,258.40) rotate(-90)' style='font-size: 15.00px; font-family: sans;' textLength='4.99px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text transform='translate(10.40,253.42) rotate(-90)' style='font-size: 15.00px; font-family: sans;' textLength='4.99px' lengthAdjust='spacingAndGlyphs'>)</text>
+<text x='352.54' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='2.66px' lengthAdjust='spacingAndGlyphs'>l</text>
+<text x='355.20' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>o</text>
+<text x='361.88' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>g</text>
+<text x='368.55' y='557.01' style='font-size: 8.40px; font-family: sans;' textLength='9.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text x='377.89' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text x='381.89' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='7.04px' lengthAdjust='spacingAndGlyphs'>Δ</text>
+<text x='388.93' y='554.79' style='font-size: 12.00px; font-family: sans;' textLength='7.33px' lengthAdjust='spacingAndGlyphs'>t)</text>
+<text transform='translate(10.47,311.18) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='2.66px' lengthAdjust='spacingAndGlyphs'>l</text>
+<text transform='translate(10.47,308.52) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>o</text>
+<text transform='translate(10.47,301.84) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>g</text>
+<text transform='translate(12.69,295.17) rotate(-90)' style='font-size: 8.40px; font-family: sans;' textLength='9.34px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text transform='translate(10.47,285.82) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(10.47,281.83) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='6.37px' lengthAdjust='spacingAndGlyphs'>σ</text>
+<text transform='translate(10.47,275.45) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(10.47,271.46) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='7.04px' lengthAdjust='spacingAndGlyphs'>Δ</text>
+<text transform='translate(10.47,264.42) rotate(-90)' style='font-size: 12.00px; font-family: sans;' textLength='14.00px' lengthAdjust='spacingAndGlyphs'>x))</text>
 </g>
 <g clip-path='url(#cpNTkuMDR8Njg5Ljc2fDU5LjA0fDUwMi41Ng==)'>
 <line x1='59.04' y1='426.66' x2='689.76' y2='443.06' style='stroke-width: 1.50; stroke: #0000FF;' />
