@@ -157,9 +157,9 @@ calc_levy <- function(chain, plot=FALSE){
   slope <- pracma::polyval(coef,fx)
   df <- data.frame(Fx = fx, Fy = fy, Slope = slope)
   if (plot) {
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", round(-coef[1], 3)))
-    x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Absolute Difference in Estimates)")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
+    caption <- eval(parse(text=paste0("expression(hat(mu)", "*' = ", round(-coef[1], 3), "')")))
+    x_lbl <- expression(log[10]*"(Absolute Difference in Estimates)")
+    y_lbl <- expression(log[10]*"(Frequency)")
     plot(df$Fx, df$Fy, 
          main="Levy Flights", xlab=x_lbl, ylab=y_lbl, pch=19, sub=caption)
     abline(lm(df$Slope~df$Fx), col="blue", lwd=2)
