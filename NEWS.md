@@ -3,6 +3,7 @@
     * `Mean_Variance()` function now returns as many rows as IDs (used to return too many)
 * Minor:
     * Adds citation information to README
+    * Fixes invalid URL in samplr.Rmd
 
 # samplr 1.1.0
 * New features:
