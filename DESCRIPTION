@@ -27,7 +27,6 @@ License: CC BY 4.0
 Imports: 
     Rcpp (>= 1.0.6),
     ggplot2,
-    latex2exp,
     pracma,
     stats,
     lme4,
