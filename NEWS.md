@@ -4,6 +4,7 @@
 * Minor:
     * Adds citation information to README
     * Removes `latex2exp` dependency
+    * Fixes invalid URL in samplr.Rmd
 
 # samplr 1.1.0
 * New features:
