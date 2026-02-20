@@ -5,6 +5,7 @@
     * Adds citation information to README
     * Removes `latex2exp` dependency
     * Fixes invalid URL in samplr.Rmd
+    * Substitutes http links for https
 
 # samplr 1.1.0
 * New features:
