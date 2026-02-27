@@ -1,10 +1,11 @@
-# Development Version
+# samplr 1.1.1
 * Bugfixes:
     * `Mean_Variance()` function now returns as many rows as IDs (used to return too many)
 * Minor:
     * Adds citation information to README
     * Removes `latex2exp` dependency
     * Fixes invalid URL in samplr.Rmd
+    * Substitutes http links for https
 
 # samplr 1.1.0
 * New features:
