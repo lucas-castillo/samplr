@@ -1,3 +1,6 @@
+# Development version
+* Minor:
+    * Fixes typo in "Get started" vignette.
 # samplr 1.1.1
 * Bugfixes:
     * `Mean_Variance()` function now returns as many rows as IDs (used to return too many)
