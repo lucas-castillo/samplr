@@ -154,8 +154,8 @@ get_true_probabilities <- function(
   not_a = 1 - a
   not_b = 1 - b
   a_or_b = 1 - not_a_and_not_b
-  a_or_not_b = 1 - a_and_not_b
-  b_or_not_a = 1- b_and_not_a
+  a_or_not_b = 1 - b_and_not_a
+  b_or_not_a = 1 - a_and_not_b
   not_a_or_not_b = 1 - a_and_b
   # Conditional Probabilities
   a_given_b = a_and_b / (a_and_b + b_and_not_a)
@@ -348,10 +348,10 @@ Mean_Variance <- function(rawData, idCol){
   coefficients$N <- 1 / coefficients$b1
   coefficients$d <- (1 - sqrt(coefficients$N * coefficients$b0 * 4 + 1)) / 2
   coefficients$beta <- (coefficients$N * coefficients$d)  / (1 - 2 * coefficients$d)
-  
+
   coefficients <- cbind("ID"=rownames(coefficients), coefficients)
   rownames(coefficients) <- NULL
-  
+
   return(coefficients)                  
 }
   
