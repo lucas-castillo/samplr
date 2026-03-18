@@ -157,9 +157,9 @@ calc_levy <- function(chain, plot=FALSE){
   slope <- pracma::polyval(coef,fx)
   df <- data.frame(Fx = fx, Fy = fy, Slope = slope)
   if (plot) {
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\mu}\u0024 =", round(-coef[1], 3)))
-    x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Absolute Difference in Estimates)")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
+    caption <- eval(parse(text=paste0("expression(hat(mu)", "*' = ", round(-coef[1], 3), "')")))
+    x_lbl <- expression(log[10]*"(Absolute Difference in Estimates)")
+    y_lbl <- expression(log[10]*"(Frequency)")
     plot(df$Fx, df$Fy, 
          main="Levy Flights", xlab=x_lbl, ylab=y_lbl, pch=19, sub=caption)
     abline(lm(df$Slope~df$Fx), col="blue", lwd=2)
@@ -222,10 +222,9 @@ calc_PSD <- function(chain, max_freq = 0.1, filter_freq = TRUE, plot = FALSE){
   if (plot) {
     df <- data.frame(lf = lf, lpsd = lpsd)
 
-
-    caption <- latex2exp::TeX(paste("\u0024\\hat{\\alpha} = ", round(-Fit[1], 3)))
-    x_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(Frequency)")
-    y_lbl <- latex2exp::TeX("\u0024log_{10} \u0024(PSD)")
+    caption <- eval(parse(text=paste0("expression(hat(alpha)", "*' = ", round(-Fit[1], 3), "')")))
+    x_lbl <- expression(log[10]*"(Frequency)")
+    y_lbl <- expression(log[10]*"(PSD)")
     plot(df$lf, df$lpsd, type="l",
          main="Power Spectral Density", xlab=x_lbl, ylab=y_lbl,sub=caption)
     abline(Fit[2], Fit[1], col="blue", lwd=2)
@@ -330,8 +329,8 @@ calc_sigma_scaling <- function(chain, plot=FALSE){
     
     plot(logN, logS,
          xlim=x_lims, ylim=y_lims,
-         xlab = latex2exp::TeX("\u0024log_{10} (\\Delta t)\u0024"),
-         ylab= latex2exp::TeX("\u0024log_{10} (\\sigma(\\Delta x))\u0024"),
+         xlab = expression(log[10]*"("*Delta*"t)"),
+         ylab= expression(log[10]*"("*sigma*"("*Delta*"x))"),
          main="Sigma Scaling", 
          sub = paste("slope =", round(slope, 3))
     )

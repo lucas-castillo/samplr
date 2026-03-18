@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Lucas Castillo \email{lucas.castillo-marti@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID}) [copyright holder]
+\strong{Maintainer}: Lucas Castillo \email{lucas.castillo@warwick.ac.uk} (\href{https://orcid.org/0000-0003-0274-0777}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
