@@ -1,3 +1,5 @@
+# samplr (development version)
+
 # samplr 1.1.2
 * Bugfixes:
    * Fixes calculation of some probabilities in `Z_identities()`; p(A or not B) and p(B or not A)
