@@ -1,8 +1,9 @@
-# Development version
+# samplr 1.1.2
 * Bugfixes:
-   * Fixes calculation of some probabilities in Z_identities; p(A or not B) and p(B or not A)
+   * Fixes calculation of some probabilities in `Z_identities()`; p(A or not B) and p(B or not A)
 * Minor:
     * Fixes typo in "Get started" vignette.
+    
 # samplr 1.1.1
 * Bugfixes:
     * `Mean_Variance()` function now returns as many rows as IDs (used to return too many)
