@@ -1,6 +1,7 @@
 ---
 output: github_document
 ---
+This branch makes cpp functions available. Do not use directly (use samplr/main branch or from CRAN). 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
