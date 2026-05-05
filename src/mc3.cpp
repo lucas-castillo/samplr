@@ -14,7 +14,7 @@
 #include "pdf_manage.h"
 using namespace Rcpp;
 
-///'@export
+//'@export
 // [[Rcpp::export]]
 List sampler_mc3_cpp(
     NumericMatrix start, // Numeric Matrix of starts for each chain.

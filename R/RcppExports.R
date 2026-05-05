@@ -5,18 +5,22 @@ Zhu23ABS_cpp <- function(stop_rule_id, trial_stim, distr_name, distr_add_params,
     .Call(`_samplr_Zhu23ABS_cpp`, stop_rule_id, trial_stim, distr_name, distr_add_params, custom_func, custom_start, useCustom, proposal_width, n_chains, provided_start_point, stop_rule, nd_time, s_nd_time, lambda, prior_on_resp, prior_depend, mc3_iterations, dec_bdry, discrim)
 }
 
+#'@export
 sampler_hmc_cpp <- function(start, distr_name, distr_params, epsilon, L, iterations, isMix, weights, custom_func, useCustom) {
     .Call(`_samplr_sampler_hmc_cpp`, start, distr_name, distr_params, epsilon, L, iterations, isMix, weights, custom_func, useCustom)
 }
 
+#'@export
 sampler_mc3_cpp <- function(start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha = 0) {
     .Call(`_samplr_sampler_mc3_cpp`, start, nChains, sigma_prop, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha)
 }
 
+#'@export
 sampler_mc_rec_cpp <- function(start, nChains, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, epsilon, L, alpha) {
     .Call(`_samplr_sampler_mc_rec_cpp`, start, nChains, delta_T, swap_all, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, epsilon, L, alpha)
 }
 
+#'@export
 sampler_mh_cpp <- function(start, sigma_prop, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha = 0) {
     .Call(`_samplr_sampler_mh_cpp`, start, sigma_prop, iterations, distr_name, distr_params, discreteValues, isMix, weights, custom_func, useCustom, alpha)
 }

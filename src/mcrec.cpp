@@ -14,7 +14,7 @@
 #include "pdf_manage.h"
 using namespace Rcpp;
 
-///'@export
+//'@export
 // [[Rcpp::export]]
 List sampler_mc_rec_cpp(
     NumericVector start,

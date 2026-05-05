@@ -1,4 +1,9 @@
 
+This branch makes cpp functions for MCMC algorithms available. They are
+not documented. We recommend not using them directly, but using their .R
+wrappers instead (as you would when using the samplr/main branch or from
+CRAN).
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # samplr: Tools To Compare Human Performance To Sampling Algorithms
